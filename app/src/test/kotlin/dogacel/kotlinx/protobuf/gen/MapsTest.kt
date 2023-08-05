@@ -2,7 +2,7 @@ package dogacel.kotlinx.protobuf.gen
 
 import kotlin.test.Test
 
-class RepeatedTest {
+class MapsTest {
     @Test
     fun shouldWork() {
     }

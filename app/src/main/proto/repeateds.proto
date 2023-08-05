@@ -18,4 +18,31 @@ message RepeatedsMessage {
   repeated bool repeated_bool = 13;
   repeated string repeated_string = 14;
   repeated bytes repeated_bytes = 15;
+
+  repeated NestedMessage repeated_nested_message = 16;
+  repeated ForeignMessage repeated_foreign_message = 17;
+  repeated NestedEnum repeated_nested_enum = 18;
+  repeated ForeignEnum repeated_foreign_enum = 19;
+
+  message NestedMessage {
+    int32 a = 1;
+    RepeatedsMessage corecursive = 2;
+  }
+
+  enum NestedEnum {
+    FOO = 0;
+    BAR = 1;
+    BAZ = 2;
+    NEG = -1;  // Intentionally negative.
+  }
+}
+
+message ForeignMessage {
+  int32 c = 1;
+}
+
+enum ForeignEnum {
+  FOREIGN_FOO = 0;
+  FOREIGN_BAR = 1;
+  FOREIGN_BAZ = 2;
 }

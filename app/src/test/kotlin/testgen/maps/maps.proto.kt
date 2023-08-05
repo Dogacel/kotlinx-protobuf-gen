@@ -1,4 +1,4 @@
-package testgen.repeateds
+package testgen.maps
 
 import kotlin.Boolean
 import kotlin.ByteArray
@@ -9,57 +9,57 @@ import kotlin.Long
 import kotlin.String
 import kotlin.UInt
 import kotlin.ULong
-import kotlin.collections.List
+import kotlin.collections.Map
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
-public data class RepeatedsMessage(
+public data class MapsMessage(
   @ProtoNumber(number = 1)
-  public val repeatedInt32: List<Int> = listOf(),
+  public val mapInt32Int32: Map<Int, Int> = mapOf(),
   @ProtoNumber(number = 2)
-  public val repeatedInt64: List<Long> = listOf(),
+  public val mapInt64Int64: Map<Long, Long> = mapOf(),
   @ProtoNumber(number = 3)
-  public val repeatedUint32: List<UInt> = listOf(),
+  public val mapUint32Uint32: Map<UInt, UInt> = mapOf(),
   @ProtoNumber(number = 4)
-  public val repeatedUint64: List<ULong> = listOf(),
+  public val mapUint64Uint64: Map<ULong, ULong> = mapOf(),
   @ProtoNumber(number = 5)
-  public val repeatedSint32: List<Int> = listOf(),
+  public val mapSint32Sint32: Map<Int, Int> = mapOf(),
   @ProtoNumber(number = 6)
-  public val repeatedSint64: List<Long> = listOf(),
+  public val mapSint64Sint64: Map<Long, Long> = mapOf(),
   @ProtoNumber(number = 7)
-  public val repeatedFixed32: List<Int> = listOf(),
+  public val mapFixed32Fixed32: Map<Int, Int> = mapOf(),
   @ProtoNumber(number = 8)
-  public val repeatedFixed64: List<Long> = listOf(),
+  public val mapFixed64Fixed64: Map<Long, Long> = mapOf(),
   @ProtoNumber(number = 9)
-  public val repeatedSfixed32: List<Int> = listOf(),
+  public val mapSfixed32Sfixed32: Map<Int, Int> = mapOf(),
   @ProtoNumber(number = 10)
-  public val repeatedSfixed64: List<Long> = listOf(),
+  public val mapSfixed64Sfixed64: Map<Long, Long> = mapOf(),
   @ProtoNumber(number = 11)
-  public val repeatedFloat: List<Float> = listOf(),
+  public val mapInt32Float: Map<Int, Float> = mapOf(),
   @ProtoNumber(number = 12)
-  public val repeatedDouble: List<Double> = listOf(),
+  public val mapInt32Double: Map<Int, Double> = mapOf(),
   @ProtoNumber(number = 13)
-  public val repeatedBool: List<Boolean> = listOf(),
+  public val mapBoolBool: Map<Boolean, Boolean> = mapOf(),
   @ProtoNumber(number = 14)
-  public val repeatedString: List<String> = listOf(),
+  public val mapStringString: Map<String, String> = mapOf(),
   @ProtoNumber(number = 15)
-  public val repeatedBytes: List<ByteArray> = listOf(),
+  public val mapStringBytes: Map<String, ByteArray> = mapOf(),
   @ProtoNumber(number = 16)
-  public val repeatedNestedMessage: List<NestedMessage?> = listOf(),
+  public val mapStringNestedMessage: Map<String, NestedMessage?> = mapOf(),
   @ProtoNumber(number = 17)
-  public val repeatedForeignMessage: List<ForeignMessage?> = listOf(),
+  public val mapStringForeignMessage: Map<String, ForeignMessage?> = mapOf(),
   @ProtoNumber(number = 18)
-  public val repeatedNestedEnum: List<NestedEnum> = listOf(),
+  public val mapStringNestedEnum: Map<String, NestedEnum> = mapOf(),
   @ProtoNumber(number = 19)
-  public val repeatedForeignEnum: List<ForeignEnum> = listOf(),
+  public val mapStringForeignEnum: Map<String, ForeignEnum> = mapOf(),
 ) {
   @Serializable
   public data class NestedMessage(
     @ProtoNumber(number = 1)
     public val a: Int = 0,
     @ProtoNumber(number = 2)
-    public val corecursive: RepeatedsMessage? = null,
+    public val corecursive: MapsMessage? = null,
   )
 
   public enum class NestedEnum {

@@ -6,8 +6,13 @@ message MessageWithEnum {
   int32 id = 1;
   TestEnum test_enum = 2;
   AliasedEnum aliased_enum = 3;
+  NestedEnum nested_enum = 4;
 
-  // TODO: Nested enums
+  enum NestedEnum {
+    NESTED_FOO = 0;
+    NESTED_BAR = 1;
+    NESTED_BAZ = 2;
+  }
 }
 
 enum TestEnum {
@@ -15,8 +20,7 @@ enum TestEnum {
   BAR = 1;
   BAZ = 2;
   TOP = 100;
-  // NEG = -1;  // Intentionally negative.
-  // Index -1 out of bounds for length 4
+  NEG = -1;  // Intentionally negative.
 }
 
 enum AliasedEnum {

@@ -10,11 +10,20 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import java.nio.file.Path
+import java.util.*
 import kotlin.io.path.Path
 
 data class CodeGeneratorOptions(
     val packagePrefix: String = "",
+    val useCamelCase: Boolean = true,
 )
+
+fun String.toLowerCamelCase(): String {
+    val snakeRegex = "_[a-zA-Z]".toRegex()
+    return snakeRegex.replace(this) {
+        it.value.replace("_", "").uppercase(Locale.ENGLISH)
+    }
+}
 
 /**
  * A class that generates the Kotlin code for the given [PluginProtos.CodeGeneratorRequest].
@@ -46,7 +55,7 @@ class CodeGenerator {
             }
         }
         typeNames = filesInOrder.flatMap { fileDescriptor ->
-            CodeGen.buildClassSpecs(fileDescriptor, options.packagePrefix)
+            buildClassSpecs(fileDescriptor, options.packagePrefix)
         }.toMap()
     }
 
@@ -57,7 +66,7 @@ class CodeGenerator {
         this.options = options
         filesInOrder = fileDescriptors.toList()
         typeNames = filesInOrder.flatMap { fileDescriptor ->
-            CodeGen.buildClassSpecs(fileDescriptor, options.packagePrefix)
+            buildClassSpecs(fileDescriptor, options.packagePrefix)
         }.toMap()
     }
 
@@ -75,10 +84,12 @@ class CodeGenerator {
      * Generate the code for the given [Descriptors.FileDescriptor]. Returns a [FileSpec.Builder] so users
      * can add additional code to the file.
      *
+     * A file contains classes and enums.
+     *
      * @param fileDescriptor [Descriptors.FileDescriptor] to generate code for.
      * @return [FileSpec.Builder] that contains the generated code.
      */
-    fun generateSingleFile(fileDescriptor: Descriptors.FileDescriptor): FileSpec.Builder {
+    private fun generateSingleFile(fileDescriptor: Descriptors.FileDescriptor): FileSpec.Builder {
         val packageName = if (options.packagePrefix.isNotEmpty()) {
             options.packagePrefix + '.' + fileDescriptor.`package`
         } else {
@@ -104,13 +115,21 @@ class CodeGenerator {
      * Generate a single parameter for the given [Descriptors.FieldDescriptor]. Returns a
      * [ParameterSpec.Builder] so users can add additional code to the parameter.
      *
+     * A parameter contains a name, type and default value. Parameters are used in constructors.
+     *
      * @param fieldDescriptor [Descriptors.FieldDescriptor] to generate code for.
      * @return [ParameterSpec.Builder] that contains the generated code.
      */
-    fun generateSingleParameter(fieldDescriptor: Descriptors.FieldDescriptor): ParameterSpec.Builder {
+    private fun generateSingleParameter(fieldDescriptor: Descriptors.FieldDescriptor): ParameterSpec.Builder {
         val fieldTypeName = TypeNames.typeNameOf(fieldDescriptor, typeNames)
 
-        val builder = ParameterSpec.builder(fieldDescriptor.name, fieldTypeName)
+        val fieldName = if (options.useCamelCase) {
+            fieldDescriptor.name.toLowerCamelCase()
+        } else {
+            fieldDescriptor.name
+        }
+
+        val builder = ParameterSpec.builder(fieldName, fieldTypeName)
 
         builder.addAnnotation(
             AnnotationSpec.builder(ProtoNumber::class)
@@ -129,10 +148,12 @@ class CodeGenerator {
      * Generate a single class for the given [Descriptors.Descriptor]. Returns a [TypeSpec.Builder] so users
      * can add additional code to the class.
      *
+     * A class contains subclasses, enums, parameters and properties.
+     *
      * @param messageType [Descriptors.Descriptor] to generate code for.
      * @return [TypeSpec.Builder] that contains the generated code.
      */
-    fun generateSingleClass(messageType: Descriptors.Descriptor): TypeSpec.Builder {
+    private fun generateSingleClass(messageType: Descriptors.Descriptor): TypeSpec.Builder {
         val typeSpec = TypeSpec.classBuilder(messageType.name)
             .addModifiers(KModifier.DATA)
             .addAnnotation(Serializable::class)
@@ -148,14 +169,33 @@ class CodeGenerator {
 
         typeSpec.primaryConstructor(constructor)
 
+
         messageType.fields.forEach {
             val type = TypeNames.typeNameOf(it, typeNames)
+            val fieldName = if (options.useCamelCase) {
+                it.name.toLowerCamelCase()
+            } else {
+                it.name
+            }
+
             typeSpec.addProperty(
-                PropertySpec.builder(it.name, type)
-                    .initializer(it.name)
+                PropertySpec.builder(fieldName, type)
+                    .initializer(fieldName)
                     .build()
             )
         }
+
+        val nestedTypes = messageType.nestedTypes.filterNot {
+            it.options.mapEntry
+        }.map {
+            generateSingleClass(it).build()
+        }
+        typeSpec.addTypes(nestedTypes)
+
+        val nestedEnums = messageType.enumTypes.map {
+            generateSingleEnum(it).build()
+        }
+        typeSpec.addTypes(nestedEnums)
 
         return typeSpec
     }
@@ -163,6 +203,8 @@ class CodeGenerator {
     /**
      * Generate a single enum for the given [Descriptors.EnumDescriptor]. Returns a [TypeSpec.Builder] so users
      * can add additional code to the enum.
+     *
+     * An enum contains enum constants.
      *
      * @param enumDescriptor [Descriptors.EnumDescriptor] to generate code for.
      * @return [TypeSpec.Builder] that contains the generated code.
@@ -185,12 +227,6 @@ class CodeGenerator {
 
         return typeSpec
     }
-}
-
-/**
- * Utilities for generating code.
- */
-object CodeGen {
 
 
     private fun buildEnumSpecs(
@@ -224,7 +260,7 @@ object CodeGen {
         return (messages + enums + self)
     }
 
-    fun buildClassSpecs(
+    private fun buildClassSpecs(
         fileDescriptor: Descriptors.FileDescriptor,
         packagePrefix: String = ""
     ): List<Pair<Descriptors.GenericDescriptor, ClassName>> {

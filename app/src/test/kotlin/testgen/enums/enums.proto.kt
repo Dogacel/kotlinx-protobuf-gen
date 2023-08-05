@@ -9,10 +9,21 @@ public data class MessageWithEnum(
   @ProtoNumber(number = 1)
   public val id: Int = 0,
   @ProtoNumber(number = 2)
-  public val test_enum: TestEnum = testgen.enums.TestEnum.FOO,
+  public val testEnum: TestEnum = testgen.enums.TestEnum.FOO,
   @ProtoNumber(number = 3)
-  public val aliased_enum: AliasedEnum = testgen.enums.AliasedEnum.ALIAS_FOO,
-)
+  public val aliasedEnum: AliasedEnum = testgen.enums.AliasedEnum.ALIAS_FOO,
+  @ProtoNumber(number = 4)
+  public val nestedEnum: NestedEnum = testgen.enums.MessageWithEnum.NestedEnum.NESTED_FOO,
+) {
+  public enum class NestedEnum {
+    @ProtoNumber(number = 0)
+    NESTED_FOO,
+    @ProtoNumber(number = 1)
+    NESTED_BAR,
+    @ProtoNumber(number = 2)
+    NESTED_BAZ,
+  }
+}
 
 public enum class TestEnum {
   @ProtoNumber(number = 0)
@@ -23,6 +34,8 @@ public enum class TestEnum {
   BAZ,
   @ProtoNumber(number = 100)
   TOP,
+  @ProtoNumber(number = -1)
+  NEG,
 }
 
 public enum class AliasedEnum {

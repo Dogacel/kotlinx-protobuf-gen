@@ -45,13 +45,26 @@ object TypeNames {
             else -> ANY
         }
 
-        if (fieldDescriptor.hasOptionalKeyword()) {
+        // TODO: Make non-optional messages not-nullable with an option
+        if (fieldDescriptor.hasOptionalKeyword() || fieldDescriptor.type == Descriptors.FieldDescriptor.Type.MESSAGE) {
             primitiveType = primitiveType.copy(nullable = true)
         }
 
         if (fieldDescriptor.isRepeated) {
+            if (fieldDescriptor.isMapField) {
+                val k = typeNameOf(
+                    fieldDescriptor.messageType.fields[0],
+                    typeNames,
+                )
+                val v = typeNameOf(
+                    fieldDescriptor.messageType.fields[1],
+                    typeNames,
+                )
+                return ClassName("kotlin.collections", "Map").parameterizedBy(k, v)
+            }
             return ClassName("kotlin.collections", "List").parameterizedBy(primitiveType)
         }
+
 
         return primitiveType
     }
