@@ -4,7 +4,7 @@ import com.google.protobuf.kotlin.toByteStringUtf8
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import testgen.repeateds.RepeatedsMessage
 import kotlin.test.Test
 
@@ -62,9 +62,33 @@ class RepeatedTest {
             .build()
 
         val result: RepeatedsMessage = ProtoBuf.decodeFromByteArray(message.toByteArray())
+
+        assertEquals(message.repeatedInt32List, result.repeatedInt32)
+        assertEquals(message.repeatedInt64List, result.repeatedInt64)
+        assertEquals(message.repeatedUint32List, result.repeatedUint32)
+        assertEquals(message.repeatedUint64List, result.repeatedUint64)
+//        assertEquals(message.repeatedSint32List, result.repeatedSint32)
+//        assertEquals(message.repeatedSint64List, result.repeatedSint64)
+        assertEquals(message.repeatedFixed32List, result.repeatedFixed32)
+        assertEquals(message.repeatedFixed64List, result.repeatedFixed64)
+        assertEquals(message.repeatedSfixed32List, result.repeatedSfixed32)
+        assertEquals(message.repeatedSfixed64List, result.repeatedSfixed64)
+        assertEquals(message.repeatedFloatList, result.repeatedFloat)
+        assertEquals(message.repeatedDoubleList, result.repeatedDouble)
+        assertEquals(message.repeatedBoolList, result.repeatedBool)
+        assertEquals(message.repeatedStringList, result.repeatedString)
+//        assertEquals(message.repeatedBytesList, result.repeatedBytes)
+//        assertEquals(message.repeatedNestedMessageList, result.repeatedNestedMessage)
+//        assertEquals(message.repeatedForeignMessageList, result.repeatedForeignMessage)
+        assertEquals(message.repeatedNestedEnumList.map { it.name }, result.repeatedNestedEnum.map { it.name })
+        assertEquals(
+            message.repeatedForeignEnumList.map { it.name },
+            result.repeatedForeignEnum.map { it.name },
+        )
+
         val deser = repeateds.Repeateds.RepeatedsMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
 
-        Assertions.assertEquals(message, deser)
+        assertEquals(message, deser)
     }
 
     @Test
@@ -72,8 +96,32 @@ class RepeatedTest {
         val message = repeateds.Repeateds.RepeatedsMessage.newBuilder().build()
 
         val result: RepeatedsMessage = ProtoBuf.decodeFromByteArray(message.toByteArray())
+
+        assertEquals(message.repeatedInt32List, result.repeatedInt32)
+        assertEquals(message.repeatedInt64List, result.repeatedInt64)
+        assertEquals(message.repeatedUint32List, result.repeatedUint32)
+        assertEquals(message.repeatedUint64List, result.repeatedUint64)
+        assertEquals(message.repeatedSint32List, result.repeatedSint32)
+        assertEquals(message.repeatedSint64List, result.repeatedSint64)
+        assertEquals(message.repeatedFixed32List, result.repeatedFixed32)
+        assertEquals(message.repeatedFixed64List, result.repeatedFixed64)
+        assertEquals(message.repeatedSfixed32List, result.repeatedSfixed32)
+        assertEquals(message.repeatedSfixed64List, result.repeatedSfixed64)
+        assertEquals(message.repeatedFloatList, result.repeatedFloat)
+        assertEquals(message.repeatedDoubleList, result.repeatedDouble)
+        assertEquals(message.repeatedBoolList, result.repeatedBool)
+        assertEquals(message.repeatedStringList, result.repeatedString)
+        assertEquals(message.repeatedBytesList, result.repeatedBytes)
+        assertEquals(message.repeatedNestedMessageList, result.repeatedNestedMessage)
+        assertEquals(message.repeatedForeignMessageList, result.repeatedForeignMessage)
+        assertEquals(message.repeatedNestedEnumList.map { it.name }, result.repeatedNestedEnum.map { it.name })
+        assertEquals(
+            message.repeatedForeignEnumList.map { it.name },
+            result.repeatedForeignEnum.map { it.name },
+        )
+
         val deser = repeateds.Repeateds.RepeatedsMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
 
-        Assertions.assertEquals(message, deser)
+        assertEquals(message, deser)
     }
 }

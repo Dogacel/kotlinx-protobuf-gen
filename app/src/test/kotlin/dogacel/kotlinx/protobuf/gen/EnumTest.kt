@@ -23,8 +23,13 @@ class EnumTest {
                 .build()
 
             val bytes = someWrapperMessage.toByteArray()
-
             val result: MessageWithEnum = ProtoBuf.decodeFromByteArray(bytes)
+
+            assertEquals(
+                someProtoEnum.name,
+                result.testEnum.name,
+            )
+
             val deser = enums.Enums.MessageWithEnum.parseFrom(
                 ProtoBuf.encodeToByteArray(result)
             )
@@ -33,6 +38,7 @@ class EnumTest {
                 someWrapperMessage,
                 deser,
             )
+
         }
     }
 
@@ -51,8 +57,13 @@ class EnumTest {
                     .build()
 
                 val bytes = someWrapperMessage.toByteArray()
-
                 val result: MessageWithEnum = ProtoBuf.decodeFromByteArray(bytes)
+
+                assertEquals(
+                    someProtoEnum.name,
+                    result.aliasedEnum.name,
+                )
+
                 val deser = enums.Enums.MessageWithEnum.parseFrom(
                     ProtoBuf.encodeToByteArray(result)
                 )
@@ -75,8 +86,13 @@ class EnumTest {
                 .build()
 
             val bytes = someWrapperMessage.toByteArray()
-
             val result: MessageWithEnum = ProtoBuf.decodeFromByteArray(bytes)
+
+            assertEquals(
+                someProtoEnum.name,
+                result.nestedEnum.name,
+            )
+
             val deser = enums.Enums.MessageWithEnum.parseFrom(
                 ProtoBuf.encodeToByteArray(result)
             )

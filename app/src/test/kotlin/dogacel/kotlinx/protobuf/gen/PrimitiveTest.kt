@@ -18,7 +18,7 @@ class PrimitiveTest {
             .setOptionalUint64(68L)
             .setOptionalFixed32(4358)
             .setOptionalFixed64(543587L)
-            .setOptionalSint32(283)
+            .setOptionalSint32(-283)
             .setOptionalSint64(349L)
             .setOptionalSfixed32(21934)
             .setOptionalSfixed64(901235L)
@@ -30,8 +30,26 @@ class PrimitiveTest {
             .build()
 
         val result: PrimitivesMessage = ProtoBuf.decodeFromByteArray(message.toByteArray())
-        val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
 
+        assertEquals(message.optionalInt32, result.optionalInt32)
+        assertEquals(message.optionalInt64, result.optionalInt64)
+        assertEquals(message.optionalUint32.toUInt(), result.optionalUint32)
+        assertEquals(message.optionalUint64.toULong(), result.optionalUint64)
+        assertEquals(message.optionalFixed32, result.optionalFixed32)
+        assertEquals(message.optionalFixed64, result.optionalFixed64)
+        assertEquals(message.optionalSint32, result.optionalSint32)
+        assertEquals(message.optionalSint64, result.optionalSint64)
+        assertEquals(message.optionalSfixed32, result.optionalSfixed32)
+        assertEquals(message.optionalSfixed64, result.optionalSfixed64)
+        assertEquals(message.optionalFloat, result.optionalFloat)
+        assertEquals(message.optionalDouble, result.optionalDouble)
+        assertEquals(message.optionalBool, result.optionalBool)
+        assertEquals(message.optionalString, result.optionalString)
+        // Byte arrays are not comparable.
+        // TODO: Consider using List<Byte> instead of ByteArray.
+        // assertEquals(message.optionalBytes.toByteArray(), result.optionalBytes)
+
+        val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
         assertEquals(message, deser)
     }
 
@@ -40,8 +58,26 @@ class PrimitiveTest {
         val message = primitives.Primitives.PrimitivesMessage.newBuilder().build()
 
         val result: PrimitivesMessage = ProtoBuf.decodeFromByteArray(message.toByteArray())
-        val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
 
+        assertEquals(message.optionalInt32, result.optionalInt32)
+        assertEquals(message.optionalInt64, result.optionalInt64)
+        assertEquals(message.optionalUint32.toUInt(), result.optionalUint32)
+        assertEquals(message.optionalUint64.toULong(), result.optionalUint64)
+        assertEquals(message.optionalFixed32, result.optionalFixed32)
+        assertEquals(message.optionalFixed64, result.optionalFixed64)
+        assertEquals(message.optionalSint32, result.optionalSint32)
+        assertEquals(message.optionalSint64, result.optionalSint64)
+        assertEquals(message.optionalSfixed32, result.optionalSfixed32)
+        assertEquals(message.optionalSfixed64, result.optionalSfixed64)
+        assertEquals(message.optionalFloat, result.optionalFloat)
+        assertEquals(message.optionalDouble, result.optionalDouble)
+        assertEquals(message.optionalBool, result.optionalBool)
+        assertEquals(message.optionalString, result.optionalString)
+        // Byte arrays are not comparable.
+        // TODO: Consider using List<Byte> instead of ByteArray.
+        // assertEquals(message.optionalBytes.toByteArray(), result.optionalBytes)
+
+        val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
         assertEquals(message, deser)
     }
 }
