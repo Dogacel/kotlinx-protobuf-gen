@@ -13,6 +13,8 @@ fun main() {
         enums.Enums.getDescriptor(),
         repeateds.Repeateds.getDescriptor(),
         maps.Maps.getDescriptor(),
+        messages.Messages.getDescriptor(),
+        oneof.Oneof.getDescriptor(),
         TestMessagesProto3.getDescriptor(),
         options = codeGeneratorOptions
     )

@@ -65,8 +65,8 @@ class RepeatedTest {
 
         assertEquals(message.repeatedInt32List, result.repeatedInt32)
         assertEquals(message.repeatedInt64List, result.repeatedInt64)
-        assertEquals(message.repeatedUint32List, result.repeatedUint32)
-        assertEquals(message.repeatedUint64List, result.repeatedUint64)
+        assertEquals(message.repeatedUint32List.map { it.toUInt() }, result.repeatedUint32)
+        assertEquals(message.repeatedUint64List.map { it.toULong() }, result.repeatedUint64)
 //        assertEquals(message.repeatedSint32List, result.repeatedSint32)
 //        assertEquals(message.repeatedSint64List, result.repeatedSint64)
         assertEquals(message.repeatedFixed32List, result.repeatedFixed32)
@@ -99,8 +99,8 @@ class RepeatedTest {
 
         assertEquals(message.repeatedInt32List, result.repeatedInt32)
         assertEquals(message.repeatedInt64List, result.repeatedInt64)
-        assertEquals(message.repeatedUint32List, result.repeatedUint32)
-        assertEquals(message.repeatedUint64List, result.repeatedUint64)
+        assertEquals(message.repeatedUint32List.map { it.toUInt() }, result.repeatedUint32)
+        assertEquals(message.repeatedUint64List.map { it.toULong() }, result.repeatedUint64)
         assertEquals(message.repeatedSint32List, result.repeatedSint32)
         assertEquals(message.repeatedSint64List, result.repeatedSint64)
         assertEquals(message.repeatedFixed32List, result.repeatedFixed32)
