@@ -3,26 +3,26 @@
  */
 package dogacel.kotlinx.protobuf.gen
 
+import com.google.protobuf.compiler.codeGeneratorRequest
+import com.google.protobuf_test_messages.proto3.TestMessagesProto3
 import kotlin.test.Test
 
 class AppTest {
     @Test
     fun shouldWork() {
-        CodeGenerator.generateFile(
-            "test_file", test.Test.getDescriptor()
-        )
+        val codeGenerator = CodeGenerator(test.Test.getDescriptor())
+        codeGenerator.generate()
     }
 
     @Test
     fun conformance() {
-        CodeGenerator.generateFile(
-            "conformance", com.google.protobuf_test_messages.proto3.TestMessagesProto3.getDescriptor()
-        )
+        val codeGenerator = CodeGenerator(TestMessagesProto3.getDescriptor())
+        codeGenerator.generate()
     }
 
     @Test
     fun classSpecs() {
-        val specs = CodeGenerator.buildClassSpecs(
+        val specs = CodeGen.buildClassSpecs(
             test.Test.getDescriptor()
 //            com.google.protobuf_test_messages.proto3.TestMessagesProto3.getDescriptor()
         )
