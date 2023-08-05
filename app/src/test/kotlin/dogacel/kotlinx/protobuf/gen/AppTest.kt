@@ -23,8 +23,8 @@ class AppTest {
     @Test
     fun classSpecs() {
         val specs = CodeGenerator.buildClassSpecs(
-//            test.Test.getDescriptor()
-            com.google.protobuf_test_messages.proto3.TestMessagesProto3.getDescriptor()
+            test.Test.getDescriptor()
+//            com.google.protobuf_test_messages.proto3.TestMessagesProto3.getDescriptor()
         )
 
         specs.forEach { (descriptor, className) ->
