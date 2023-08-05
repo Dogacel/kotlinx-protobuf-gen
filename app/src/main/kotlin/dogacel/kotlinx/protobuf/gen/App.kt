@@ -8,6 +8,7 @@ fun main() {
         packagePrefix = "testgen"
     )
     val codeGenerator = CodeGenerator(
+        demo.Demo.getDescriptor(),
         primitives.Primitives.getDescriptor(),
         enums.Enums.getDescriptor(),
         repeateds.Repeateds.getDescriptor(),
