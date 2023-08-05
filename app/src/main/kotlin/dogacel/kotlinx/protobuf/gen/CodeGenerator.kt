@@ -25,6 +25,34 @@ object CodeGenerator {
     }
 
     private fun Descriptors.FieldDescriptor.toGeneratedType(classSpecs: Map<Descriptors.Descriptor, TypeName>): TypeName {
+        if (this.isExtension) {
+            println("This is an extension ${this.fullName}")
+        }
+
+        if (this.isMapField) {
+            println("This is a map field ${this.fullName}")
+        }
+
+        if (this.isOptional) {
+            println("This is an optional field ${this.fullName}")
+        }
+
+        if (this.isPackable) {
+            println("This is a packable field ${this.fullName}}")
+        }
+
+        if (this.isRequired) {
+            println("This is a required field ${this.fullName}")
+        }
+
+        if (this.isRepeated) {
+            println("This is a repeated field ${this.fullName}")
+        }
+
+        if (this.isPacked) {
+            println("This is a reserved field ${this.fullName}")
+        }
+
         return when (this.type) {
             Type.BOOL -> BOOLEAN
             Type.INT32 -> INT
