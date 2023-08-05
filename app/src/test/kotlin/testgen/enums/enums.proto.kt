@@ -15,6 +15,7 @@ public data class MessageWithEnum(
   @ProtoNumber(number = 4)
   public val nestedEnum: NestedEnum = testgen.enums.MessageWithEnum.NestedEnum.NESTED_FOO,
 ) {
+  @Serializable
   public enum class NestedEnum {
     @ProtoNumber(number = 0)
     NESTED_FOO,
@@ -25,6 +26,7 @@ public data class MessageWithEnum(
   }
 }
 
+@Serializable
 public enum class TestEnum {
   @ProtoNumber(number = 0)
   FOO,
@@ -38,6 +40,7 @@ public enum class TestEnum {
   NEG,
 }
 
+@Serializable
 public enum class AliasedEnum {
   @ProtoNumber(number = 0)
   ALIAS_FOO,

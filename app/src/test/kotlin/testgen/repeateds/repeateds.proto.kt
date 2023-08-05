@@ -11,48 +11,73 @@ import kotlin.UInt
 import kotlin.ULong
 import kotlin.collections.List
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoIntegerType.FIXED
+import kotlinx.serialization.protobuf.ProtoIntegerType.SIGNED
 import kotlinx.serialization.protobuf.ProtoNumber
+import kotlinx.serialization.protobuf.ProtoPacked
+import kotlinx.serialization.protobuf.ProtoType
 
 @Serializable
 public data class RepeatedsMessage(
   @ProtoNumber(number = 1)
-  public val repeatedInt32: List<Int> = listOf(),
+  @ProtoPacked
+  public val repeatedInt32: List<Int> = emptyList(),
   @ProtoNumber(number = 2)
-  public val repeatedInt64: List<Long> = listOf(),
+  @ProtoPacked
+  public val repeatedInt64: List<Long> = emptyList(),
   @ProtoNumber(number = 3)
-  public val repeatedUint32: List<UInt> = listOf(),
+  @ProtoPacked
+  public val repeatedUint32: List<UInt> = emptyList(),
   @ProtoNumber(number = 4)
-  public val repeatedUint64: List<ULong> = listOf(),
+  @ProtoPacked
+  public val repeatedUint64: List<ULong> = emptyList(),
   @ProtoNumber(number = 5)
-  public val repeatedSint32: List<Int> = listOf(),
+  @ProtoPacked
+  @ProtoType(type = SIGNED)
+  public val repeatedSint32: List<Int> = emptyList(),
   @ProtoNumber(number = 6)
-  public val repeatedSint64: List<Long> = listOf(),
+  @ProtoPacked
+  @ProtoType(type = SIGNED)
+  public val repeatedSint64: List<Long> = emptyList(),
   @ProtoNumber(number = 7)
-  public val repeatedFixed32: List<Int> = listOf(),
+  @ProtoPacked
+  @ProtoType(type = FIXED)
+  public val repeatedFixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 8)
-  public val repeatedFixed64: List<Long> = listOf(),
+  @ProtoPacked
+  @ProtoType(type = FIXED)
+  public val repeatedFixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 9)
-  public val repeatedSfixed32: List<Int> = listOf(),
+  @ProtoPacked
+  @ProtoType(type = FIXED)
+  public val repeatedSfixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 10)
-  public val repeatedSfixed64: List<Long> = listOf(),
+  @ProtoPacked
+  @ProtoType(type = FIXED)
+  public val repeatedSfixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 11)
-  public val repeatedFloat: List<Float> = listOf(),
+  @ProtoPacked
+  public val repeatedFloat: List<Float> = emptyList(),
   @ProtoNumber(number = 12)
-  public val repeatedDouble: List<Double> = listOf(),
+  @ProtoPacked
+  public val repeatedDouble: List<Double> = emptyList(),
   @ProtoNumber(number = 13)
-  public val repeatedBool: List<Boolean> = listOf(),
+  @ProtoPacked
+  public val repeatedBool: List<Boolean> = emptyList(),
   @ProtoNumber(number = 14)
-  public val repeatedString: List<String> = listOf(),
+  public val repeatedString: List<String> = emptyList(),
   @ProtoNumber(number = 15)
-  public val repeatedBytes: List<ByteArray> = listOf(),
+  public val repeatedBytes: List<ByteArray> = emptyList(),
   @ProtoNumber(number = 16)
-  public val repeatedNestedMessage: List<NestedMessage?> = listOf(),
+  public val repeatedNestedMessage: List<NestedMessage?> = emptyList(),
   @ProtoNumber(number = 17)
-  public val repeatedForeignMessage: List<ForeignMessage?> = listOf(),
+  public val repeatedForeignMessage: List<ForeignMessage?> = emptyList(),
   @ProtoNumber(number = 18)
-  public val repeatedNestedEnum: List<NestedEnum> = listOf(),
+  @ProtoPacked
+  public val repeatedNestedEnum: List<NestedEnum> = emptyList(),
   @ProtoNumber(number = 19)
-  public val repeatedForeignEnum: List<ForeignEnum> = listOf(),
+  @ProtoPacked
+  public val repeatedForeignEnum: List<ForeignEnum> = emptyList(),
 ) {
   @Serializable
   public data class NestedMessage(
@@ -62,6 +87,7 @@ public data class RepeatedsMessage(
     public val corecursive: RepeatedsMessage? = null,
   )
 
+  @Serializable
   public enum class NestedEnum {
     @ProtoNumber(number = 0)
     FOO,
@@ -80,6 +106,7 @@ public data class ForeignMessage(
   public val c: Int = 0,
 )
 
+@Serializable
 public enum class ForeignEnum {
   @ProtoNumber(number = 0)
   FOREIGN_FOO,

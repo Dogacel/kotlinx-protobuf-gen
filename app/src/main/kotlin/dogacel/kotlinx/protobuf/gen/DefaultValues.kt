@@ -19,9 +19,9 @@ object DefaultValues {
 
         if (fieldDescriptor.isRepeated) {
             if (fieldDescriptor.isMapField) {
-                return CodeBlock.of("mapOf()")
+                return CodeBlock.of("emptyMap()")
             }
-            return CodeBlock.of("listOf()")
+            return CodeBlock.of("emptyList()")
         }
 
         if (fieldDescriptor.hasOptionalKeyword()) {
@@ -55,7 +55,7 @@ object DefaultValues {
             }
 
             Descriptors.FieldDescriptor.Type.MESSAGE -> null
-            else -> throw IllegalStateException("Default type not found for: ${fieldDescriptor.type}")
+            null -> throw IllegalStateException("Field type is null: $fieldDescriptor")
         }
     }
 }

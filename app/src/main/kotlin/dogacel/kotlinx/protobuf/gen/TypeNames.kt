@@ -42,7 +42,7 @@ object TypeNames {
             Descriptors.FieldDescriptor.Type.MESSAGE -> typeNames[fieldDescriptor.messageType]
                 ?: throw IllegalStateException("Message type not found: ${fieldDescriptor.messageType.fullName}")
 
-            else -> ANY
+            null -> throw IllegalStateException("Field type is null: $fieldDescriptor")
         }
 
         // TODO: Make non-optional messages not-nullable with an option
