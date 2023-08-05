@@ -1,25 +1,35 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
-import com.google.protobuf.Descriptors.EnumDescriptor
-import com.google.protobuf.Descriptors.FieldDescriptor.Type
 import com.google.protobuf.compiler.PluginProtos
-import com.google.protobuf.fileDescriptorProto
 import com.squareup.kotlinpoet.*
-import dogacel.kotlinx.protobuf.gen.CodeGen.toGeneratedType
+import dogacel.kotlinx.protobuf.gen.DefaultValues.defaultValueOf
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
+import java.nio.file.Path
 import kotlin.io.path.Path
+
+data class CodeGeneratorOptions(
+    val packagePrefix: String = "",
+)
 
 /**
  * A class that generates the Kotlin code for the given [PluginProtos.CodeGeneratorRequest].
- * This [request] is sent via the protobuf compiler plugin.
+ * This request is sent via the protobuf compiler plugin.
  */
 class CodeGenerator {
-    private val typeNames: Map<Descriptors.Descriptor, TypeName>
+    private val typeNames: Map<Descriptors.GenericDescriptor, TypeName>
     private val filesInOrder: List<Descriptors.FileDescriptor>
+    private val options: CodeGeneratorOptions
 
-    constructor(request: PluginProtos.CodeGeneratorRequest) {
+    constructor(
+        request: PluginProtos.CodeGeneratorRequest,
+        options: CodeGeneratorOptions = CodeGeneratorOptions()
+    ) {
+        this.options = options
         // https://protobuf.dev/reference/java/api-docs/com/google/protobuf/compiler/PluginProtos.CodeGeneratorRequest
         // FileDescriptorProtos for all files in files_to_generate and everything
         // they import.  The files will appear in topological order, so each file
@@ -36,26 +46,44 @@ class CodeGenerator {
             }
         }
         typeNames = filesInOrder.flatMap { fileDescriptor ->
-            CodeGen.buildClassSpecs(fileDescriptor)
+            CodeGen.buildClassSpecs(fileDescriptor, options.packagePrefix)
         }.toMap()
     }
 
-    constructor(vararg fileDescriptors: Descriptors.FileDescriptor) {
+    constructor(
+        vararg fileDescriptors: Descriptors.FileDescriptor,
+        options: CodeGeneratorOptions = CodeGeneratorOptions()
+    ) {
+        this.options = options
         filesInOrder = fileDescriptors.toList()
         typeNames = filesInOrder.flatMap { fileDescriptor ->
-            CodeGen.buildClassSpecs(fileDescriptor)
+            CodeGen.buildClassSpecs(fileDescriptor, options.packagePrefix)
         }.toMap()
     }
 
-    fun generate() {
+    /**
+     * Generate the source files to the given [path].
+     */
+    fun generate(path: Path = Path("./generated")) {
         filesInOrder.forEach { fileDescriptor ->
             val fileSpec = generateSingleFile(fileDescriptor)
-            fileSpec.build().writeTo(Path("./generated"))
+            fileSpec.build().writeTo(path)
         }
     }
 
+    /**
+     * Generate the code for the given [Descriptors.FileDescriptor]. Returns a [FileSpec.Builder] so users
+     * can add additional code to the file.
+     *
+     * @param fileDescriptor [Descriptors.FileDescriptor] to generate code for.
+     * @return [FileSpec.Builder] that contains the generated code.
+     */
     fun generateSingleFile(fileDescriptor: Descriptors.FileDescriptor): FileSpec.Builder {
-        val packageName = fileDescriptor.`package` ?: ""
+        val packageName = if (options.packagePrefix.isNotEmpty()) {
+            options.packagePrefix + '.' + fileDescriptor.`package`
+        } else {
+            fileDescriptor.`package`
+        }
 
         val fileSpec = FileSpec.builder(packageName, fileDescriptor.name)
 
@@ -72,8 +100,39 @@ class CodeGenerator {
         return fileSpec
     }
 
-    fun generateSingleClass(messageType: Descriptors.Descriptor): TypeSpec.Builder {
+    /**
+     * Generate a single parameter for the given [Descriptors.FieldDescriptor]. Returns a
+     * [ParameterSpec.Builder] so users can add additional code to the parameter.
+     *
+     * @param fieldDescriptor [Descriptors.FieldDescriptor] to generate code for.
+     * @return [ParameterSpec.Builder] that contains the generated code.
+     */
+    fun generateSingleParameter(fieldDescriptor: Descriptors.FieldDescriptor): ParameterSpec.Builder {
+        val fieldTypeName = TypeNames.typeNameOf(fieldDescriptor, typeNames)
 
+        val builder = ParameterSpec.builder(fieldDescriptor.name, fieldTypeName)
+
+        builder.addAnnotation(
+            AnnotationSpec.builder(ProtoNumber::class)
+                .addMember("number = %L", fieldDescriptor.number)
+                .build()
+        )
+
+        val defaultValue = defaultValueOf(fieldDescriptor, typeNames)
+
+        builder.defaultValue("%L", defaultValue)
+
+        return builder
+    }
+
+    /**
+     * Generate a single class for the given [Descriptors.Descriptor]. Returns a [TypeSpec.Builder] so users
+     * can add additional code to the class.
+     *
+     * @param messageType [Descriptors.Descriptor] to generate code for.
+     * @return [TypeSpec.Builder] that contains the generated code.
+     */
+    fun generateSingleClass(messageType: Descriptors.Descriptor): TypeSpec.Builder {
         val typeSpec = TypeSpec.classBuilder(messageType.name)
             .addModifiers(KModifier.DATA)
             .addAnnotation(Serializable::class)
@@ -82,14 +141,7 @@ class CodeGenerator {
             messageType.fields.forEach {
                 builder
                     .addParameter(
-                        ParameterSpec
-                            .builder(it.name, it.toGeneratedType(typeNames))
-                            .addAnnotation(
-                                AnnotationSpec.builder(ProtoNumber::class)
-                                    .addMember("number = %L", it.number)
-                                    .build()
-                            )
-                            .build()
+                        generateSingleParameter(it).build()
                     )
             }
         }.build()
@@ -97,8 +149,9 @@ class CodeGenerator {
         typeSpec.primaryConstructor(constructor)
 
         messageType.fields.forEach {
+            val type = TypeNames.typeNameOf(it, typeNames)
             typeSpec.addProperty(
-                PropertySpec.builder(it.name, it.toGeneratedType(typeNames))
+                PropertySpec.builder(it.name, type)
                     .initializer(it.name)
                     .build()
             )
@@ -107,14 +160,25 @@ class CodeGenerator {
         return typeSpec
     }
 
-    private fun generateSingleEnum(enumDescriptor: EnumDescriptor): TypeSpec.Builder {
+    /**
+     * Generate a single enum for the given [Descriptors.EnumDescriptor]. Returns a [TypeSpec.Builder] so users
+     * can add additional code to the enum.
+     *
+     * @param enumDescriptor [Descriptors.EnumDescriptor] to generate code for.
+     * @return [TypeSpec.Builder] that contains the generated code.
+     */
+    private fun generateSingleEnum(enumDescriptor: Descriptors.EnumDescriptor): TypeSpec.Builder {
         val typeSpec = TypeSpec.enumBuilder(enumDescriptor.name)
 
         enumDescriptor.values.forEach { valueDescriptor ->
             typeSpec.addEnumConstant(
                 valueDescriptor.name,
                 TypeSpec.anonymousClassBuilder()
-                    .addSuperclassConstructorParameter("%L", valueDescriptor.number)
+                    .addAnnotation(
+                        AnnotationSpec.builder(ProtoNumber::class)
+                            .addMember("number = %L", valueDescriptor.number)
+                            .build()
+                    )
                     .build()
             )
         }
@@ -123,89 +187,69 @@ class CodeGenerator {
     }
 }
 
+/**
+ * Utilities for generating code.
+ */
 object CodeGen {
 
-    fun Descriptors.FieldDescriptor.toGeneratedType(classSpecs: Map<Descriptors.Descriptor, TypeName>): TypeName {
-        if (this.isExtension) {
-            println("This is an extension ${this.fullName}")
-        }
 
-        if (this.isMapField) {
-            println("This is a map field ${this.fullName}")
-        }
-
-        if (this.isOptional) {
-            println("This is an optional field ${this.fullName}")
-        }
-
-        if (this.isPackable) {
-            println("This is a packable field ${this.fullName}}")
-        }
-
-        if (this.isRequired) {
-            println("This is a required field ${this.fullName}")
-        }
-
-        if (this.isRepeated) {
-            println("This is a repeated field ${this.fullName}")
-        }
-
-        if (this.isPacked) {
-            println("This is a reserved field ${this.fullName}")
-        }
-
-        return when (this.type) {
-            Type.BOOL -> BOOLEAN
-            Type.INT32 -> INT
-            Type.FIXED32 -> INT
-            Type.SFIXED32 -> INT
-            Type.SINT32 -> INT
-            Type.UINT32 -> U_INT
-            Type.INT64 -> LONG
-            Type.FIXED64 -> LONG
-            Type.SFIXED64 -> LONG
-            Type.SINT64 -> LONG
-            Type.UINT64 -> U_LONG
-            Type.DOUBLE -> DOUBLE
-            Type.FLOAT -> FLOAT
-            Type.BYTES -> BYTE_ARRAY
-            Type.STRING -> STRING
-            Type.ENUM -> ENUM
-
-            Type.GROUP -> ANY
-            Type.MESSAGE -> classSpecs[this.messageType]
-                ?: throw IllegalStateException("Message type not found: ${this.messageType.fullName}")
-
-            else -> ANY
-        }
+    private fun buildEnumSpecs(
+        enumDescriptor: Descriptors.EnumDescriptor,
+        packageName: String,
+        simpleNames: List<String>
+    ): Pair<Descriptors.GenericDescriptor, ClassName> {
+        return Pair(
+            enumDescriptor,
+            ClassName(packageName, simpleNames + enumDescriptor.name)
+        )
     }
 
     private fun buildClassSpecs(
         descriptor: Descriptors.Descriptor,
         packageName: String,
         simpleNames: List<String>
-    ): List<Pair<Descriptors.Descriptor, ClassName>> {
-        return descriptor.nestedTypes.flatMap { nestedType ->
+    ): List<Pair<Descriptors.GenericDescriptor, ClassName>> {
+        val messages = descriptor.nestedTypes.flatMap { nestedType ->
             buildClassSpecs(nestedType, packageName, simpleNames + descriptor.name)
-        } + Pair(
+        }
+
+        val enums = descriptor.enumTypes.map {
+            buildEnumSpecs(it, packageName, simpleNames + descriptor.name)
+        }
+
+        val self = Pair(
             descriptor,
             ClassName(packageName, simpleNames + descriptor.name)
         )
+        return (messages + enums + self)
     }
 
-    fun buildClassSpecs(fileDescriptor: Descriptors.FileDescriptor): List<Pair<Descriptors.Descriptor, ClassName>> {
+    fun buildClassSpecs(
+        fileDescriptor: Descriptors.FileDescriptor,
+        packagePrefix: String = ""
+    ): List<Pair<Descriptors.GenericDescriptor, ClassName>> {
         val publicDependencies = fileDescriptor.publicDependencies.flatMap {
-            buildClassSpecs(it)
+            buildClassSpecs(it, packagePrefix)
         }
 
         val dependencies = fileDescriptor.dependencies.flatMap {
-            buildClassSpecs(it)
+            buildClassSpecs(it, packagePrefix)
         }
 
-        val source = fileDescriptor.messageTypes.flatMap {
-            buildClassSpecs(it, fileDescriptor.`package`, listOf())
+        val packageName = if (packagePrefix.isNotEmpty()) {
+            packagePrefix + '.' + fileDescriptor.`package`
+        } else {
+            fileDescriptor.`package`
         }
 
-        return (publicDependencies + dependencies + source)
+        val messages = fileDescriptor.messageTypes.flatMap {
+            buildClassSpecs(it, packageName, listOf())
+        }
+
+        val enums = fileDescriptor.enumTypes.map {
+            buildEnumSpecs(it, packageName, listOf())
+        }
+
+        return (publicDependencies + dependencies + messages + enums)
     }
 }

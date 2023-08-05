@@ -1,4 +1,4 @@
-package test
+package testgen.test
 
 import kotlin.Int
 import kotlin.String
@@ -8,7 +8,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 public data class TestMessage(
   @ProtoNumber(number = 1)
-  public val id: Int,
+  public val id: Int = 0,
   @ProtoNumber(number = 2)
-  public val name: String,
+  public val name: String = "",
 )

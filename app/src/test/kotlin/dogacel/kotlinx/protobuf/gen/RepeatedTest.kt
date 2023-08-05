@@ -5,10 +5,10 @@ package dogacel.kotlinx.protobuf.gen
 
 import kotlin.test.Test
 
-class PrimitiveTest {
+class RepeatedTest {
     @Test
     fun shouldWork() {
-        val codeGenerator = CodeGenerator(primitives.Primitives.getDescriptor())
+        val codeGenerator = CodeGenerator(repeateds.Repeateds.getDescriptor())
         codeGenerator.generate()
     }
 }

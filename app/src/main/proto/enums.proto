@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package enums;
+
+message MessageWithEnum {
+  int32 id = 1;
+  TestEnum test_enum = 2;
+  AliasedEnum aliased_enum = 3;
+
+  // TODO: Nested enums
+}
+
+enum TestEnum {
+  FOO = 0;
+  BAR = 1;
+  BAZ = 2;
+  TOP = 100;
+  // NEG = -1;  // Intentionally negative.
+  // Index -1 out of bounds for length 4
+}
+
+enum AliasedEnum {
+  option allow_alias = true;
+
+  ALIAS_FOO = 0;
+  ALIAS_BAR = 1;
+  ALIAS_BAZ = 2;
+  QUX = 2;
+  qux = 2;
+  bAz = 2;
+}
