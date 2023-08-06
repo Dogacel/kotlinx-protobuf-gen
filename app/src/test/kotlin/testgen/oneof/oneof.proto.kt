@@ -1,7 +1,6 @@
 package testgen.oneof
 
 import kotlin.Boolean
-import kotlin.ByteArray
 import kotlin.Double
 import kotlin.Float
 import kotlin.Int
@@ -19,8 +18,6 @@ public data class OneofMessage(
   public val oneofNestedMessage: NestedMessage? = null,
   @ProtoNumber(number = 3)
   public val oneofString: String = "",
-  @ProtoNumber(number = 4)
-  public val oneofBytes: ByteArray = byteArrayOf(),
   @ProtoNumber(number = 5)
   public val oneofBool: Boolean = false,
   @ProtoNumber(number = 6)

@@ -49,6 +49,7 @@ object TypeNames {
             primitiveType = primitiveType.copy(nullable = true)
         }
 
+        // A repeated field can never be optional.
         if (fieldDescriptor.isRepeated) {
             if (fieldDescriptor.isMapField) {
                 val k = typeNameOf(

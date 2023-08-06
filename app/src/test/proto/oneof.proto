@@ -7,7 +7,7 @@ message OneofMessage {
     uint32 oneof_uint32 = 1;
     NestedMessage oneof_nested_message = 2;
     string oneof_string = 3;
-    bytes oneof_bytes = 4;
+//    bytes oneof_bytes = 4;
     bool oneof_bool = 5;
     uint64 oneof_uint64 = 6;
     float oneof_float = 7;

@@ -4,9 +4,7 @@ import com.google.protobuf.compiler.PluginProtos
 
 fun main() {
     val request = PluginProtos.CodeGeneratorRequest.parseFrom(System.`in`)
-    val codeGenerator = CodeGenerator(request = request)
-
-    val specs = codeGenerator.generateFileSpecs()
+    val specs = CodeGenerator(request = request).generateFileSpecs()
 
     val responseBuilder =
         PluginProtos.CodeGeneratorResponse.newBuilder()
