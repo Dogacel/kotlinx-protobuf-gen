@@ -5,6 +5,8 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.0" apply false
     kotlin("plugin.serialization") version "1.9.0" apply false
     id("com.google.protobuf") version "0.9.4" apply false
+
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0" apply false
 }
 
 rootProject.name = "kotlinx-protobuf-gen"

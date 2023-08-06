@@ -9,7 +9,7 @@ object DefaultValues {
      *
      * @param fieldDescriptor a [Descriptors.FieldDescriptor] to get default value for.
      * @param typeNames a map of [Descriptors.GenericDescriptor] to [TypeName] to get type names which is used
-     *        to reference other types using full name in code.
+     * to reference other types using full name in code.
      * @return default value of the given type
      */
     fun defaultValueOf(
