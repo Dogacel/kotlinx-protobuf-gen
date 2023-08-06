@@ -14,7 +14,7 @@ class EnumTest {
         Enums.TestEnum.entries.filterNot {
             it in listOf(
                 Enums.TestEnum.NEG, // TODO: NEG is not supported yet, "Index -1 out of bounds for length 5"
-                Enums.TestEnum.UNRECOGNIZED,
+                Enums.TestEnum.UNRECOGNIZED
             )
         }.forEach {
             val someProtoEnum = it
@@ -27,7 +27,7 @@ class EnumTest {
 
             assertEquals(
                 someProtoEnum.name,
-                result.testEnum.name,
+                result.testEnum.name
             )
 
             val deser = enums.Enums.MessageWithEnum.parseFrom(
@@ -36,20 +36,21 @@ class EnumTest {
 
             assertEquals(
                 someWrapperMessage,
-                deser,
+                deser
             )
-
         }
     }
 
     @Test
     fun shouldDeSerAliasEnum() {
-        (Enums.AliasedEnum.entries
-                + listOf(
-            Enums.AliasedEnum.QUX,
-            Enums.AliasedEnum.qux,
-            Enums.AliasedEnum.bAz,
-        ))
+        (
+            Enums.AliasedEnum.entries +
+                listOf(
+                    Enums.AliasedEnum.QUX,
+                    Enums.AliasedEnum.qux,
+                    Enums.AliasedEnum.bAz
+                )
+            )
             .filterNot { it == Enums.AliasedEnum.UNRECOGNIZED }.forEach {
                 val someProtoEnum = it
                 val someWrapperMessage = enums.Enums.MessageWithEnum.newBuilder()
@@ -61,7 +62,7 @@ class EnumTest {
 
                 assertEquals(
                     someProtoEnum.name,
-                    result.aliasedEnum.name,
+                    result.aliasedEnum.name
                 )
 
                 val deser = enums.Enums.MessageWithEnum.parseFrom(
@@ -70,7 +71,7 @@ class EnumTest {
 
                 assertEquals(
                     someWrapperMessage,
-                    deser,
+                    deser
                 )
             }
     }
@@ -90,7 +91,7 @@ class EnumTest {
 
             assertEquals(
                 someProtoEnum.name,
-                result.nestedEnum.name,
+                result.nestedEnum.name
             )
 
             val deser = enums.Enums.MessageWithEnum.parseFrom(
@@ -99,7 +100,7 @@ class EnumTest {
 
             assertEquals(
                 someWrapperMessage,
-                deser,
+                deser
             )
         }
     }

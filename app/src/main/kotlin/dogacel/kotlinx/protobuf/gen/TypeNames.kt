@@ -54,17 +54,16 @@ object TypeNames {
             if (fieldDescriptor.isMapField) {
                 val k = typeNameOf(
                     fieldDescriptor.messageType.fields[0],
-                    typeNames,
+                    typeNames
                 )
                 val v = typeNameOf(
                     fieldDescriptor.messageType.fields[1],
-                    typeNames,
+                    typeNames
                 )
                 return ClassName("kotlin.collections", "Map").parameterizedBy(k, v)
             }
             return ClassName("kotlin.collections", "List").parameterizedBy(primitiveType)
         }
-
 
         return primitiveType
     }

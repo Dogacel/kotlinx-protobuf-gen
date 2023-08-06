@@ -43,5 +43,5 @@ data class RepeatedWrapper(
     @ProtoNumber(5)
     val repeatedSint32: List<Int>,
     @ProtoNumber(6)
-    val repeatedSint64: List<Long>,
+    val repeatedSint64: List<Long>
 )

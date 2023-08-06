@@ -31,7 +31,8 @@ class RepeatedTest {
                     "asdkj23u9u90ASDIJ4)%_#Q",
                     "",
                     "iewdu923+_A"
-                ).map { it.toByteStringUtf8() })
+                ).map { it.toByteStringUtf8() }
+            )
             .addAllRepeatedNestedMessage(
                 listOf(
                     repeateds.Repeateds.RepeatedsMessage.NestedMessage.newBuilder().setA(-1).build(),
@@ -83,7 +84,7 @@ class RepeatedTest {
         assertEquals(message.repeatedNestedEnumList.map { it.name }, result.repeatedNestedEnum.map { it.name })
         assertEquals(
             message.repeatedForeignEnumList.map { it.name },
-            result.repeatedForeignEnum.map { it.name },
+            result.repeatedForeignEnum.map { it.name }
         )
 
         val deser = repeateds.Repeateds.RepeatedsMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
@@ -117,7 +118,7 @@ class RepeatedTest {
         assertEquals(message.repeatedNestedEnumList.map { it.name }, result.repeatedNestedEnum.map { it.name })
         assertEquals(
             message.repeatedForeignEnumList.map { it.name },
-            result.repeatedForeignEnum.map { it.name },
+            result.repeatedForeignEnum.map { it.name }
         )
 
         val deser = repeateds.Repeateds.RepeatedsMessage.parseFrom(ProtoBuf.encodeToByteArray(result))

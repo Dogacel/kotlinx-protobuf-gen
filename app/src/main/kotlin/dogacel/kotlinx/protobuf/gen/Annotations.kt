@@ -18,7 +18,7 @@ object Annotations {
      * @return
      */
     fun annotationsOf(
-        enumValueDescriptor: Descriptors.EnumValueDescriptor,
+        enumValueDescriptor: Descriptors.EnumValueDescriptor
     ): List<AnnotationSpec> {
         return listOf(
             AnnotationSpec.builder(ProtoNumber::class)
@@ -36,9 +36,8 @@ object Annotations {
      * @return a list of [AnnotationSpec]s to generate annotations from.
      */
     fun annotationsOf(
-        fieldDescriptor: Descriptors.FieldDescriptor,
+        fieldDescriptor: Descriptors.FieldDescriptor
     ): List<AnnotationSpec> {
-
         val annotations: MutableList<AnnotationSpec> = mutableListOf()
 
         annotations += AnnotationSpec.builder(ProtoNumber::class)
@@ -55,13 +54,13 @@ object Annotations {
             Descriptors.FieldDescriptor.Type.FIXED32,
             Descriptors.FieldDescriptor.Type.FIXED64,
             Descriptors.FieldDescriptor.Type.SFIXED32,
-            Descriptors.FieldDescriptor.Type.SFIXED64,
+            Descriptors.FieldDescriptor.Type.SFIXED64
             -> annotations += AnnotationSpec.builder(ProtoType::class)
                 .addMember("type = %M", MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "FIXED"))
                 .build()
 
             Descriptors.FieldDescriptor.Type.SINT32,
-            Descriptors.FieldDescriptor.Type.SINT64,
+            Descriptors.FieldDescriptor.Type.SINT64
             -> annotations += AnnotationSpec.builder(ProtoType::class)
                 .addMember("type = %M", MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "SIGNED"))
                 .build()

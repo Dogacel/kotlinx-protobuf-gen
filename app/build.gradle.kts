@@ -1,5 +1,4 @@
 import com.google.protobuf.gradle.id
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 /*
@@ -13,7 +12,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.0"
     kotlin("plugin.serialization") version "1.9.0"
-
 
     id("com.google.protobuf") version "0.9.4"
 
