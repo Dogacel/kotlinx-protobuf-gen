@@ -91,10 +91,18 @@ class CodeGenerator {
     /**
      * Generate the source files to the given [path].
      */
-    fun generate(path: Path = Path("./generated")) {
-        filesInOrder.forEach { fileDescriptor ->
-            val fileSpec = generateSingleFile(fileDescriptor)
-            fileSpec.build().writeTo(path)
+    fun generateFiles(path: Path = Path("./generated")) {
+        generateFileSpecs().forEach { file ->
+            file.writeTo(path)
+        }
+    }
+
+    /**
+     * Generate the file specs that contain the generated code without persisting them.
+     */
+    fun generateFileSpecs(): List<FileSpec> {
+        return filesInOrder.map { fileDescriptor ->
+            generateSingleFile(fileDescriptor).build()
         }
     }
 

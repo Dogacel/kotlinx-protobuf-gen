@@ -1,23 +1,25 @@
 package dogacel.kotlinx.protobuf.gen
 
-import com.google.protobuf_test_messages.proto3.TestMessagesProto3
-import kotlin.io.path.Path
+import com.google.protobuf.compiler.PluginProtos
 
 fun main() {
-    val codeGeneratorOptions = CodeGeneratorOptions(
-        packagePrefix = "testgen"
-    )
-    val codeGenerator = CodeGenerator(
-        demo.Demo.getDescriptor(),
-        primitives.Primitives.getDescriptor(),
-        enums.Enums.getDescriptor(),
-        repeateds.Repeateds.getDescriptor(),
-        maps.Maps.getDescriptor(),
-        messages.Messages.getDescriptor(),
-        oneof.Oneof.getDescriptor(),
-        TestMessagesProto3.getDescriptor(),
-        options = codeGeneratorOptions
-    )
+    val request = PluginProtos.CodeGeneratorRequest.parseFrom(System.`in`)
+    val codeGenerator = CodeGenerator(request = request)
 
-    codeGenerator.generate(Path("./app/src/test/kotlin"))
+    val specs = codeGenerator.generateFileSpecs()
+
+    val responseBuilder =
+        PluginProtos.CodeGeneratorResponse.newBuilder()
+            .setSupportedFeatures(PluginProtos.CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL_VALUE.toLong())
+            .addAllFile(
+                specs.map { spec ->
+                    PluginProtos.CodeGeneratorResponse.File.newBuilder()
+                        .setName(spec.packageName.replace('.', '/') + "/" + spec.name + ".kt")
+                        .setContent(spec.toString())
+                        .build()
+                }
+            )
+            .build()
+
+    responseBuilder.writeTo(System.out)
 }

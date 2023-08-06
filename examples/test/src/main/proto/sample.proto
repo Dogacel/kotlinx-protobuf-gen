@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package protos;
+
+message Node {
+  int32 id = 1;
+  string name = 2;
+  repeated string tags = 3;
+  map<string, string> attributes = 4;
+  NodeStatus status = 5;
+//  Node next = 6;
+}
+
+enum NodeStatus {
+  UNKNOWN = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+}

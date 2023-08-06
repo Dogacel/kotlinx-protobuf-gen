@@ -45,7 +45,6 @@ object TypeNames {
             null -> throw IllegalStateException("Field type is null: $fieldDescriptor")
         }
 
-        // TODO: Make non-optional messages not-nullable with an option
         if (fieldDescriptor.hasOptionalKeyword() || fieldDescriptor.type == Descriptors.FieldDescriptor.Type.MESSAGE) {
             primitiveType = primitiveType.copy(nullable = true)
         }
