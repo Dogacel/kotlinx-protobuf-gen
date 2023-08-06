@@ -12,6 +12,8 @@ deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin
 
 ## Example
 
+To see examples on how to use this library, check out the [examples](./examples) directory.
+
 ```protobuf
 syntax = "proto3";
 

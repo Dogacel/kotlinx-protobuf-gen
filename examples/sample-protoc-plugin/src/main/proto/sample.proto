@@ -8,7 +8,7 @@ message Node {
   repeated string tags = 3;
   map<string, string> attributes = 4;
   NodeStatus status = 5;
-//  Node next = 6;
+  Node next = 6;
 }
 
 enum NodeStatus {

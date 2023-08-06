@@ -14,6 +14,10 @@ fun main() {
             "host" to "9000",
         ),
         status = NodeStatus.ACTIVE,
+        next = Node(
+            id = 200,
+            name = "Network Node 2"
+        )
     )
 
     println(myNode)
