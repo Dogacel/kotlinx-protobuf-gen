@@ -180,14 +180,34 @@ class CodeGenerator {
             .addModifiers(KModifier.DATA)
             .addAnnotation(Serializable::class)
 
+
         // A Data class needs a primary constructor with all the parameters.
         val parameters = messageType.fields.map { generateSingleParameter(it).build() }
-        val constructor = FunSpec
+        val constructorSpec = FunSpec
             .constructorBuilder()
             .addParameters(parameters)
-            .build()
 
-        typeSpec.primaryConstructor(constructor)
+        // A trick to handle oneof fields. We need to make sure that only one of the fields is set.
+        // Validation is done in `init` block so objects in invalid states can't be initialized.
+        messageType.oneofs.forEach { oneOfDescriptor ->
+            if (!oneOfDescriptor.isSynthetic && oneOfDescriptor.fields.isNotEmpty()) {
+                val codeSpec = CodeBlock.builder()
+                codeSpec.addStatement("require(")
+                codeSpec.indent()
+                codeSpec.addStatement("listOfNotNull(")
+                codeSpec.indent()
+                oneOfDescriptor.fields.forEach {
+                    codeSpec.addStatement("%L,", it.name.toLowerCamelCaseIf(options.useCamelCase))
+                }
+                codeSpec.unindent()
+                codeSpec.addStatement(").size <= 1")
+                codeSpec.unindent()
+                codeSpec.addStatement(") { \"Should only contain one of ${oneOfDescriptor.name}.\" } ")
+                constructorSpec.addCode(codeSpec.build())
+            }
+        }
+
+        typeSpec.primaryConstructor(constructorSpec.build())
 
         // A data class should define all parameters in constructors as parameters using `val` keyword.
         messageType.fields.forEach { fieldDescriptor ->

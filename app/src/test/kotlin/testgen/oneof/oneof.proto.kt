@@ -13,26 +13,46 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 public data class OneofMessage(
   @ProtoNumber(number = 1)
-  public val oneofUint32: UInt = 0U,
+  public val oneofUint32: UInt? = null,
   @ProtoNumber(number = 2)
   public val oneofNestedMessage: NestedMessage? = null,
   @ProtoNumber(number = 3)
-  public val oneofString: String = "",
+  public val oneofString: String? = null,
   @ProtoNumber(number = 5)
-  public val oneofBool: Boolean = false,
+  public val oneofBool: Boolean? = null,
   @ProtoNumber(number = 6)
-  public val oneofUint64: ULong = 0UL,
+  public val oneofUint64: ULong? = null,
   @ProtoNumber(number = 7)
-  public val oneofFloat: Float = 0.0f,
+  public val oneofFloat: Float? = null,
   @ProtoNumber(number = 8)
-  public val oneofDouble: Double = 0.0,
+  public val oneofDouble: Double? = null,
   @ProtoNumber(number = 9)
-  public val oneofEnum: NestedEnum = testgen.oneof.OneofMessage.NestedEnum.FOO,
+  public val oneofEnum: NestedEnum? = null,
   @ProtoNumber(number = 10)
-  public val left: String = "",
+  public val left: String? = null,
   @ProtoNumber(number = 11)
-  public val right: String = "",
+  public val right: String? = null,
 ) {
+  init {
+    require(
+      listOfNotNull(
+        oneofUint32,
+        oneofNestedMessage,
+        oneofString,
+        oneofBool,
+        oneofUint64,
+        oneofFloat,
+        oneofDouble,
+        oneofEnum,
+      ).size <= 1
+    ) { "Should only contain one of oneof_field." } 
+    require(
+      listOfNotNull(
+        left,
+        right,
+      ).size <= 1
+    ) { "Should only contain one of second_oneof_field." } 
+  }
   @Serializable
   public data class NestedMessage(
     @ProtoNumber(number = 1)

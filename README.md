@@ -59,7 +59,7 @@ public data class Task(
 - [x] Supports `proto2` and `proto3`.
 - [x] Generates `kotlinx.serialization` annotations for proto field numbers and serialization format.
 - [x] Generates Kotlin code for primitive fields such as `int32`, `string`, `bytes`.
-- [x] Generates Kotlin code for `message`, `enum`, `repeated`, `map` types.
+- [x] Generates Kotlin code for `message`, `enum`, `repeated`, `map`, `oneof` types.
 - [x] Generates Kotlin code that includes imports and uses nested types.
 
 ## Roadmap
@@ -88,10 +88,16 @@ And here is a list of features that we are planning to work on after the first s
 
 ## Known Issues
 
+An issue to track `kotlinx.serialization`: https://github.com/Kotlin/kotlinx.serialization/issues/2401
+
 Focusing on core functionality, here is a list of known major issues:
 
-- [ ] Generated `oneof` fields are flattened and not serialized correctly.
+- [x] Generated `oneof` fields are flattened and not serialized correctly.
+  - A flat list of oneof fields is generated. Validation happen in `init` block to make sure at most one
+    field is set. One caveat is overlapping names which we can consider later.
+  - Will consider sealed traits in the future.
 - [ ] Generated `repeated` fields with `fixedXX`, `sfixedXX` and `uintXX` types can't be serialized.
 - [ ] Generated `repeated` fields with `sintXX` deserializes incorrectly.
 - [ ] Generated `map` fields with `fixedXX` and `sfixedXX` keys can't be serialized.
 - [ ] Generated `enum` fields with negative values can't be serialized / deserialized.
+  - PR opened in `kotlinx.serialization`: https://github.com/Kotlin/kotlinx.serialization/pull/2400

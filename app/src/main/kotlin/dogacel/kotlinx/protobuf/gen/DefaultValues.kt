@@ -16,6 +16,10 @@ object DefaultValues {
         fieldDescriptor: Descriptors.FieldDescriptor,
         typeNames: Map<Descriptors.GenericDescriptor, TypeName> = mapOf()
     ): Any? {
+        if (fieldDescriptor.realContainingOneof != null) {
+            return null
+        }
+
         if (fieldDescriptor.isRepeated) {
             if (fieldDescriptor.isMapField) {
                 return CodeBlock.of("emptyMap()")

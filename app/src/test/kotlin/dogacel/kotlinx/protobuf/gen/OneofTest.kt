@@ -4,7 +4,10 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.assertThrows
 import testgen.oneof.OneofMessage
+import java.lang.IllegalArgumentException
 import kotlin.test.Ignore
 import kotlin.test.Test
 
@@ -46,17 +49,23 @@ class OneofTest {
     }
 
     @Test
-    @Ignore("Only one oneof field can be set at a time, current implementation doesn't account it.")
-    fun failMultipleOneofs() {
-        val kMessage = OneofMessage(
-            oneofDouble = 420.0,
-            oneofString = "300"
-        )
+    fun oneofRules() {
+        assertThrows<IllegalArgumentException> {
+            OneofMessage(
+                oneofDouble = 420.0,
+                oneofString = "300"
+            )
+        }
 
-        // Should probably throw an exception or should be modelled using sealed classes.
-        val pMessage = oneof.Oneof.OneofMessage.parseFrom(ProtoBuf.encodeToByteArray(kMessage))
+        val emptyMessage = oneof.Oneof.OneofMessage.getDefaultInstance()
+        val emptyConstructed: OneofMessage = ProtoBuf.decodeFromByteArray(emptyMessage.toByteArray())
 
-        assertEquals(kMessage.oneofDouble, pMessage.oneofDouble)
-        assertEquals(kMessage.oneofString, pMessage.oneofString)
+        assertEquals(OneofMessage(), emptyConstructed)
+
+        assertThrows<IllegalArgumentException> {
+            OneofMessage(
+                oneofEnum = OneofMessage.NestedEnum.BAZ
+            ).copy(oneofUint32 = 123U)
+        }
     }
 }

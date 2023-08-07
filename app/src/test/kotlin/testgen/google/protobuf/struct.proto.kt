@@ -17,18 +17,31 @@ public data class Struct(
 @Serializable
 public data class Value(
   @ProtoNumber(number = 1)
-  public val nullValue: NullValue = testgen.google.protobuf.NullValue.NULL_VALUE,
+  public val nullValue: NullValue? = null,
   @ProtoNumber(number = 2)
-  public val numberValue: Double = 0.0,
+  public val numberValue: Double? = null,
   @ProtoNumber(number = 3)
-  public val stringValue: String = "",
+  public val stringValue: String? = null,
   @ProtoNumber(number = 4)
-  public val boolValue: Boolean = false,
+  public val boolValue: Boolean? = null,
   @ProtoNumber(number = 5)
   public val structValue: Struct? = null,
   @ProtoNumber(number = 6)
   public val listValue: ListValue? = null,
-)
+) {
+  init {
+    require(
+      listOfNotNull(
+        nullValue,
+        numberValue,
+        stringValue,
+        boolValue,
+        structValue,
+        listValue,
+      ).size <= 1
+    ) { "Should only contain one of kind." } 
+  }
+}
 
 @Serializable
 public data class ListValue(

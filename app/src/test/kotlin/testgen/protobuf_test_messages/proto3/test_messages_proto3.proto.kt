@@ -257,24 +257,23 @@ public data class TestAllTypesProto3(
   @ProtoNumber(number = 74)
   public val mapStringForeignEnum: Map<String, ForeignEnum> = emptyMap(),
   @ProtoNumber(number = 111)
-  public val oneofUint32: UInt = 0U,
+  public val oneofUint32: UInt? = null,
   @ProtoNumber(number = 112)
   public val oneofNestedMessage: NestedMessage? = null,
   @ProtoNumber(number = 113)
-  public val oneofString: String = "",
+  public val oneofString: String? = null,
   @ProtoNumber(number = 114)
-  public val oneofBytes: ByteArray = byteArrayOf(),
+  public val oneofBytes: ByteArray? = null,
   @ProtoNumber(number = 115)
-  public val oneofBool: Boolean = false,
+  public val oneofBool: Boolean? = null,
   @ProtoNumber(number = 116)
-  public val oneofUint64: ULong = 0UL,
+  public val oneofUint64: ULong? = null,
   @ProtoNumber(number = 117)
-  public val oneofFloat: Float = 0.0f,
+  public val oneofFloat: Float? = null,
   @ProtoNumber(number = 118)
-  public val oneofDouble: Double = 0.0,
+  public val oneofDouble: Double? = null,
   @ProtoNumber(number = 119)
-  public val oneofEnum: NestedEnum =
-      testgen.protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum.FOO,
+  public val oneofEnum: NestedEnum? = null,
   @ProtoNumber(number = 201)
   public val optionalBoolWrapper: BoolValue? = null,
   @ProtoNumber(number = 202)
@@ -374,6 +373,21 @@ public data class TestAllTypesProto3(
   @ProtoNumber(number = 418)
   public val FieldName18__: Int = 0,
 ) {
+  init {
+    require(
+      listOfNotNull(
+        oneofUint32,
+        oneofNestedMessage,
+        oneofString,
+        oneofBytes,
+        oneofBool,
+        oneofUint64,
+        oneofFloat,
+        oneofDouble,
+        oneofEnum,
+      ).size <= 1
+    ) { "Should only contain one of oneof_field." } 
+  }
   @Serializable
   public data class NestedMessage(
     @ProtoNumber(number = 1)

@@ -45,7 +45,11 @@ object TypeNames {
             null -> throw IllegalStateException("Field type is null: $fieldDescriptor")
         }
 
-        if (fieldDescriptor.hasOptionalKeyword() || fieldDescriptor.type == Descriptors.FieldDescriptor.Type.MESSAGE) {
+        if (
+            fieldDescriptor.hasOptionalKeyword() ||
+            fieldDescriptor.type == Descriptors.FieldDescriptor.Type.MESSAGE ||
+            fieldDescriptor.realContainingOneof != null
+        ) {
             primitiveType = primitiveType.copy(nullable = true)
         }
 
