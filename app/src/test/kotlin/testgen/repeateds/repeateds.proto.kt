@@ -11,11 +11,8 @@ import kotlin.UInt
 import kotlin.ULong
 import kotlin.collections.List
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoIntegerType.FIXED
-import kotlinx.serialization.protobuf.ProtoIntegerType.SIGNED
 import kotlinx.serialization.protobuf.ProtoNumber
 import kotlinx.serialization.protobuf.ProtoPacked
-import kotlinx.serialization.protobuf.ProtoType
 
 @Serializable
 public data class RepeatedsMessage(
@@ -33,27 +30,21 @@ public data class RepeatedsMessage(
   public val repeatedUint64: List<ULong> = emptyList(),
   @ProtoNumber(number = 5)
   @ProtoPacked
-  @ProtoType(type = SIGNED)
   public val repeatedSint32: List<Int> = emptyList(),
   @ProtoNumber(number = 6)
   @ProtoPacked
-  @ProtoType(type = SIGNED)
   public val repeatedSint64: List<Long> = emptyList(),
   @ProtoNumber(number = 7)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedFixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 8)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedFixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 9)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedSfixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 10)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedSfixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 11)
   @ProtoPacked

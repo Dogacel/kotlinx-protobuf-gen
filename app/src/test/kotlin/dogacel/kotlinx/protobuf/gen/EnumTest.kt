@@ -12,8 +12,10 @@ class EnumTest {
     @Test
     fun shouldDeSerEnum() {
         Enums.TestEnum.entries.filterNot {
+            // NEG is not supported yet, "Index -1 out of bounds for length 5"
+            // https://github.com/Kotlin/kotlinx.serialization/pull/2400
             it in listOf(
-                Enums.TestEnum.NEG, // TODO: NEG is not supported yet, "Index -1 out of bounds for length 5"
+                Enums.TestEnum.NEG,
                 Enums.TestEnum.UNRECOGNIZED
             )
         }.forEach {

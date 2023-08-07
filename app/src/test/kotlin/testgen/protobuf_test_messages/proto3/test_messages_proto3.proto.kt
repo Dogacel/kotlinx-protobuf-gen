@@ -105,27 +105,21 @@ public data class TestAllTypesProto3(
   public val repeatedUint64: List<ULong> = emptyList(),
   @ProtoNumber(number = 35)
   @ProtoPacked
-  @ProtoType(type = SIGNED)
   public val repeatedSint32: List<Int> = emptyList(),
   @ProtoNumber(number = 36)
   @ProtoPacked
-  @ProtoType(type = SIGNED)
   public val repeatedSint64: List<Long> = emptyList(),
   @ProtoNumber(number = 37)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedFixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 38)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedFixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 39)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedSfixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 40)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val repeatedSfixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 41)
   @ProtoPacked
@@ -168,27 +162,21 @@ public data class TestAllTypesProto3(
   public val packedUint64: List<ULong> = emptyList(),
   @ProtoNumber(number = 79)
   @ProtoPacked
-  @ProtoType(type = SIGNED)
   public val packedSint32: List<Int> = emptyList(),
   @ProtoNumber(number = 80)
   @ProtoPacked
-  @ProtoType(type = SIGNED)
   public val packedSint64: List<Long> = emptyList(),
   @ProtoNumber(number = 81)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val packedFixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 82)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val packedFixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 83)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val packedSfixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 84)
   @ProtoPacked
-  @ProtoType(type = FIXED)
   public val packedSfixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 85)
   @ProtoPacked
@@ -211,22 +199,16 @@ public data class TestAllTypesProto3(
   @ProtoNumber(number = 92)
   public val unpackedUint64: List<ULong> = emptyList(),
   @ProtoNumber(number = 93)
-  @ProtoType(type = SIGNED)
   public val unpackedSint32: List<Int> = emptyList(),
   @ProtoNumber(number = 94)
-  @ProtoType(type = SIGNED)
   public val unpackedSint64: List<Long> = emptyList(),
   @ProtoNumber(number = 95)
-  @ProtoType(type = FIXED)
   public val unpackedFixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 96)
-  @ProtoType(type = FIXED)
   public val unpackedFixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 97)
-  @ProtoType(type = FIXED)
   public val unpackedSfixed32: List<Int> = emptyList(),
   @ProtoNumber(number = 98)
-  @ProtoType(type = FIXED)
   public val unpackedSfixed64: List<Long> = emptyList(),
   @ProtoNumber(number = 99)
   public val unpackedFloat: List<Float> = emptyList(),

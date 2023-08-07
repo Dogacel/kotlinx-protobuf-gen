@@ -48,26 +48,37 @@ object Annotations {
             annotations += AnnotationSpec.builder(ProtoPacked::class).build()
         }
 
+
         // Documentation says, UintXX and SfixedXX is not supported but this configuration passes unit tests.
         // https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-protobuf/kotlinx.serialization.protobuf/-proto-integer-type/
-        when (fieldDescriptor.type) {
-            Descriptors.FieldDescriptor.Type.FIXED32,
-            Descriptors.FieldDescriptor.Type.FIXED64,
-            Descriptors.FieldDescriptor.Type.SFIXED32,
-            Descriptors.FieldDescriptor.Type.SFIXED64
-            -> annotations += AnnotationSpec.builder(ProtoType::class)
-                .addMember("type = %M", MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "FIXED"))
-                .build()
+        //
+        // https://github.com/Kotlin/kotlinx.serialization/issues/2401/
+        // Repeated values do not support @ProtoType annotations.
+        if (fieldDescriptor.isRepeated.not()) {
+            when (fieldDescriptor.type) {
+                Descriptors.FieldDescriptor.Type.FIXED32,
+                Descriptors.FieldDescriptor.Type.FIXED64,
+                Descriptors.FieldDescriptor.Type.SFIXED32,
+                Descriptors.FieldDescriptor.Type.SFIXED64
+                -> annotations += AnnotationSpec.builder(ProtoType::class)
+                    .addMember(
+                        "type = %M",
+                        MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "FIXED")
+                    )
+                    .build()
 
-            Descriptors.FieldDescriptor.Type.SINT32,
-            Descriptors.FieldDescriptor.Type.SINT64
-            -> annotations += AnnotationSpec.builder(ProtoType::class)
-                .addMember("type = %M", MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "SIGNED"))
-                .build()
+                Descriptors.FieldDescriptor.Type.SINT32,
+                Descriptors.FieldDescriptor.Type.SINT64
+                -> annotations += AnnotationSpec.builder(ProtoType::class)
+                    .addMember(
+                        "type = %M",
+                        MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "SIGNED")
+                    )
+                    .build()
 
-            else -> Unit
+                else -> Unit
+            }
         }
-
         return annotations
     }
 }
