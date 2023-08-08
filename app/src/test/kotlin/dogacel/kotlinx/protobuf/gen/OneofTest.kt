@@ -4,11 +4,8 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.assertThrows
 import testgen.oneof.OneofMessage
-import java.lang.IllegalArgumentException
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class OneofTest {
