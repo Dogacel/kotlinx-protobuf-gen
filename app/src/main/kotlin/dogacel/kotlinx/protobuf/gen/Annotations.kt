@@ -48,7 +48,6 @@ object Annotations {
             annotations += AnnotationSpec.builder(ProtoPacked::class).build()
         }
 
-
         // Documentation says, UintXX and SfixedXX is not supported but this configuration passes unit tests.
         // https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-protobuf/kotlinx.serialization.protobuf/-proto-integer-type/
         //

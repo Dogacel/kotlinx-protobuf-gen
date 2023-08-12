@@ -1,6 +1,7 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf_test_messages.proto3.TestMessagesProto3
+import test.grpc.TestGrpc
 import kotlin.io.path.Path
 
 fun main() {
@@ -16,6 +17,7 @@ fun main() {
         messages.Messages.getDescriptor(),
         oneof.Oneof.getDescriptor(),
         TestMessagesProto3.getDescriptor(),
+        TestGrpc.getDescriptor(),
         options = codeGeneratorOptions
     )
 

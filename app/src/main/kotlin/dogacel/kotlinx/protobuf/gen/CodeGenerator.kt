@@ -1,6 +1,8 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
+import com.google.protobuf.Descriptors.MethodDescriptor
+import com.google.protobuf.Descriptors.ServiceDescriptor
 import com.google.protobuf.compiler.PluginProtos
 import com.squareup.kotlinpoet.*
 import dogacel.kotlinx.protobuf.gen.DefaultValues.defaultValueOf
@@ -143,6 +145,11 @@ class CodeGenerator {
             fileSpec.addType(typeSpec.build())
         }
 
+        fileDescriptor.services.forEach { service ->
+            val typeSpec = generateSingleService(service)
+            fileSpec.addType(typeSpec.build())
+        }
+
         return fileSpec
     }
 
@@ -172,24 +179,23 @@ class CodeGenerator {
      *
      * A class contains subclasses, enums, parameters and properties.
      *
-     * @param messageType [Descriptors.Descriptor] to generate code for.
+     * @param messageDescriptor [Descriptors.Descriptor] to generate code for.
      * @return [TypeSpec.Builder] that contains the generated code.
      */
-    private fun generateSingleClass(messageType: Descriptors.Descriptor): TypeSpec.Builder {
-        val typeSpec = TypeSpec.classBuilder(messageType.name)
+    private fun generateSingleClass(messageDescriptor: Descriptors.Descriptor): TypeSpec.Builder {
+        val typeSpec = TypeSpec.classBuilder(messageDescriptor.name)
             .addModifiers(KModifier.DATA)
             .addAnnotation(Serializable::class)
 
-
         // A Data class needs a primary constructor with all the parameters.
-        val parameters = messageType.fields.map { generateSingleParameter(it).build() }
+        val parameters = messageDescriptor.fields.map { generateSingleParameter(it).build() }
         val constructorSpec = FunSpec
             .constructorBuilder()
             .addParameters(parameters)
 
         // A trick to handle oneof fields. We need to make sure that only one of the fields is set.
         // Validation is done in `init` block so objects in invalid states can't be initialized.
-        messageType.oneofs.forEach { oneOfDescriptor ->
+        messageDescriptor.oneofs.forEach { oneOfDescriptor ->
             if (!oneOfDescriptor.isSynthetic && oneOfDescriptor.fields.isNotEmpty()) {
                 val codeSpec = CodeBlock.builder()
                 codeSpec.addStatement("require(")
@@ -210,7 +216,7 @@ class CodeGenerator {
         typeSpec.primaryConstructor(constructorSpec.build())
 
         // A data class should define all parameters in constructors as parameters using `val` keyword.
-        messageType.fields.forEach { fieldDescriptor ->
+        messageDescriptor.fields.forEach { fieldDescriptor ->
             val type = TypeNames.typeNameOf(fieldDescriptor, typeLinks)
             val fieldName = fieldDescriptor.name.toLowerCamelCaseIf(options.useCamelCase)
 
@@ -222,14 +228,14 @@ class CodeGenerator {
         }
 
         // Recursively generate nested classes and enums.
-        val nestedTypes = messageType.nestedTypes.filterNot {
+        val nestedTypes = messageDescriptor.nestedTypes.filterNot {
             it.options.mapEntry
         }.map {
             generateSingleClass(it).build()
         }
         typeSpec.addTypes(nestedTypes)
 
-        val nestedEnums = messageType.enumTypes.map {
+        val nestedEnums = messageDescriptor.enumTypes.map {
             generateSingleEnum(it).build()
         }
         typeSpec.addTypes(nestedEnums)
@@ -261,6 +267,35 @@ class CodeGenerator {
         }
 
         return typeSpec
+    }
+
+    private fun generateSingleService(serviceDescriptor: ServiceDescriptor): TypeSpec.Builder {
+        val typeSpec = TypeSpec
+            .classBuilder(serviceDescriptor.name)
+            .addModifiers(KModifier.ABSTRACT)
+
+        serviceDescriptor.methods.forEach {
+            val methodFunSpec = generateMethod(it)
+            typeSpec.addFunction(methodFunSpec.build())
+        }
+
+        return typeSpec
+    }
+
+    private fun generateMethod(methodDescriptor: MethodDescriptor): FunSpec.Builder {
+        val requestParameterType = typeLinks[methodDescriptor.inputType]
+            ?: throw IllegalStateException("No type found for ${methodDescriptor.inputType.fullName}")
+        val responseParameterType = typeLinks[methodDescriptor.outputType]
+            ?: throw IllegalStateException("No type found for ${methodDescriptor.outputType.fullName}")
+
+        val requestParamSpec = ParameterSpec
+            .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf(), requestParameterType)
+
+        return FunSpec
+            .builder(methodDescriptor.name)
+            .addParameter(requestParamSpec.build())
+            .returns(responseParameterType)
+            .addCode("return TODO()")
     }
 
     /**

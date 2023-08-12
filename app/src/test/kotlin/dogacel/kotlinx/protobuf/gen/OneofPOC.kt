@@ -1,6 +1,5 @@
 package dogacel.kotlinx.protobuf.gen
 
-
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import testgen.oneof.OneofMessage
 import kotlin.test.Ignore
 import kotlin.test.Test
-
 
 class OneofPOC {
     @Test
@@ -61,7 +59,7 @@ interface KOneof<T : Any> {
 @Serializable
 public data class OneofPOCMessage(
     public val oneofField: OneofField<@Contextual Any>? = null,
-    public val secondOneOfField: SecondOneOfField<@Contextual Any>? = null,
+    public val secondOneOfField: SecondOneOfField<@Contextual Any>? = null
 ) {
     sealed interface OneofField<T : Any> : KOneof<T> {
         @JvmInline
@@ -133,7 +131,7 @@ public data class OneofPOCMessage(
         @ProtoNumber(number = 1)
         public val a: Int = 0,
         @ProtoNumber(number = 2)
-        public val corecursive: OneofMessage? = null,
+        public val corecursive: OneofMessage? = null
     )
 
     @Serializable
@@ -148,6 +146,6 @@ public data class OneofPOCMessage(
         BAZ,
 
         @ProtoNumber(number = -1)
-        NEG,
+        NEG
     }
 }
