@@ -1,6 +1,7 @@
 package testgen.test.grpc
 
 import kotlin.String
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
@@ -19,9 +20,10 @@ public data class TestUnaryResponse(
 public abstract class TestService {
   public fun TestUnary(TestUnaryRequest: TestUnaryRequest): TestUnaryResponse = TODO()
 
-  public fun TestClientStream(TestUnaryRequest: TestUnaryRequest): TestUnaryResponse = TODO()
+  public fun TestClientStream(TestUnaryRequest: Flow<TestUnaryRequest>): TestUnaryResponse = TODO()
 
-  public fun TestServerStream(TestUnaryRequest: TestUnaryRequest): TestUnaryResponse = TODO()
+  public fun TestServerStream(TestUnaryRequest: TestUnaryRequest): Flow<TestUnaryResponse> = TODO()
 
-  public fun TestBidiStream(TestUnaryRequest: TestUnaryRequest): TestUnaryResponse = TODO()
+  public fun TestBidiStream(TestUnaryRequest: Flow<TestUnaryRequest>): Flow<TestUnaryResponse> =
+      TODO()
 }

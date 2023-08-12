@@ -1,8 +1,6 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
-import com.google.protobuf.Descriptors.MethodDescriptor
-import com.google.protobuf.Descriptors.ServiceDescriptor
 import com.google.protobuf.compiler.PluginProtos
 import com.squareup.kotlinpoet.*
 import dogacel.kotlinx.protobuf.gen.DefaultValues.defaultValueOf
@@ -269,32 +267,51 @@ class CodeGenerator {
         return typeSpec
     }
 
-    private fun generateSingleService(serviceDescriptor: ServiceDescriptor): TypeSpec.Builder {
+    /**
+     * Generate a single service for the given [Descriptors.ServiceDescriptor]. Returns a [TypeSpec.Builder] so
+     * users can add additional code to the service.
+     *
+     * A service contains methods.
+     *
+     * @param serviceDescriptor [Descriptors.ServiceDescriptor] to generate code for.
+     * @return [TypeSpec.Builder] that contains the generated code.
+     */
+    private fun generateSingleService(serviceDescriptor: Descriptors.ServiceDescriptor): TypeSpec.Builder {
         val typeSpec = TypeSpec
             .classBuilder(serviceDescriptor.name)
             .addModifiers(KModifier.ABSTRACT)
 
         serviceDescriptor.methods.forEach {
-            val methodFunSpec = generateMethod(it)
+            val methodFunSpec = generateSingleMethod(it)
             typeSpec.addFunction(methodFunSpec.build())
         }
 
         return typeSpec
     }
 
-    private fun generateMethod(methodDescriptor: MethodDescriptor): FunSpec.Builder {
-        val requestParameterType = typeLinks[methodDescriptor.inputType]
-            ?: throw IllegalStateException("No type found for ${methodDescriptor.inputType.fullName}")
-        val responseParameterType = typeLinks[methodDescriptor.outputType]
-            ?: throw IllegalStateException("No type found for ${methodDescriptor.outputType.fullName}")
+    /**
+     * Generate a single method for the given [Descriptors.MethodDescriptor]. Returns a [FunSpec.Builder] so
+     * users can add additional code to the method.
+     *
+     * A method contains a request and a response type.
+     *
+     * If the request type is a stream, the method will take a [Flow] of the response type. Otherwise, it will
+     * return a single response. If the response type is a stream, the method will return a [Flow] of the
+     * response type. Otherwise, it will return a single response.
+     *
+     * @param methodDescriptor [Descriptors.MethodDescriptor] to generate code for.
+     * @return [FunSpec.Builder] that contains the generated code.
+     */
+    private fun generateSingleMethod(methodDescriptor: Descriptors.MethodDescriptor): FunSpec.Builder {
+        val (requestType, responseType) = TypeNames.typeNameOf(methodDescriptor, typeLinks)
 
         val requestParamSpec = ParameterSpec
-            .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf(), requestParameterType)
+            .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf(), requestType)
 
         return FunSpec
             .builder(methodDescriptor.name)
             .addParameter(requestParamSpec.build())
-            .returns(responseParameterType)
+            .returns(responseType)
             .addCode("return TODO()")
     }
 

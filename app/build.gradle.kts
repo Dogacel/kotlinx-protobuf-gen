@@ -21,8 +21,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("com.squareup:kotlinpoet:1.14.2")
-//    implementation("com.squareup:kotlinpoet-ksp:1.14.2")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")

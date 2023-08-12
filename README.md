@@ -82,7 +82,8 @@ And here is a list of features that we are planning to work on after the first s
 - [ ] Support various options such as `deprecated`, `default`, `json_name`.
 - [ ] Auto-generated comments from `.proto` files in the generated code.
 - [ ] Support Protobuf JSON format by default.
-- [ ] gRPC support.
+- [x] gRPC support.
+  - Stub generation is completed but it does not include any functionality to call or receive gRPC yet.
 - [ ] Plugin and more option support for customizing the generated code. (Such as non-enforced nullability to
   gimmick proto2 required fields based on certain rules)
 
