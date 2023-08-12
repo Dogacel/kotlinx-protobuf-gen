@@ -77,8 +77,9 @@ is a list of features we are working on that are required to release first stabl
 
 And here is a list of features that we are planning to work on after the first stable release.
 
-- [ ] Support Well-Known Types deserialization to Well-Known Kotlin types such as `google.protobuf.Duration`
+- [x] Support Well-Known Types deserialization to Well-Known Kotlin types such as `google.protobuf.Duration`
   to `kotlin.time.Duration` and `google.protobuf.Timestamp` to `kotlinx.datetime.Instant`.
+  - An option is added to code generator to enable this feature.
 - [ ] Support various options such as `deprecated`, `default`, `json_name`.
 - [ ] Auto-generated comments from `.proto` files in the generated code.
 - [ ] Support Protobuf JSON format by default.

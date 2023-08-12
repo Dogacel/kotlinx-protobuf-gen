@@ -143,9 +143,11 @@ class CodeGenerator {
             fileSpec.addType(typeSpec.build())
         }
 
-        fileDescriptor.services.forEach { service ->
-            val typeSpec = generateSingleService(service)
-            fileSpec.addType(typeSpec.build())
+        if (options.generateServices) {
+            fileDescriptor.services.forEach { service ->
+                val typeSpec = generateSingleService(service)
+                fileSpec.addType(typeSpec.build())
+            }
         }
 
         return fileSpec
@@ -342,6 +344,12 @@ class CodeGenerator {
         packageName: String,
         simpleNames: List<String>
     ): List<Link> {
+        val wellKnownType = options.wellKnownTypes.getFor(descriptor)
+
+        if (wellKnownType != null) {
+            return listOf(Link(descriptor, wellKnownType))
+        }
+
         val messages = descriptor.nestedTypes.flatMap { nestedType ->
             getAllLinks(nestedType, packageName, simpleNames + descriptor.name)
         }

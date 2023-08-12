@@ -18,6 +18,7 @@ fun main() {
         oneof.Oneof.getDescriptor(),
         TestMessagesProto3.getDescriptor(),
         TestGrpc.getDescriptor(),
+        wkt.WellKnownType.getDescriptor(),
         options = codeGeneratorOptions
     )
 

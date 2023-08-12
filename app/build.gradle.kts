@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.serialization")
     id("com.google.protobuf")
     id("org.jlleitschuh.gradle.ktlint")
+    id("org.jetbrains.kotlinx.kover")
     application
 }
 
@@ -22,6 +23,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("com.squareup:kotlinpoet:1.14.2")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -40,7 +42,7 @@ ktlint {
     filter {
         exclude { entry ->
             val condition = entry.file.toString().contains("generated") ||
-                entry.file.toString().contains("testgen")
+                    entry.file.toString().contains("testgen")
             if (!condition) {
                 println(entry.file)
             }
