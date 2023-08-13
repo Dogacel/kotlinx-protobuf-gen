@@ -13,7 +13,6 @@ abstract class WellKnownTypes {
     abstract fun getFor(descriptor: Descriptors.GenericDescriptor): TypeName?
 }
 
-
 object DefaultWellKnownTypes : WellKnownTypes() {
     private val typeMapping: Map<Descriptors.GenericDescriptor, TypeName> = mapOf(
 //        com.google.protobuf.Any.getDescriptor() to ANY,

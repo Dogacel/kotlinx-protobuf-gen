@@ -1,7 +1,6 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
-import com.squareup.kotlinpoet.TypeName
 
 /**
  * A set of options to customize the generated code.

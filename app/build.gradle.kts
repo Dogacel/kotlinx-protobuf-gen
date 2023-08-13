@@ -8,6 +8,8 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.kotlinx.kover")
     application
+    `maven-publish`
+    id("org.jetbrains.dokka") version "1.8.20"
 }
 
 repositories {
@@ -41,11 +43,8 @@ ktlint {
     ignoreFailures.set(true)
     filter {
         exclude { entry ->
-            val condition = entry.file.toString().contains("generated") ||
-                    entry.file.toString().contains("testgen")
-            if (!condition) {
-//                println(entry.file)
-            }
+            val condition =
+                entry.file.toString().contains("generated") || entry.file.toString().contains("testgen")
             condition
         }
     }
@@ -76,6 +75,8 @@ tasks.jar {
     from(runtimeClasspathJars.map { zipTree(it) })
 
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    archiveClassifier.set("jvm8")
 }
 
 koverReport {
@@ -105,6 +106,61 @@ protobuf {
         all().forEach {
             it.builtins {
                 id("kotlin")
+            }
+        }
+    }
+}
+
+// Publishing
+
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(kotlin.sourceSets.main.get().kotlin)
+}
+
+val javadocJar by tasks.creating(Jar::class) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles Javadoc JAR"
+    archiveClassifier.set("javadoc")
+    from(tasks.named("dokkaHtml"))
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = rootProject.group.toString()
+            artifactId = "kotlinx-protobuf-gen"
+            version = rootProject.version.toString()
+
+            from(components["kotlin"])
+            artifact(tasks["sourcesJar"])
+            artifact(tasks["javadocJar"])
+
+            pom {
+                name.set("kotlinx-protobuf-gen")
+                description.set("Generate kotlin classes using kotlinx.serialization from proto definitions.")
+                url.set("https://github.com/dogace/kotlinx-protobuf-gen")
+                licenses {
+                    license {
+                        name.set("Apache-2.0")
+                        url.set("https://opensource.org/licenses/Apache-2.0")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("dogacel")
+                        name.set("Doğaç Eldenk")
+                        email.set("dogacel@gmail.copm")
+                    }
+                }
+                scm {
+                    url.set(
+                        "https://github.com/dogacel/kotlinx-protobuf-gen.git"
+                    )
+                }
+                issueManagement {
+                    url.set("https://github.com/dogacel/kotlinx-protobuf-gen/issues")
+                }
             }
         }
     }

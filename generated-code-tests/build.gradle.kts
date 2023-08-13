@@ -113,11 +113,8 @@ ktlint {
     ignoreFailures.set(true)
     filter {
         exclude { entry ->
-            val condition = entry.file.toString().contains("generated") ||
-                    entry.file.toString().contains("testgen")
-            if (!condition) {
-//                println(entry.file)
-            }
+            val condition =
+                entry.file.toString().contains("generated") || entry.file.toString().contains("testgen")
             condition
         }
     }

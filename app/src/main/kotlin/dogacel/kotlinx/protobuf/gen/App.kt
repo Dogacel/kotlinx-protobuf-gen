@@ -2,7 +2,7 @@ package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.compiler.PluginProtos
 
-fun main(args: Array<String>) {
+fun main() {
     val request = PluginProtos.CodeGeneratorRequest.parseFrom(System.`in`)
     val options = CodeGeneratorOptions.parse(request.parameter)
     val specs = CodeGenerator(request = request, options = options).generateFileSpecs()

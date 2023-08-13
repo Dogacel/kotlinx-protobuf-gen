@@ -11,6 +11,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        this.url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
 }
 
 var protobufVersion = "3.23.4"
@@ -24,10 +27,6 @@ tasks.withType(KotlinCompilationTask::class.java).configureEach {
     compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
 }
 
-tasks.named("generateProto") {
-    dependsOn(project(":app").tasks.jar)
-}
-
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:$protobufVersion"
@@ -35,8 +34,7 @@ protobuf {
 
     plugins {
         id("kotlinx-protobuf-gen") {
-            path = project(":app").tasks.jar.get().archiveFile.get().asFile.absolutePath
-
+            artifact = "io.github.dogacel:kotlinx-protobuf-gen:alpha-SNAPSHOT:jvm8@jar"
         }
     }
 

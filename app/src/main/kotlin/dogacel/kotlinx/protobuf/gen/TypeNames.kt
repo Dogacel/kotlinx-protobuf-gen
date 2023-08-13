@@ -114,7 +114,6 @@ object TypeNames {
         }
             ?: throw IllegalStateException("No type found for ${descriptor.outputType.fullName}")
 
-
         return MethodTypeName(
             request = requestParameterType,
             response = responseParameterType
