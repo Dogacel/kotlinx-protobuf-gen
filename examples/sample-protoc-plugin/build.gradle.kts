@@ -36,6 +36,7 @@ protobuf {
     plugins {
         id("kotlinx-protobuf-gen") {
             path = project(":app").tasks.jar.get().archiveFile.get().asFile.absolutePath
+
         }
     }
 
@@ -46,7 +47,9 @@ protobuf {
                 remove("java")
             }
             it.plugins {
-                id("kotlinx-protobuf-gen")
+                id("kotlinx-protobuf-gen") {
+                    option("package_prefix=custom.pkg")
+                }
             }
         }
     }

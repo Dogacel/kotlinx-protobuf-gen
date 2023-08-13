@@ -1,8 +1,7 @@
-import kotlinx.serialization.ExperimentalSerializationApi
+import custom.pkg.protos.Node
+import custom.pkg.protos.NodeStatus
 import kotlinx.serialization.encodeToHexString
 import kotlinx.serialization.protobuf.ProtoBuf
-import protos.Node
-import protos.NodeStatus
 
 fun main() {
     val myNode = Node(
