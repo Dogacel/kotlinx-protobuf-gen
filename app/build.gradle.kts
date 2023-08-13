@@ -44,7 +44,7 @@ ktlint {
             val condition = entry.file.toString().contains("generated") ||
                     entry.file.toString().contains("testgen")
             if (!condition) {
-                println(entry.file)
+//                println(entry.file)
             }
             condition
         }
@@ -76,6 +76,23 @@ tasks.jar {
     from(runtimeClasspathJars.map { zipTree(it) })
 
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+koverReport {
+    filters {
+        includes {
+            this.packages("dogacel.kotlinx.protobuf.gen")
+            this.packages("dogacel.kotlinx.protobuf.gen.*")
+        }
+    }
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir("$rootDir/testProtos")
+        }
+    }
 }
 
 protobuf {
