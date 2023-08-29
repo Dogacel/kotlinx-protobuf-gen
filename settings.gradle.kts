@@ -8,9 +8,11 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.7.3" apply false
 
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0" apply false
+    id("ru.vyarus.mkdocs") version "3.0.0" apply false
 }
 
 rootProject.name = "kotlinx-protobuf-gen"
 include("app")
 include("generated-code-tests")
 include("examples:sample-protoc-plugin")
+include("docs")
