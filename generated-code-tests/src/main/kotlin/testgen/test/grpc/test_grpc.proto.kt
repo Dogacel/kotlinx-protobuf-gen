@@ -18,12 +18,14 @@ public data class TestUnaryResponse(
 )
 
 public abstract class TestService {
-  public fun TestUnary(TestUnaryRequest: TestUnaryRequest): TestUnaryResponse = TODO()
+  public open suspend fun testUnary(testUnaryRequest: TestUnaryRequest): TestUnaryResponse = TODO()
 
-  public fun TestClientStream(TestUnaryRequest: Flow<TestUnaryRequest>): TestUnaryResponse = TODO()
+  public open suspend fun testClientStream(testUnaryRequest: Flow<TestUnaryRequest>):
+      TestUnaryResponse = TODO()
 
-  public fun TestServerStream(TestUnaryRequest: TestUnaryRequest): Flow<TestUnaryResponse> = TODO()
+  public open suspend fun testServerStream(testUnaryRequest: TestUnaryRequest):
+      Flow<TestUnaryResponse> = TODO()
 
-  public fun TestBidiStream(TestUnaryRequest: Flow<TestUnaryRequest>): Flow<TestUnaryResponse> =
-      TODO()
+  public open suspend fun testBidiStream(testUnaryRequest: Flow<TestUnaryRequest>):
+      Flow<TestUnaryResponse> = TODO()
 }

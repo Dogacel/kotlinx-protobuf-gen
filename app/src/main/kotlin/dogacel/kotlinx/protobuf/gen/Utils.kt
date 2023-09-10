@@ -25,4 +25,20 @@ object Utils {
             it.value.replace("_", "").uppercase(Locale.ENGLISH)
         }
     }
+
+    /**
+     * Convert the first character of a string to lower.
+     *
+     * Example
+     * - `Foo` -> `foo`
+     * - `foo` -> `foo`
+     *
+     * @return The string starting with a lowercase character.
+     */
+    fun String.toFirstLower(): String {
+        if (this.length <= 1) {
+            return this.lowercase()
+        }
+        return this[0].lowercaseChar() + this.substring(1)
+    }
 }

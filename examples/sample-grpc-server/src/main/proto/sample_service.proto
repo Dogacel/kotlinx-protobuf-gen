@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sample.grpc;
+
+message SayHelloRequest {
+  string name = 1;
+}
+
+message SayHelloResponse {
+  string message = 1;
+}
+
+message AddRequest {
+  int32 a = 1;
+  int32 b = 2;
+}
+
+message AddResponse {
+  int32 result = 1;
+}
+
+service SampleService {
+  rpc SayHello (SayHelloRequest) returns (SayHelloResponse);
+  rpc Add (AddRequest) returns (AddResponse);
+}

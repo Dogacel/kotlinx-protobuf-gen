@@ -4,6 +4,7 @@ import com.google.protobuf.Descriptors
 import com.google.protobuf.compiler.PluginProtos
 import com.squareup.kotlinpoet.*
 import dogacel.kotlinx.protobuf.gen.DefaultValues.defaultValueOf
+import dogacel.kotlinx.protobuf.gen.Utils.toFirstLower
 import dogacel.kotlinx.protobuf.gen.Utils.toLowerCamelCaseIf
 import kotlinx.serialization.Serializable
 import java.nio.file.Path
@@ -37,7 +38,7 @@ class CodeGenerator {
      */
     constructor(
         request: PluginProtos.CodeGeneratorRequest,
-        options: CodeGeneratorOptions = CodeGeneratorOptions()
+        options: CodeGeneratorOptions = CodeGeneratorOptions(),
     ) {
         this.options = options
         // https://protobuf.dev/reference/java/api-docs/com/google/protobuf/compiler/PluginProtos.CodeGeneratorRequest
@@ -47,7 +48,7 @@ class CodeGenerator {
         val files = mutableMapOf<String, Descriptors.FileDescriptor>()
         filesInOrder = request.protoFileList.map { file ->
             files.computeIfAbsent(
-                file.name
+                file.name,
             ) {
                 val deps = file.dependencyList.map { dep ->
                     files[dep] ?: throw IllegalStateException("Dependency $dep not found for file ${file.name}")
@@ -66,7 +67,7 @@ class CodeGenerator {
      */
     constructor(
         vararg fileDescriptors: Descriptors.FileDescriptor,
-        options: CodeGeneratorOptions = CodeGeneratorOptions()
+        options: CodeGeneratorOptions = CodeGeneratorOptions(),
     ) {
         this.options = options
 
@@ -145,7 +146,7 @@ class CodeGenerator {
 
         if (options.generateServices) {
             fileDescriptor.services.forEach { service ->
-                val typeSpec = generateSingleService(service)
+                val typeSpec = generateSingleService(service, options.generateGrpcServices)
                 fileSpec.addType(typeSpec.build())
             }
         }
@@ -223,7 +224,7 @@ class CodeGenerator {
             typeSpec.addProperty(
                 PropertySpec.builder(fieldName, type)
                     .initializer(fieldName)
-                    .build()
+                    .build(),
             )
         }
 
@@ -262,7 +263,7 @@ class CodeGenerator {
                 valueDescriptor.name,
                 TypeSpec.anonymousClassBuilder()
                     .addAnnotations(Annotations.annotationsOf(valueDescriptor))
-                    .build()
+                    .build(),
             )
         }
 
@@ -276,9 +277,13 @@ class CodeGenerator {
      * A service contains methods.
      *
      * @param serviceDescriptor [Descriptors.ServiceDescriptor] to generate code for.
+     * @param isGrpcCompatible whether to generate service as a bindable gRPC or not.
      * @return [TypeSpec.Builder] that contains the generated code.
      */
-    private fun generateSingleService(serviceDescriptor: Descriptors.ServiceDescriptor): TypeSpec.Builder {
+    private fun generateSingleService(
+        serviceDescriptor: Descriptors.ServiceDescriptor,
+        isGrpcCompatible: Boolean,
+    ): TypeSpec.Builder {
         val typeSpec = TypeSpec
             .classBuilder(serviceDescriptor.name)
             .addModifiers(KModifier.ABSTRACT)
@@ -308,10 +313,12 @@ class CodeGenerator {
         val (requestType, responseType) = TypeNames.typeNameOf(methodDescriptor, typeLinks)
 
         val requestParamSpec = ParameterSpec
-            .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf(), requestType)
+            .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf().toFirstLower(), requestType)
 
         return FunSpec
-            .builder(methodDescriptor.name)
+            .builder(methodDescriptor.name.toFirstLower())
+            .addModifiers(KModifier.OPEN)
+            .addModifiers(KModifier.SUSPEND)
             .addParameter(requestParamSpec.build())
             .returns(responseType)
             .addCode("return TODO()")
@@ -325,11 +332,11 @@ class CodeGenerator {
     private fun getEnumLink(
         enumDescriptor: Descriptors.EnumDescriptor,
         packageName: String,
-        simpleNames: List<String>
+        simpleNames: List<String>,
     ): Link {
         return Link(
             enumDescriptor,
-            ClassName(packageName, simpleNames + enumDescriptor.name)
+            ClassName(packageName, simpleNames + enumDescriptor.name),
         )
     }
 
@@ -342,7 +349,7 @@ class CodeGenerator {
     private fun getAllLinks(
         descriptor: Descriptors.Descriptor,
         packageName: String,
-        simpleNames: List<String>
+        simpleNames: List<String>,
     ): List<Link> {
         val wellKnownType = options.wellKnownTypes.getFor(descriptor)
 
@@ -360,7 +367,7 @@ class CodeGenerator {
 
         val self = Link(
             descriptor,
-            ClassName(packageName, simpleNames + descriptor.name)
+            ClassName(packageName, simpleNames + descriptor.name),
         )
         return (messages + enums + self)
     }
@@ -372,7 +379,7 @@ class CodeGenerator {
      */
     private fun getAllLinks(
         fileDescriptor: Descriptors.FileDescriptor,
-        packagePrefix: String = ""
+        packagePrefix: String = "",
     ): List<Link> {
         val publicDependencies = fileDescriptor.publicDependencies.flatMap {
             getAllLinks(it, packagePrefix)

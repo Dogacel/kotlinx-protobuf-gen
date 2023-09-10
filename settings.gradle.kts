@@ -15,4 +15,5 @@ rootProject.name = "kotlinx-protobuf-gen"
 include("app")
 include("generated-code-tests")
 include("examples:sample-protoc-plugin")
+include("examples:sample-grpc-server")
 include("docs")
