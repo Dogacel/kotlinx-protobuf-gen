@@ -5,11 +5,10 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     kotlin("plugin.serialization")
     id("com.google.protobuf")
-    id("org.jlleitschuh.gradle.ktlint")
-    id("org.jetbrains.kotlinx.kover")
     application
     `maven-publish`
     id("org.jetbrains.dokka")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 repositories {
@@ -37,17 +36,6 @@ dependencies {
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(11))
-    }
-}
-
-ktlint {
-    ignoreFailures.set(true)
-    filter {
-        exclude { entry ->
-            val condition =
-                entry.file.toString().contains("generated") || entry.file.toString().contains("testgen")
-            condition
-        }
     }
 }
 

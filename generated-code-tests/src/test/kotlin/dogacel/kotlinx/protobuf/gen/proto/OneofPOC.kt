@@ -1,4 +1,4 @@
-package dogacel.kotlinx.protobuf.gen
+package dogacel.kotlinx.protobuf.gen.proto
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -84,13 +84,13 @@ public data class OneofPOCMessage(
         value class Bool(
             @ProtoNumber(number = 5)
             override val value: kotlin.Boolean
-        ) : OneofField<kotlin.Boolean>
+        ) : OneofField<Boolean>
 
         @JvmInline
         value class Uint64(
             @ProtoNumber(number = 6)
             override val value: ULong
-        ) : OneofField<kotlin.ULong>
+        ) : OneofField<ULong>
 
         @JvmInline
         value class Float(
@@ -111,7 +111,7 @@ public data class OneofPOCMessage(
         ) : OneofField<NestedEnum>
     }
 
-    @Serializable
+    @kotlinx.serialization.Serializable
     sealed interface SecondOneOfField<T : Any> : KOneof<T> {
         @JvmInline
         value class Left(
@@ -126,7 +126,7 @@ public data class OneofPOCMessage(
         ) : SecondOneOfField<String>
     }
 
-    @Serializable
+    @kotlinx.serialization.Serializable
     public data class NestedMessage(
         @ProtoNumber(number = 1)
         public val a: Int = 0,
@@ -134,7 +134,7 @@ public data class OneofPOCMessage(
         public val corecursive: OneofMessage? = null
     )
 
-    @Serializable
+    @kotlinx.serialization.Serializable
     public enum class NestedEnum {
         @ProtoNumber(number = 0)
         FOO,

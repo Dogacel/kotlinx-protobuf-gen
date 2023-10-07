@@ -1,5 +1,4 @@
-package dogacel.kotlinx.protobuf.gen
-
+package dogacel.kotlinx.protobuf.gen.proto
 
 import com.google.protobuf.*
 import kotlinx.datetime.Instant
@@ -12,16 +11,14 @@ import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 
-
 class WellKnownTypesTest {
     private fun builder(): wkt.WellKnownType.MessageWithWellKnownTypes.Builder =
         wkt.WellKnownType.MessageWithWellKnownTypes.newBuilder()
 
     private fun wkt.WellKnownType.MessageWithWellKnownTypes.Builder.test(
-        scope:
-            (
+        scope: (
             original: wkt.WellKnownType.MessageWithWellKnownTypes,
-            result: MessageWithWellKnownTypes,
+            result: MessageWithWellKnownTypes
         ) -> Unit
     ) {
         val message = this.build()

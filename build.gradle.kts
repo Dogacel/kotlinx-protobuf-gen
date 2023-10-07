@@ -32,3 +32,24 @@ signing {
         sign(extension.publications)
     }
 }
+
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint") // Version should be inherited from parent
+
+    repositories {
+        // Required to download KtLint
+        mavenCentral()
+    }
+
+    // Optionally configure plugin
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        ignoreFailures.set(true)
+        filter {
+            exclude { entry ->
+                val condition =
+                    entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
+                condition
+            }
+        }
+    }
+}

@@ -38,7 +38,7 @@ class CodeGenerator {
      */
     constructor(
         request: PluginProtos.CodeGeneratorRequest,
-        options: CodeGeneratorOptions = CodeGeneratorOptions(),
+        options: CodeGeneratorOptions = CodeGeneratorOptions()
     ) {
         this.options = options
         // https://protobuf.dev/reference/java/api-docs/com/google/protobuf/compiler/PluginProtos.CodeGeneratorRequest
@@ -48,7 +48,7 @@ class CodeGenerator {
         val files = mutableMapOf<String, Descriptors.FileDescriptor>()
         filesInOrder = request.protoFileList.map { file ->
             files.computeIfAbsent(
-                file.name,
+                file.name
             ) {
                 val deps = file.dependencyList.map { dep ->
                     files[dep] ?: throw IllegalStateException("Dependency $dep not found for file ${file.name}")
@@ -67,7 +67,7 @@ class CodeGenerator {
      */
     constructor(
         vararg fileDescriptors: Descriptors.FileDescriptor,
-        options: CodeGeneratorOptions = CodeGeneratorOptions(),
+        options: CodeGeneratorOptions = CodeGeneratorOptions()
     ) {
         this.options = options
 
@@ -116,8 +116,8 @@ class CodeGenerator {
     }
 
     /**
-     * Whether to generate a class for the given descriptor or not. Currently we do not create classes for
-     * well-known types.
+     * Whether to generate a class for the given descriptor or not. Currently, we do not create classes for
+     * well-known types. They are imported from "io.github.dogacel:kotlinx-protobuf-runtime-common" library.
      */
     fun shouldGenerateClass(descriptor: Descriptors.Descriptor): Boolean {
         return options.wellKnownTypes.getFor(descriptor) == null
@@ -234,7 +234,7 @@ class CodeGenerator {
             typeSpec.addProperty(
                 PropertySpec.builder(fieldName, type)
                     .initializer(fieldName)
-                    .build(),
+                    .build()
             )
         }
 
@@ -275,7 +275,7 @@ class CodeGenerator {
                 valueDescriptor.name,
                 TypeSpec.anonymousClassBuilder()
                     .addAnnotations(Annotations.annotationsOf(valueDescriptor))
-                    .build(),
+                    .build()
             )
         }
 
@@ -294,7 +294,7 @@ class CodeGenerator {
      */
     private fun generateSingleService(
         serviceDescriptor: Descriptors.ServiceDescriptor,
-        isGrpcCompatible: Boolean,
+        isGrpcCompatible: Boolean
     ): TypeSpec.Builder {
         val typeSpec = TypeSpec
             .classBuilder(serviceDescriptor.name)
@@ -344,11 +344,11 @@ class CodeGenerator {
     private fun getEnumLink(
         enumDescriptor: Descriptors.EnumDescriptor,
         packageName: String,
-        simpleNames: List<String>,
+        simpleNames: List<String>
     ): Link {
         return Link(
             enumDescriptor,
-            ClassName(packageName, simpleNames + enumDescriptor.name),
+            ClassName(packageName, simpleNames + enumDescriptor.name)
         )
     }
 
@@ -361,7 +361,7 @@ class CodeGenerator {
     private fun getAllLinks(
         descriptor: Descriptors.Descriptor,
         packageName: String,
-        simpleNames: List<String>,
+        simpleNames: List<String>
     ): List<Link> {
         val wellKnownType = options.wellKnownTypes.getFor(descriptor)
 
@@ -379,7 +379,7 @@ class CodeGenerator {
 
         val self = Link(
             descriptor,
-            ClassName(packageName, simpleNames + descriptor.name),
+            ClassName(packageName, simpleNames + descriptor.name)
         )
         return (messages + enums + self)
     }
@@ -391,7 +391,7 @@ class CodeGenerator {
      */
     private fun getAllLinks(
         fileDescriptor: Descriptors.FileDescriptor,
-        packagePrefix: String = "",
+        packagePrefix: String = ""
     ): List<Link> {
         val publicDependencies = fileDescriptor.publicDependencies.flatMap {
             getAllLinks(it, packagePrefix)

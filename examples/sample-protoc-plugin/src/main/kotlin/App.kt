@@ -10,7 +10,7 @@ fun main() {
         tags = listOf("fast", "reliable"),
         attributes = mapOf(
             "ip" to "192.168.1.1",
-            "host" to "9000",
+            "host" to "9000"
         ),
         status = NodeStatus.ACTIVE,
         next = Node(

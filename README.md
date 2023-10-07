@@ -6,8 +6,8 @@ Generate kotlin data classes from `protobuf` files that supports _Kotlin Native_
 deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization).
 
 > [!NOTE]  
-> Full documentation for the project including setup instruction can be found
-> at [GitHub Pages](https://dogacel.github.io/kotlinx-protobuf-gen).
+> Setup instructions and detailed documentation can be found
+> at [Setup and Documentation](https://dogacel.github.io/kotlinx-protobuf-gen).
 
 ![Demonstrate Code](./docs/src/doc/docs/assets/demonstrate_code.png)
 
@@ -23,16 +23,13 @@ deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin
 
 ## Roadmap
 
-I will probably move those stuff to issues and projects later on. For now, here is a list of stuff that I have
-been thinking about,
-
-Our goal is to eventually support all features of Protobuf in Kotlin without depending on the Java library. Here
-is a list of features we are working on that are required to release first stable version.
+The goal is to eventually support all features of Protobuf in Kotlin without depending on the Java library. Here
+is a list of features we are working on that are required to release first stable version:
 
 - [ ] Proper serialization / deserialization of all types. Check "Known Issues" section below to see all major
   issues.
-- [ ] Make data classes with `ByteArray` implement equals and hashcode correctly.
-- [ ] Run full conformance tests on the generated code.
+- [ ] Run full conformance tests on the generated code.]
+- [ ] Support Protobuf JSON format.
 
 And here is a list of features that we are planning to work on after the first stable release.
 
@@ -42,9 +39,9 @@ And here is a list of features that we are planning to work on after the first s
     - More WKT additions will be added.
 - [ ] Support various options such as `deprecated`, `default`, `json_name`.
 - [ ] Auto-generated comments from `.proto` files in the generated code.
-- [ ] Support Protobuf JSON format by default.
 - [x] gRPC support.
     - Stub generation is completed but it does not include any functionality to call or receive gRPC yet.
+    - It is tricky to support gRPC without depending on the Java library.
 - [ ] Plugin and more option support for customizing the generated code. (Such as non-enforced nullability to
   gimmick proto2 required fields based on certain rules)
 
@@ -61,8 +58,8 @@ Focusing on core functionality, here is a list of known major issues:
 - [ ] Generated `repeated` fields with `fixedXX`, `sfixedXX` and `uintXX` types can't be serialized.
 - [ ] Generated `repeated` fields with `sintXX` deserializes incorrectly.
 - [ ] Generated `map` fields with `fixedXX` and `sfixedXX` keys can't be serialized.
-- [ ] Generated `enum` fields with negative values can't be serialized / deserialized.
-    - PR opened in `kotlinx.serialization`: https://github.com/Kotlin/kotlinx.serialization/pull/2400
+- [x] Generated `enum` fields with negative values can't be serialized / deserialized.
+- [ ] Make data classes with `ByteArray` implement equals and hashcode correctly.
 
 ## Contribution
 

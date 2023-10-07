@@ -1,4 +1,4 @@
-package dogacel.kotlinx.protobuf.gen
+package dogacel.kotlinx.protobuf.gen.proto
 
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray

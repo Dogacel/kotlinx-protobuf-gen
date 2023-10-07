@@ -145,7 +145,6 @@ object DoubleValueSerializer : KSerializer<Double?> {
     }
 }
 
-
 object StringValueSerializer : KSerializer<String?> {
     @Serializable
     private data class Boxed(
@@ -182,7 +181,7 @@ object DurationSerializer : KSerializer<Duration?> {
     @Serializable
     private data class Boxed(
         val seconds: Long = 0L,
-        val nanos: Int = 0,
+        val nanos: Int = 0
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
@@ -192,9 +191,10 @@ object DurationSerializer : KSerializer<Duration?> {
             value?.toComponents { seconds, nanoseconds ->
                 Boxed(
                     seconds = seconds,
-                    nanos = nanoseconds,
+                    nanos = nanoseconds
                 )
-            })
+            }
+        )
     }
 
     override fun deserialize(decoder: Decoder): Duration? {
@@ -208,7 +208,7 @@ object TimestampSerializer : KSerializer<Instant?> {
     @Serializable
     private data class Boxed(
         val seconds: Long = 0L,
-        val nanos: Int = 0,
+        val nanos: Int = 0
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
@@ -218,9 +218,9 @@ object TimestampSerializer : KSerializer<Instant?> {
             value?.let {
                 Boxed(
                     seconds = it.epochSeconds,
-                    nanos = it.nanosecondsOfSecond,
+                    nanos = it.nanosecondsOfSecond
                 )
-            },
+            }
         )
     }
 

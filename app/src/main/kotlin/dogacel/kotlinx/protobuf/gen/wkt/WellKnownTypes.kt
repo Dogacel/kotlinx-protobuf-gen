@@ -69,7 +69,7 @@ object DefaultWellKnownTypes : WellKnownTypes() {
         com.google.protobuf.Empty.getDescriptor() to UNIT,
 //        com.google.protobuf.FieldMask.getDescriptor() to ???,
 //        com.google.protobuf.ListValue.getDescriptor() to ???,
-        com.google.protobuf.NullValue.getDescriptor() to NOTHING.copy(nullable = true),
+        com.google.protobuf.NullValue.getDescriptor() to NOTHING.copy(nullable = true)
 //        com.google.protobuf.Struct.getDescriptor() to ???,
 //        com.google.protobuf.Value.getDescriptor() to ???,
     ).mapKeys {

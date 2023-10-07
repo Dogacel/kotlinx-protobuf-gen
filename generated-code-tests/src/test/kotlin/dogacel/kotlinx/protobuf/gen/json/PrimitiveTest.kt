@@ -1,8 +1,9 @@
-package dogacel.kotlinx.protobuf.gen
+package dogacel.kotlinx.protobuf.gen.json
 
-import com.google.protobuf.kotlin.toByteStringUtf8
+import com.google.protobuf.util.JsonFormat
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import org.junit.jupiter.api.Assertions.assertEquals
 import testgen.primitives.PrimitivesMessage
@@ -26,10 +27,11 @@ class PrimitiveTest {
             .setOptionalDouble(0.391284)
             .setOptionalBool(true)
             .setOptionalString("Hello")
-            .setOptionalBytes("934u9234".toByteStringUtf8())
+//            .setOptionalBytes("934u9234".toByteStringUtf8())
             .build()
 
-        val result: PrimitivesMessage = ProtoBuf.decodeFromByteArray(message.toByteArray())
+        val protoJson = JsonFormat.printer().print(message)
+        val result: PrimitivesMessage = Json.decodeFromString(protoJson)
 
         assertEquals(message.optionalInt32, result.optionalInt32)
         assertEquals(message.optionalInt64, result.optionalInt64)
@@ -45,9 +47,6 @@ class PrimitiveTest {
         assertEquals(message.optionalDouble, result.optionalDouble)
         assertEquals(message.optionalBool, result.optionalBool)
         assertEquals(message.optionalString, result.optionalString)
-        // Byte arrays are not comparable.
-        // TODO: Consider using List<Byte> instead of ByteArray.
-        // assertEquals(message.optionalBytes.toByteArray(), result.optionalBytes)
 
         val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
         assertEquals(message, deser)
@@ -73,9 +72,6 @@ class PrimitiveTest {
         assertEquals(message.optionalDouble, result.optionalDouble)
         assertEquals(message.optionalBool, result.optionalBool)
         assertEquals(message.optionalString, result.optionalString)
-        // Byte arrays are not comparable.
-        // TODO: Consider using List<Byte> instead of ByteArray.
-        // assertEquals(message.optionalBytes.toByteArray(), result.optionalBytes)
 
         val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
         assertEquals(message, deser)

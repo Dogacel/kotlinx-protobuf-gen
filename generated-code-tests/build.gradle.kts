@@ -6,7 +6,6 @@ plugins {
     id("com.google.protobuf")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
-    id("org.jlleitschuh.gradle.ktlint")
     application
 }
 
@@ -19,6 +18,11 @@ var protobufVersion = "3.23.4"
 dependencies {
     implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
     implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     implementation(project(":runtime-common"))
 
@@ -108,11 +112,10 @@ tasks.named("runKtlintCheckOverMainSourceSet") {
 }
 
 ktlint {
-    ignoreFailures.set(true)
     filter {
         exclude { entry ->
             val condition =
-                entry.file.toString().contains("generated") || entry.file.toString().contains("testgen")
+                entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
             condition
         }
     }

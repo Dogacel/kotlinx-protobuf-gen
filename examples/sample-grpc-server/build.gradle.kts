@@ -24,15 +24,19 @@ var protobufVersion = "3.23.4"
 val grpcVersion = "1.58.0"
 val grpcKotlinVersion = "1.3.1"
 
-
 dependencies {
     implementation("io.github.dogacel:kotlinx-protobuf-gen-runtime:alpha-SNAPSHOT")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     listOf(
         "armeria",
         "armeria-grpc",
         "armeria-logback",
-        "armeria-kotlin",
+        "armeria-kotlin"
     ).forEach {
         implementation("com.linecorp.armeria:$it:1.25.2")
     }
@@ -45,6 +49,10 @@ dependencies {
     // Logging
     runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
     runtimeOnly("org.slf4j:log4j-over-slf4j:1.7.36")
+}
+
+configurations.all {
+    resolutionStrategy.sortArtifacts(ResolutionStrategy.SortOrder.DEPENDENCY_FIRST)
 }
 
 tasks.named("generateProto") {
@@ -84,6 +92,16 @@ protobuf {
                 id("grpckt")
                 id("kotlinx-protobuf-gen")
             }
+        }
+    }
+}
+
+ktlint {
+    filter {
+        exclude { entry ->
+            val condition =
+                entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
+            condition
         }
     }
 }

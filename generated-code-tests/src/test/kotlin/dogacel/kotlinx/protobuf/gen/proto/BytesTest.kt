@@ -1,4 +1,4 @@
-package dogacel.kotlinx.protobuf.gen
+package dogacel.kotlinx.protobuf.gen.proto
 
 import com.google.protobuf.ByteString
 import kotlinx.serialization.Serializable
@@ -23,7 +23,7 @@ class BytesTest {
     }
 }
 
-@Serializable
+@kotlinx.serialization.Serializable
 data class ByteWrapper(
     @ProtoNumber(1)
     @ProtoPacked

@@ -24,7 +24,7 @@ data class CodeGeneratorOptions(
     val generateServices: Boolean = true,
     val generateGrpcServices: Boolean = true,
     val generateGrpcMethodsSuspend: Boolean = true,
-    val wellKnownTypes: WellKnownTypes = NoWellKnownTypes,
+    val wellKnownTypes: WellKnownTypes = NoWellKnownTypes
 ) {
     companion object {
         fun parse(parameter: String): CodeGeneratorOptions {
@@ -41,7 +41,7 @@ data class CodeGeneratorOptions(
                 generateGrpcMethodsSuspend = flags.contains("disable_grpc_methods_suspend").not(),
                 wellKnownTypes = flags.contains("use_well_known_types").let {
                     if (it) DefaultWellKnownTypes else NoWellKnownTypes
-                },
+                }
             )
         }
     }

@@ -18,11 +18,10 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
     implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
 
-    api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
@@ -34,17 +33,6 @@ java {
         languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
-
-//ktlint {
-//    ignoreFailures.set(true)
-//    filter {
-//        exclude { entry ->
-//            val condition =
-//                entry.file.toString().contains("generated") || entry.file.toString().contains("testgen")
-//            condition
-//        }
-//    }
-//}
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
@@ -66,16 +54,15 @@ tasks.jar {
     archiveClassifier.set("jvm8")
 }
 
-
-//sourceSets {
+// sourceSets {
 //    main {
 //        proto {
 //            srcDir("$rootDir/testProtos")
 //        }
 //    }
-//}
+// }
 
-//protobuf {
+// protobuf {
 //    protoc {
 //        artifact = "com.google.protobuf:protoc:$protobufVersion"
 //    }
@@ -88,7 +75,7 @@ tasks.jar {
 //            }
 //        }
 //    }
-//}
+// }
 
 // Publishing
 
@@ -141,6 +128,16 @@ publishing {
                     url.set("https://github.com/dogacel/kotlinx-protobuf-gen/issues")
                 }
             }
+        }
+    }
+}
+
+ktlint {
+    filter {
+        exclude { entry ->
+            val condition =
+                entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
+            condition
         }
     }
 }
