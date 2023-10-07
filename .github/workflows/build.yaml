@@ -16,7 +16,7 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: build --scan
+          arguments: build koverXmlReport --scan
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
