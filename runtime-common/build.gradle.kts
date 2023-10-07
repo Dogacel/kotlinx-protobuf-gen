@@ -1,13 +1,9 @@
-import com.google.protobuf.gradle.id
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
     kotlin("plugin.serialization")
-    id("com.google.protobuf")
-    id("org.jlleitschuh.gradle.ktlint")
-    id("org.jetbrains.kotlinx.kover")
-    application
+    `java-library`
     `maven-publish`
     id("org.jetbrains.dokka")
 }
@@ -22,12 +18,11 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
     implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-
-    implementation("com.squareup:kotlinpoet:1.14.2")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
@@ -40,21 +35,16 @@ java {
     }
 }
 
-ktlint {
-    ignoreFailures.set(true)
-    filter {
-        exclude { entry ->
-            val condition =
-                entry.file.toString().contains("generated") || entry.file.toString().contains("testgen")
-            condition
-        }
-    }
-}
-
-application {
-    // Define the main class for the application.
-    mainClass.set("dogacel.kotlinx.protobuf.gen.AppKt")
-}
+//ktlint {
+//    ignoreFailures.set(true)
+//    filter {
+//        exclude { entry ->
+//            val condition =
+//                entry.file.toString().contains("generated") || entry.file.toString().contains("testgen")
+//            condition
+//        }
+//    }
+//}
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
@@ -66,10 +56,6 @@ tasks.withType(KotlinCompilationTask::class.java).configureEach {
 }
 
 tasks.jar {
-    manifest {
-        attributes["Main-Class"] = application.mainClass.get()
-    }
-
     from(sourceSets.main.get().output)
 
     val runtimeClasspathJars = configurations.runtimeClasspath.get().filter { it.name.endsWith(".jar") }
@@ -80,37 +66,29 @@ tasks.jar {
     archiveClassifier.set("jvm8")
 }
 
-koverReport {
-    filters {
-        includes {
-            this.packages("dogacel.kotlinx.protobuf.gen")
-            this.packages("dogacel.kotlinx.protobuf.gen.*")
-        }
-    }
-}
 
-sourceSets {
-    main {
-        proto {
-            srcDir("$rootDir/testProtos")
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        proto {
+//            srcDir("$rootDir/testProtos")
+//        }
+//    }
+//}
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
-    }
-
-    // Enable Kotlin generation
-    generateProtoTasks {
-        all().forEach {
-            it.builtins {
-                id("kotlin")
-            }
-        }
-    }
-}
+//protobuf {
+//    protoc {
+//        artifact = "com.google.protobuf:protoc:$protobufVersion"
+//    }
+//
+//    // Enable Kotlin generation
+//    generateProtoTasks {
+//        all().forEach {
+//            it.builtins {
+//                id("kotlin")
+//            }
+//        }
+//    }
+//}
 
 // Publishing
 
@@ -130,7 +108,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = rootProject.group.toString()
-            artifactId = "kotlinx-protobuf-gen"
+            artifactId = "kotlinx-protobuf-gen-runtime"
             version = rootProject.version.toString()
 
             from(components["kotlin"])
@@ -138,8 +116,8 @@ publishing {
             artifact(tasks["javadocJar"])
 
             pom {
-                name.set("kotlinx-protobuf-gen")
-                description.set("Generate kotlin classes using kotlinx.serialization from proto definitions.")
+                name.set("kotlinx-protobuf-gen-runtime")
+                description.set("Runtime classes for 'kotlinx-protobuf-gen'.")
                 url.set("https://github.com/dogacel/kotlinx-protobuf-gen")
                 licenses {
                     license {

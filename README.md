@@ -18,6 +18,8 @@ deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin
 - [x] Generates Kotlin code for primitive fields such as `int32`, `string`, `bytes`.
 - [x] Generates Kotlin code for `message`, `enum`, `repeated`, `map`, `oneof` types.
 - [x] Generates Kotlin code that includes imports and uses nested types.
+- [x] Supports common well-known types such as `Timestamp`, `StringValue` and serializes them to kotlin
+  primitives or standards.
 
 ## Roadmap
 
@@ -37,6 +39,7 @@ And here is a list of features that we are planning to work on after the first s
 - [x] Support Well-Known Types deserialization to Well-Known Kotlin types such as `google.protobuf.Duration`
   to `kotlin.time.Duration` and `google.protobuf.Timestamp` to `kotlinx.datetime.Instant`.
     - An option is added to code generator to enable this feature.
+    - More WKT additions will be added.
 - [ ] Support various options such as `deprecated`, `default`, `json_name`.
 - [ ] Auto-generated comments from `.proto` files in the generated code.
 - [ ] Support Protobuf JSON format by default.

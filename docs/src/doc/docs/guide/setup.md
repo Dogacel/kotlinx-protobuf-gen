@@ -30,19 +30,9 @@ plugins {
 var protobufVersion = "3.23.4"
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
-
-    // Required if stream service definitions will be generated. Streaming RPC operations are
-    // defined as Flow<...> types in code.
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-
-    // Required if `bytes` type is used.
-    implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-    // Required for importing well-known types such as `com.google.protobuf.Timestamp`.
-    implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
-    // Required for converting well-known types to kotlin Instant or Duration.
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    // Runtime libraries include WKT conversion utilities and other libraries that are required such
+    // as kotlinx.datetime, kotlinx.coroutines, kotlinx.serialization, etc.
+    implementation("io.github.dogacel:kotlinx-protobuf-gen:alpha-SNAPSHOT")
 }
 ```
 

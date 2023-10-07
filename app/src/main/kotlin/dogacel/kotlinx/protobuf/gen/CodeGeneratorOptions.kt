@@ -1,6 +1,9 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
+import dogacel.kotlinx.protobuf.gen.wkt.DefaultWellKnownTypes
+import dogacel.kotlinx.protobuf.gen.wkt.NoWellKnownTypes
+import dogacel.kotlinx.protobuf.gen.wkt.WellKnownTypes
 
 /**
  * A set of options to customize the generated code.
@@ -21,7 +24,7 @@ data class CodeGeneratorOptions(
     val generateServices: Boolean = true,
     val generateGrpcServices: Boolean = true,
     val generateGrpcMethodsSuspend: Boolean = true,
-    val wellKnownTypes: WellKnownTypes = DefaultWellKnownTypes,
+    val wellKnownTypes: WellKnownTypes = NoWellKnownTypes,
 ) {
     companion object {
         fun parse(parameter: String): CodeGeneratorOptions {
@@ -36,6 +39,9 @@ data class CodeGeneratorOptions(
                 useCamelCase = flags.contains("use_snake_case").not(),
                 generateServices = flags.contains("disable_services").not(),
                 generateGrpcMethodsSuspend = flags.contains("disable_grpc_methods_suspend").not(),
+                wellKnownTypes = flags.contains("use_well_known_types").let {
+                    if (it) DefaultWellKnownTypes else NoWellKnownTypes
+                },
             )
         }
     }

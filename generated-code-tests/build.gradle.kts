@@ -20,10 +20,7 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
     implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation(project(":runtime-common"))
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
@@ -97,6 +94,7 @@ protobuf {
             it.plugins {
                 id("kotlinx-protobuf-gen") {
                     option("package_prefix=testgen")
+                    option("use_well_known_types")
                 }
             }
         }

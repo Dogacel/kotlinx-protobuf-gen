@@ -19,8 +19,11 @@ repositories {
 var protobufVersion = "3.23.4"
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
+    implementation("io.github.dogacel:kotlinx-protobuf-gen-runtime:alpha-SNAPSHOT")
+}
+
+configurations.all {
+    resolutionStrategy.sortArtifacts(ResolutionStrategy.SortOrder.DEPENDENCY_FIRST)
 }
 
 tasks.withType(KotlinCompilationTask::class.java).configureEach {

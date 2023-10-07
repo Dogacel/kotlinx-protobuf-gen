@@ -26,8 +26,7 @@ val grpcKotlinVersion = "1.3.1"
 
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
+    implementation("io.github.dogacel:kotlinx-protobuf-gen-runtime:alpha-SNAPSHOT")
 
     listOf(
         "armeria",

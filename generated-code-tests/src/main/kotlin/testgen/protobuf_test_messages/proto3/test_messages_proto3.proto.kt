@@ -1,5 +1,16 @@
 package testgen.protobuf_test_messages.proto3
 
+import dogacel.kotlinx.protobuf.gen.wkt.BoolValueP
+import dogacel.kotlinx.protobuf.gen.wkt.BytesValueP
+import dogacel.kotlinx.protobuf.gen.wkt.DoubleValueP
+import dogacel.kotlinx.protobuf.gen.wkt.DurationP
+import dogacel.kotlinx.protobuf.gen.wkt.FloatValueP
+import dogacel.kotlinx.protobuf.gen.wkt.Int32ValueP
+import dogacel.kotlinx.protobuf.gen.wkt.Int64ValueP
+import dogacel.kotlinx.protobuf.gen.wkt.StringValueP
+import dogacel.kotlinx.protobuf.gen.wkt.TimestampP
+import dogacel.kotlinx.protobuf.gen.wkt.UInt32ValueP
+import dogacel.kotlinx.protobuf.gen.wkt.UInt64ValueP
 import kotlin.Boolean
 import kotlin.ByteArray
 import kotlin.Double
@@ -18,20 +29,9 @@ import kotlinx.serialization.protobuf.ProtoNumber
 import kotlinx.serialization.protobuf.ProtoPacked
 import kotlinx.serialization.protobuf.ProtoType
 import testgen.google.protobuf.Any
-import testgen.google.protobuf.BoolValue
-import testgen.google.protobuf.BytesValue
-import testgen.google.protobuf.DoubleValue
-import testgen.google.protobuf.Duration
 import testgen.google.protobuf.FieldMask
-import testgen.google.protobuf.FloatValue
-import testgen.google.protobuf.Int32Value
-import testgen.google.protobuf.Int64Value
 import testgen.google.protobuf.ListValue
-import testgen.google.protobuf.StringValue
 import testgen.google.protobuf.Struct
-import testgen.google.protobuf.Timestamp
-import testgen.google.protobuf.UInt32Value
-import testgen.google.protobuf.UInt64Value
 import testgen.google.protobuf.Value
 
 @Serializable
@@ -275,45 +275,45 @@ public data class TestAllTypesProto3(
   @ProtoNumber(number = 119)
   public val oneofEnum: NestedEnum? = null,
   @ProtoNumber(number = 201)
-  public val optionalBoolWrapper: BoolValue? = null,
+  public val optionalBoolWrapper: BoolValueP? = null,
   @ProtoNumber(number = 202)
-  public val optionalInt32Wrapper: Int32Value? = null,
+  public val optionalInt32Wrapper: Int32ValueP? = null,
   @ProtoNumber(number = 203)
-  public val optionalInt64Wrapper: Int64Value? = null,
+  public val optionalInt64Wrapper: Int64ValueP? = null,
   @ProtoNumber(number = 204)
-  public val optionalUint32Wrapper: UInt32Value? = null,
+  public val optionalUint32Wrapper: UInt32ValueP? = null,
   @ProtoNumber(number = 205)
-  public val optionalUint64Wrapper: UInt64Value? = null,
+  public val optionalUint64Wrapper: UInt64ValueP? = null,
   @ProtoNumber(number = 206)
-  public val optionalFloatWrapper: FloatValue? = null,
+  public val optionalFloatWrapper: FloatValueP? = null,
   @ProtoNumber(number = 207)
-  public val optionalDoubleWrapper: DoubleValue? = null,
+  public val optionalDoubleWrapper: DoubleValueP? = null,
   @ProtoNumber(number = 208)
-  public val optionalStringWrapper: StringValue? = null,
+  public val optionalStringWrapper: StringValueP? = null,
   @ProtoNumber(number = 209)
-  public val optionalBytesWrapper: BytesValue? = null,
+  public val optionalBytesWrapper: BytesValueP? = null,
   @ProtoNumber(number = 211)
-  public val repeatedBoolWrapper: List<BoolValue?> = emptyList(),
+  public val repeatedBoolWrapper: List<BoolValueP?> = emptyList(),
   @ProtoNumber(number = 212)
-  public val repeatedInt32Wrapper: List<Int32Value?> = emptyList(),
+  public val repeatedInt32Wrapper: List<Int32ValueP?> = emptyList(),
   @ProtoNumber(number = 213)
-  public val repeatedInt64Wrapper: List<Int64Value?> = emptyList(),
+  public val repeatedInt64Wrapper: List<Int64ValueP?> = emptyList(),
   @ProtoNumber(number = 214)
-  public val repeatedUint32Wrapper: List<UInt32Value?> = emptyList(),
+  public val repeatedUint32Wrapper: List<UInt32ValueP?> = emptyList(),
   @ProtoNumber(number = 215)
-  public val repeatedUint64Wrapper: List<UInt64Value?> = emptyList(),
+  public val repeatedUint64Wrapper: List<UInt64ValueP?> = emptyList(),
   @ProtoNumber(number = 216)
-  public val repeatedFloatWrapper: List<FloatValue?> = emptyList(),
+  public val repeatedFloatWrapper: List<FloatValueP?> = emptyList(),
   @ProtoNumber(number = 217)
-  public val repeatedDoubleWrapper: List<DoubleValue?> = emptyList(),
+  public val repeatedDoubleWrapper: List<DoubleValueP?> = emptyList(),
   @ProtoNumber(number = 218)
-  public val repeatedStringWrapper: List<StringValue?> = emptyList(),
+  public val repeatedStringWrapper: List<StringValueP?> = emptyList(),
   @ProtoNumber(number = 219)
-  public val repeatedBytesWrapper: List<BytesValue?> = emptyList(),
+  public val repeatedBytesWrapper: List<BytesValueP?> = emptyList(),
   @ProtoNumber(number = 301)
-  public val optionalDuration: Duration? = null,
+  public val optionalDuration: DurationP? = null,
   @ProtoNumber(number = 302)
-  public val optionalTimestamp: Timestamp? = null,
+  public val optionalTimestamp: TimestampP? = null,
   @ProtoNumber(number = 303)
   public val optionalFieldMask: FieldMask? = null,
   @ProtoNumber(number = 304)
@@ -323,9 +323,9 @@ public data class TestAllTypesProto3(
   @ProtoNumber(number = 306)
   public val optionalValue: Value? = null,
   @ProtoNumber(number = 311)
-  public val repeatedDuration: List<Duration?> = emptyList(),
+  public val repeatedDuration: List<DurationP?> = emptyList(),
   @ProtoNumber(number = 312)
-  public val repeatedTimestamp: List<Timestamp?> = emptyList(),
+  public val repeatedTimestamp: List<TimestampP?> = emptyList(),
   @ProtoNumber(number = 313)
   public val repeatedFieldmask: List<FieldMask?> = emptyList(),
   @ProtoNumber(number = 324)

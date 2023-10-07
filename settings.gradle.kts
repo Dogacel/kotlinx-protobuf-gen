@@ -9,10 +9,13 @@ plugins {
 
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0" apply false
     id("ru.vyarus.mkdocs") version "3.0.0" apply false
+    id("org.jetbrains.dokka") version "1.8.20" apply false
 }
 
 rootProject.name = "kotlinx-protobuf-gen"
+
 include("app")
+include("runtime-common")
 include("generated-code-tests")
 include("examples:sample-protoc-plugin")
 include("examples:sample-grpc-server")

@@ -116,6 +116,14 @@ class CodeGenerator {
     }
 
     /**
+     * Whether to generate a class for the given descriptor or not. Currently we do not create classes for
+     * well-known types.
+     */
+    fun shouldGenerateClass(descriptor: Descriptors.Descriptor): Boolean {
+        return options.wellKnownTypes.getFor(descriptor) == null
+    }
+
+    /**
      * Generate the code for the given [Descriptors.FileDescriptor]. Returns a [FileSpec.Builder] so users
      * can add additional code to the file.
      *
@@ -135,8 +143,10 @@ class CodeGenerator {
         val fileSpec = FileSpec.builder(packageName, fileName)
 
         fileDescriptor.messageTypes.forEach { messageType ->
-            val typeSpec = generateSingleClass(messageType)
-            fileSpec.addType(typeSpec.build())
+            if (shouldGenerateClass(messageType)) {
+                val typeSpec = generateSingleClass(messageType)
+                fileSpec.addType(typeSpec.build())
+            }
         }
 
         fileDescriptor.enumTypes.forEach { enumType ->
@@ -231,9 +241,11 @@ class CodeGenerator {
         // Recursively generate nested classes and enums.
         val nestedTypes = messageDescriptor.nestedTypes.filterNot {
             it.options.mapEntry
-        }.map {
-            generateSingleClass(it).build()
         }
+            .filter { shouldGenerateClass(it) }
+            .map {
+                generateSingleClass(it).build()
+            }
         typeSpec.addTypes(nestedTypes)
 
         val nestedEnums = messageDescriptor.enumTypes.map {
