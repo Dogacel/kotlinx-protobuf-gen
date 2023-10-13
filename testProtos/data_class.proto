@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message Hello {
+  enum Type {
+    UNKNOWN = 0;
+    KNOWN = 1;
+  }
+  message SubHello {
+    message HelloExtend {
+      optional Type type = 1;
+    }
+    optional SubHello subHello = 1;
+  }
+}

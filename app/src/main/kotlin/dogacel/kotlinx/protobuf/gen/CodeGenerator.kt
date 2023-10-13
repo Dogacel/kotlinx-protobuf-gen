@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import java.nio.file.Path
 import kotlin.io.path.Path
 
+
 /**
  * Links are used to keep track of the [TypeName] of the fields and the types they reference before the code
  * is generated. This way, code generation of types do not depend on each other and can be generated in any
@@ -144,8 +145,13 @@ class CodeGenerator {
 
         fileDescriptor.messageTypes.forEach { messageType ->
             if (shouldGenerateClass(messageType)) {
-                val typeSpec = generateSingleClass(messageType)
-                fileSpec.addType(typeSpec.build())
+                if (isHasPropertyField(messageType)) {
+                    val typeSpec = generateDataClass(messageType)
+                    fileSpec.addType(typeSpec.build())
+                } else {
+                    val typeSpec = generateClass(messageType)
+                    fileSpec.addType(typeSpec.build())
+                }
             }
         }
 
@@ -162,6 +168,19 @@ class CodeGenerator {
         }
 
         return fileSpec
+    }
+
+    /**
+     * Generate the code for the given [Descriptors.Descriptor]. Returns a Boolean determine whether the
+     * descriptor has a property field or not.
+     *
+     * @param fileDescriptor [Descriptors.FileDescriptor] to generate code for.
+     * @return Boolean that represents whether the descriptor has a property field or not.
+     */
+    private fun isHasPropertyField(fileDescriptor: Descriptors.Descriptor): Boolean {
+        return fileDescriptor.fields.any {
+            it.isOptional || it.isRequired || it.isRepeated
+        }
     }
 
     /**
@@ -193,7 +212,7 @@ class CodeGenerator {
      * @param messageDescriptor [Descriptors.Descriptor] to generate code for.
      * @return [TypeSpec.Builder] that contains the generated code.
      */
-    private fun generateSingleClass(messageDescriptor: Descriptors.Descriptor): TypeSpec.Builder {
+    private fun generateDataClass(messageDescriptor: Descriptors.Descriptor): TypeSpec.Builder {
         val typeSpec = TypeSpec.classBuilder(messageDescriptor.name)
             .addModifiers(KModifier.DATA)
             .addAnnotation(Serializable::class)
@@ -233,6 +252,7 @@ class CodeGenerator {
 
             typeSpec.addProperty(
                 PropertySpec.builder(fieldName, type)
+                    .mutable(true) // change val to var
                     .initializer(fieldName)
                     .build()
             )
@@ -244,7 +264,11 @@ class CodeGenerator {
         }
             .filter { shouldGenerateClass(it) }
             .map {
-                generateSingleClass(it).build()
+                if (isHasPropertyField(it)) {
+                    generateDataClass(it).build()
+                } else {
+                    generateClass(it).build()
+                }
             }
         typeSpec.addTypes(nestedTypes)
 
@@ -278,6 +302,44 @@ class CodeGenerator {
                     .build()
             )
         }
+
+        return typeSpec
+    }
+
+    private fun generateClass(messageDescriptor: Descriptors.Descriptor): TypeSpec.Builder {
+        val typeSpec = TypeSpec.classBuilder(messageDescriptor.name)
+            .addAnnotation(Serializable::class)
+
+        // Generate parameters and properties
+        messageDescriptor.fields.forEach { fieldDescriptor ->
+            val type = TypeNames.typeNameOf(fieldDescriptor, typeLinks)
+            val fieldName = fieldDescriptor.name.toLowerCamelCaseIf(options.useCamelCase)
+            typeSpec.addProperty(
+                PropertySpec.builder(fieldName, type)
+                    .mutable(true)
+                    .initializer(fieldName)
+                    .build()
+            )
+        }
+
+        // Recursively generate nested classes and enums
+        val nestedTypes = messageDescriptor.nestedTypes.filterNot {
+            it.options.mapEntry
+        }
+            .filter { shouldGenerateClass(it) }
+            .map {
+                if (isHasPropertyField(it)) {
+                    generateDataClass(it).build()
+                } else {
+                    generateClass(it).build()
+                }
+            }
+        typeSpec.addTypes(nestedTypes)
+
+        val nestedEnums = messageDescriptor.enumTypes.map {
+            generateSingleEnum(it).build()
+        }
+        typeSpec.addTypes(nestedEnums)
 
         return typeSpec
     }
