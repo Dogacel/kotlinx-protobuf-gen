@@ -76,6 +76,8 @@ tests.
     - This is a separate subproject makes sure we are not breaking the compilation of our main app when the
       generated code is not compiling after making some changes.
     - We store the generated code in version control showcase and review the generated code.
+    - Make sure you run `./gradlew build` after you modify the code to generate the newest files. If newest files are
+      not committed, the CI check will fail.
 
 Linting can be done via
 

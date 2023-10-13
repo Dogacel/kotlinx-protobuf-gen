@@ -18,6 +18,11 @@ jobs:
         with:
           arguments: build koverXmlReport --scan
 
+      - name: Check auto-generated files are committed
+        shell: bash
+        run: |
+          git diff --exit-code
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
