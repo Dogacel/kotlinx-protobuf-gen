@@ -18,6 +18,11 @@ jobs:
         with:
           arguments: build koverXmlReport --scan
 
+      - name: Check tests are generated
+        shell: bash
+        run: |
+          git diff --name-only | grep "generated-code-tests" -vqz
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
