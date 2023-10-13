@@ -1,5 +1,5 @@
 comment:
-  layout: "header, diff, flags, components, tree"
+  layout: "components, diff, files,"
 
 component_management:
   individual_components:
