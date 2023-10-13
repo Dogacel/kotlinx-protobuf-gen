@@ -6,6 +6,7 @@ plugins {
     `java-library`
     `maven-publish`
     id("org.jetbrains.dokka")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 repositories {

@@ -1,0 +1,28 @@
+comment:
+  layout: "components, diff, files,"
+
+component_management:
+  individual_components:
+    - component_id: app
+      name: app
+      paths:
+        - app
+    - component_id: generated-code-tests
+      name: generated code tests
+      paths:
+        - generated-code-tests
+      statuses:
+        - type: project
+          target: auto
+        - type: patch
+          target: auto
+    - component_id: runtime-common
+      name: runtime-common
+      paths:
+        - runtime-common
+
+ignore:
+  - "**/test_messages_proto3.proto.kt" # Ignore conformance test to get a more realistic coverage for existing functionality.
+  - "**/google/protobuf/*.proto.kt" # Ignore auto-generated google types that are actually WKTs.
+  - "examples" # Ignore examples.
+  - "docs" # Ignore docs.

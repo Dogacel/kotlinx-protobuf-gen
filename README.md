@@ -1,6 +1,8 @@
 # kotlinx-protobuf-gen
 
 [![Build](https://github.com/Dogacel/kotlinx-protobuf-gen/actions/workflows/build.yaml/badge.svg)](https://github.com/Dogacel/kotlinx-protobuf-gen/actions/workflows/build.yaml)
+[![codecov](https://codecov.io/gh/Dogacel/kotlinx-protobuf-gen/graph/badge.svg?token=6FE41BE2ZK)](https://codecov.io/gh/Dogacel/kotlinx-protobuf-gen)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Generate kotlin data classes from `protobuf` files that supports _Kotlin Native_ that can be serialized and
 deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization).
@@ -76,6 +78,8 @@ tests.
     - This is a separate subproject makes sure we are not breaking the compilation of our main app when the
       generated code is not compiling after making some changes.
     - We store the generated code in version control showcase and review the generated code.
+    - Make sure you run `./gradlew build` after you modify the code to generate the newest files. If newest files are
+      not committed, the CI check will fail.
 
 Linting can be done via
 
