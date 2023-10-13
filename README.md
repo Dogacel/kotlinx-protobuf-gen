@@ -2,6 +2,7 @@
 
 [![Build](https://github.com/Dogacel/kotlinx-protobuf-gen/actions/workflows/build.yaml/badge.svg)](https://github.com/Dogacel/kotlinx-protobuf-gen/actions/workflows/build.yaml)
 [![codecov](https://codecov.io/gh/Dogacel/kotlinx-protobuf-gen/graph/badge.svg?token=6FE41BE2ZK)](https://codecov.io/gh/Dogacel/kotlinx-protobuf-gen)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Generate kotlin data classes from `protobuf` files that supports _Kotlin Native_ that can be serialized and
 deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization).
