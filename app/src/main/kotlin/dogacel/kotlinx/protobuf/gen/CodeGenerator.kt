@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import java.nio.file.Path
 import kotlin.io.path.Path
 
+
 /**
  * Links are used to keep track of the [TypeName] of the fields and the types they reference before the code
  * is generated. This way, code generation of types do not depend on each other and can be generated in any
@@ -165,6 +166,45 @@ class CodeGenerator {
     }
 
     /**
+     * Check if the given message descriptor contains any fields or not.
+     *
+     * This is used to avoid generating data classes with 0 properties because they are not allowed in Kotlin.
+     *
+     * @param messageDescriptor the descriptor to check if it has any fields.
+     * @return whether the given message descriptor contains any fields or not.
+     */
+    fun hasNoField(messageDescriptor: Descriptors.Descriptor): Boolean {
+        return messageDescriptor.fields.isEmpty()
+    }
+
+    /**
+     * Get the overriden methods for a method with no fields.
+     *
+     * @param messageDescriptor descriptor of the message to generate empty override methods for.
+     * @return a list of [FunSpec]s that contain the overriden `toString`, `hashCode` and `equals`.
+     */
+    private fun getEmptyOverrideFunSpecs(messageDescriptor: Descriptors.Descriptor): List<FunSpec> {
+        return listOf(
+            FunSpec.builder("toString")
+                .addModifiers(KModifier.OVERRIDE)
+                .addStatement("return %S", messageDescriptor.name)
+                .returns(String::class)
+                .build(),
+            FunSpec.builder("hashCode")
+                .addModifiers(KModifier.OVERRIDE)
+                .addStatement("return %L", messageDescriptor.name.hashCode())
+                .returns(Int::class)
+                .build(),
+            FunSpec.builder("equals")
+                .addModifiers(KModifier.OVERRIDE)
+                .addParameter("other", Any::class.asTypeName().copy(nullable = true))
+                .addStatement("return other is ${messageDescriptor.name}")
+                .returns(Boolean::class)
+                .build()
+        )
+    }
+
+    /**
      * Generate a single parameter for the given [Descriptors.FieldDescriptor]. Returns a
      * [ParameterSpec.Builder] so users can add additional code to the parameter.
      *
@@ -195,8 +235,13 @@ class CodeGenerator {
      */
     private fun generateSingleClass(messageDescriptor: Descriptors.Descriptor): TypeSpec.Builder {
         val typeSpec = TypeSpec.classBuilder(messageDescriptor.name)
-            .addModifiers(KModifier.DATA)
             .addAnnotation(Serializable::class)
+
+        if (hasNoField(messageDescriptor)) {
+            typeSpec.addFunctions(getEmptyOverrideFunSpecs(messageDescriptor))
+        } else {
+            typeSpec.addModifiers(KModifier.DATA)
+        }
 
         // A Data class needs a primary constructor with all the parameters.
         val parameters = messageDescriptor.fields.map { generateSingleParameter(it).build() }

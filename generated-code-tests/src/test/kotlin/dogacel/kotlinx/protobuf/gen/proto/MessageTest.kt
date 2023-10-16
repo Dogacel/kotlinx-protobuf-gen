@@ -3,6 +3,7 @@ package dogacel.kotlinx.protobuf.gen.proto
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
+import testgen.messages.MessageNoFields
 import testgen.messages.MessagesMessage
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -36,7 +37,10 @@ class MessageTest {
         assertEquals(message.id, result.id)
         assertEquals(message.optionalForeignMessage.c, result.optionalForeignMessage?.c)
         assertEquals(message.optionalNestedMessage.a, result.optionalNestedMessage?.a)
-        assertEquals(message.optionalNestedMessage.corecursive.id, result.optionalNestedMessage?.corecursive?.id)
+        assertEquals(
+            message.optionalNestedMessage.corecursive.id,
+            result.optionalNestedMessage?.corecursive?.id
+        )
         assertEquals(
             message.optionalNestedMessage.corecursive.optionalForeignMessage.c,
             result.optionalNestedMessage?.corecursive?.optionalForeignMessage?.c
@@ -58,6 +62,18 @@ class MessageTest {
         assertEquals(null, result.optionalNestedMessage)
 
         val deser = messages.Messages.MessagesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
+        assertEquals(message, deser)
+    }
+
+    @Test
+    fun shouldSerNoField() {
+        val message = messages.MessageNoFieldsOuterClass.MessageNoFields.newBuilder().build()
+
+        val messageBytes = message.toByteArray()
+        val result: MessageNoFields = ProtoBuf.decodeFromByteArray(messageBytes)
+        
+        val deser =
+            messages.MessageNoFieldsOuterClass.MessageNoFields.parseFrom(ProtoBuf.encodeToByteArray(result))
         assertEquals(message, deser)
     }
 }
