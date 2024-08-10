@@ -1,5 +1,4 @@
 import com.google.protobuf.gradle.id
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -13,71 +12,47 @@ application {
     mainClass.set("AppKt")
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        this.url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    }
-}
-
-var protobufVersion = "3.23.4"
-val grpcVersion = "1.58.0"
-val grpcKotlinVersion = "1.3.1"
-
 dependencies {
-    implementation("io.github.dogacel:kotlinx-protobuf-gen-runtime:alpha-SNAPSHOT")
+    implementation(project(":runtime-common"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation(libs.bundles.kotlinx)
 
     listOf(
         "armeria",
         "armeria-grpc",
         "armeria-logback",
-        "armeria-kotlin"
+        "armeria-kotlin",
     ).forEach {
-        implementation("com.linecorp.armeria:$it:1.25.2")
+        implementation("com.linecorp.armeria:$it:${libs.versions.armeria.get()}")
     }
 
     // GRPC
-    implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
-    implementation("io.grpc:grpc-protobuf:$grpcVersion")
-    implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
+    implementation(libs.grpc.kotlin.stub)
+    implementation(libs.grpc.protobuf)
+    implementation(libs.bundles.protobuf)
 
     // Logging
-    runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
-    runtimeOnly("org.slf4j:log4j-over-slf4j:1.7.36")
-}
-
-configurations.all {
-    resolutionStrategy.sortArtifacts(ResolutionStrategy.SortOrder.DEPENDENCY_FIRST)
+    runtimeOnly(libs.bundles.logging)
 }
 
 tasks.named("generateProto") {
     dependsOn(project(":app").tasks.jar)
 }
 
-tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
-}
-
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
 
     plugins {
         id("kotlinx-protobuf-gen") {
-//            artifact = "io.github.dogacel:kotlinx-protobuf-gen:alpha-SNAPSHOT:jvm8@jar"
             path = project(":app").tasks.jar.get().archiveFile.get().asFile.absolutePath
         }
         id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+            artifact = "io.grpc:protoc-gen-grpc-java:${libs.versions.grpc.asProvider().get()}"
         }
         id("grpckt") {
-            artifact = "io.grpc:protoc-gen-grpc-kotlin:$grpcKotlinVersion:jdk8@jar"
+            artifact = "io.grpc:protoc-gen-grpc-kotlin:${libs.versions.grpc.kotlin.get()}:jdk8@jar"
         }
     }
 
@@ -99,8 +74,7 @@ protobuf {
 ktlint {
     filter {
         exclude { entry ->
-            val condition =
-                entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
+            val condition = entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
             condition
         }
     }

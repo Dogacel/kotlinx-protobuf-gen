@@ -21,26 +21,52 @@ import kotlin.time.Duration.Companion.seconds
 //    @ProtoNumber(number = 16)
 //    public val repeatedListValue: ListValue? = null,
 
-typealias BoolValueP = @Serializable(with = BoolValueSerializer::class) Boolean?
-typealias Int32ValueP = @Serializable(with = Int32ValueSerializer::class) Int?
-typealias Int64ValueP = @Serializable(with = Int64ValueSerializer::class) Long?
-typealias UInt32ValueP = @Serializable(with = UInt32ValueSerializer::class) UInt?
-typealias UInt64ValueP = @Serializable(with = UInt64ValueSerializer::class) ULong?
-typealias FloatValueP = @Serializable(with = FloatValueSerializer::class) Float?
-typealias DoubleValueP = @Serializable(with = DoubleValueSerializer::class) Double?
-typealias StringValueP = @Serializable(with = StringValueSerializer::class) String?
-typealias BytesValueP = @Serializable(with = BytesValueSerializer::class) ByteArray?
-typealias DurationP = @Serializable(with = DurationSerializer::class) Duration?
-typealias TimestampP = @Serializable(with = TimestampSerializer::class) Instant?
+typealias BoolValueP =
+    @Serializable(with = BoolValueSerializer::class)
+    Boolean?
+typealias Int32ValueP =
+    @Serializable(with = Int32ValueSerializer::class)
+    Int?
+typealias Int64ValueP =
+    @Serializable(with = Int64ValueSerializer::class)
+    Long?
+typealias UInt32ValueP =
+    @Serializable(with = UInt32ValueSerializer::class)
+    UInt?
+typealias UInt64ValueP =
+    @Serializable(with = UInt64ValueSerializer::class)
+    ULong?
+typealias FloatValueP =
+    @Serializable(with = FloatValueSerializer::class)
+    Float?
+typealias DoubleValueP =
+    @Serializable(with = DoubleValueSerializer::class)
+    Double?
+typealias StringValueP =
+    @Serializable(with = StringValueSerializer::class)
+    String?
+typealias BytesValueP =
+    @Serializable(with = BytesValueSerializer::class)
+    ByteArray?
+typealias DurationP =
+    @Serializable(with = DurationSerializer::class)
+    Duration?
+typealias TimestampP =
+    @Serializable(with = TimestampSerializer::class)
+    Instant?
 
 object BoolValueSerializer : KSerializer<Boolean?> {
     @Serializable
     private data class Boxed(
-        val `value`: Boolean = false
+        val `value`: Boolean = false,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: Boolean?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Boolean?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -52,11 +78,15 @@ object BoolValueSerializer : KSerializer<Boolean?> {
 object Int32ValueSerializer : KSerializer<Int?> {
     @Serializable
     private data class Boxed(
-        val `value`: Int = 0
+        val `value`: Int = 0,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: Int?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Int?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -68,11 +98,15 @@ object Int32ValueSerializer : KSerializer<Int?> {
 object Int64ValueSerializer : KSerializer<Long?> {
     @Serializable
     private data class Boxed(
-        val `value`: Long = 0L
+        val `value`: Long = 0L,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: Long?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Long?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -84,11 +118,15 @@ object Int64ValueSerializer : KSerializer<Long?> {
 object UInt32ValueSerializer : KSerializer<UInt?> {
     @Serializable
     private data class Boxed(
-        val `value`: UInt = 0U
+        val `value`: UInt = 0U,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: UInt?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: UInt?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -100,11 +138,15 @@ object UInt32ValueSerializer : KSerializer<UInt?> {
 object UInt64ValueSerializer : KSerializer<ULong?> {
     @Serializable
     private data class Boxed(
-        val `value`: ULong = 0UL
+        val `value`: ULong = 0UL,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: ULong?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: ULong?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -116,11 +158,15 @@ object UInt64ValueSerializer : KSerializer<ULong?> {
 object FloatValueSerializer : KSerializer<Float?> {
     @Serializable
     private data class Boxed(
-        val `value`: Float = 0f
+        val `value`: Float = 0f,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: Float?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Float?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -132,11 +178,15 @@ object FloatValueSerializer : KSerializer<Float?> {
 object DoubleValueSerializer : KSerializer<Double?> {
     @Serializable
     private data class Boxed(
-        val `value`: Double = 0.0
+        val `value`: Double = 0.0,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: Double?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Double?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -148,11 +198,15 @@ object DoubleValueSerializer : KSerializer<Double?> {
 object StringValueSerializer : KSerializer<String?> {
     @Serializable
     private data class Boxed(
-        val `value`: String = ""
+        val `value`: String = "",
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: String?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: String?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -164,11 +218,15 @@ object StringValueSerializer : KSerializer<String?> {
 object BytesValueSerializer : KSerializer<ByteArray?> {
     @Serializable
     private data class Boxed(
-        val `value`: ByteArray = ByteArray(0)
+        val `value`: ByteArray = ByteArray(0),
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: ByteArray?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: ByteArray?,
+    ) {
         encoder.encodeNullableSerializableValue(Boxed.serializer(), value?.let { Boxed(it) })
     }
 
@@ -181,19 +239,23 @@ object DurationSerializer : KSerializer<Duration?> {
     @Serializable
     private data class Boxed(
         val seconds: Long = 0L,
-        val nanos: Int = 0
+        val nanos: Int = 0,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: Duration?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Duration?,
+    ) {
         encoder.encodeNullableSerializableValue(
             Boxed.serializer(),
             value?.toComponents { seconds, nanoseconds ->
                 Boxed(
                     seconds = seconds,
-                    nanos = nanoseconds
+                    nanos = nanoseconds,
                 )
-            }
+            },
         )
     }
 
@@ -208,19 +270,23 @@ object TimestampSerializer : KSerializer<Instant?> {
     @Serializable
     private data class Boxed(
         val seconds: Long = 0L,
-        val nanos: Int = 0
+        val nanos: Int = 0,
     )
 
     override val descriptor: SerialDescriptor = Boxed.serializer().descriptor
-    override fun serialize(encoder: Encoder, value: Instant?) {
+
+    override fun serialize(
+        encoder: Encoder,
+        value: Instant?,
+    ) {
         encoder.encodeNullableSerializableValue(
             Boxed.serializer(),
             value?.let {
                 Boxed(
                     seconds = it.epochSeconds,
-                    nanos = it.nanosecondsOfSecond
+                    nanos = it.nanosecondsOfSecond,
                 )
-            }
+            },
         )
     }
 

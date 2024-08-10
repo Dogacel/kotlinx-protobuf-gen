@@ -1,6 +1,6 @@
 package dogacel.kotlinx.protobuf.gen
 
-import java.util.*
+import java.util.Locale
 
 /**
  * A generic set of utils usually that do not belong to a specific class.

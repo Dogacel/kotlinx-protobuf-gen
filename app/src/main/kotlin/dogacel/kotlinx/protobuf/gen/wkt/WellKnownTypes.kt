@@ -1,7 +1,10 @@
 package dogacel.kotlinx.protobuf.gen.wkt
 
 import com.google.protobuf.Descriptors
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.NOTHING
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.UNIT
 
 abstract class WellKnownTypes {
     /**
@@ -20,61 +23,73 @@ object NoWellKnownTypes : WellKnownTypes() {
 }
 
 object DefaultWellKnownTypes : WellKnownTypes() {
-    private val typeMapping: Map<String, TypeName> = mapOf(
+    private val typeMapping: Map<String, TypeName> =
+        mapOf(
 //        com.google.protobuf.Any.getDescriptor() to ANY,
-        com.google.protobuf.BoolValue.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "BoolValueP"
-        ),
-        com.google.protobuf.Int32Value.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "Int32ValueP"
-        ),
-        com.google.protobuf.Int64Value.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "Int64ValueP"
-        ),
-        com.google.protobuf.UInt32Value.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "UInt32ValueP"
-        ),
-        com.google.protobuf.UInt64Value.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "UInt64ValueP"
-        ),
-        com.google.protobuf.FloatValue.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "FloatValueP"
-        ),
-        com.google.protobuf.StringValue.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "StringValueP"
-        ),
-        com.google.protobuf.BytesValue.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "BytesValueP"
-        ),
-        com.google.protobuf.DoubleValue.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "DoubleValueP"
-        ),
-        com.google.protobuf.Duration.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "DurationP"
-        ),
-        com.google.protobuf.Timestamp.getDescriptor() to ClassName(
-            "dogacel.kotlinx.protobuf.gen.wkt",
-            "TimestampP"
-        ),
-        com.google.protobuf.Empty.getDescriptor() to UNIT,
+            com.google.protobuf.BoolValue.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "BoolValueP",
+                ),
+            com.google.protobuf.Int32Value.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "Int32ValueP",
+                ),
+            com.google.protobuf.Int64Value.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "Int64ValueP",
+                ),
+            com.google.protobuf.UInt32Value.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "UInt32ValueP",
+                ),
+            com.google.protobuf.UInt64Value.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "UInt64ValueP",
+                ),
+            com.google.protobuf.FloatValue.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "FloatValueP",
+                ),
+            com.google.protobuf.StringValue.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "StringValueP",
+                ),
+            com.google.protobuf.BytesValue.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "BytesValueP",
+                ),
+            com.google.protobuf.DoubleValue.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "DoubleValueP",
+                ),
+            com.google.protobuf.Duration.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "DurationP",
+                ),
+            com.google.protobuf.Timestamp.getDescriptor() to
+                ClassName(
+                    "dogacel.kotlinx.protobuf.gen.wkt",
+                    "TimestampP",
+                ),
+            com.google.protobuf.Empty.getDescriptor() to UNIT,
 //        com.google.protobuf.FieldMask.getDescriptor() to ???,
 //        com.google.protobuf.ListValue.getDescriptor() to ???,
-        com.google.protobuf.NullValue.getDescriptor() to NOTHING.copy(nullable = true)
+            com.google.protobuf.NullValue.getDescriptor() to NOTHING.copy(nullable = true),
 //        com.google.protobuf.Struct.getDescriptor() to ???,
 //        com.google.protobuf.Value.getDescriptor() to ???,
-    ).mapKeys {
-        it.key.fullName
-    }
+        ).mapKeys {
+            it.key.fullName
+        }
 
     override fun getFor(descriptor: Descriptors.GenericDescriptor): TypeName? {
         return typeMapping[descriptor.fullName]

@@ -1,10 +1,13 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 plugins {
+    // Publishing
     `maven-publish`
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "io.github.dogacel"
-version = "0.0.01"
+version = "0.0.1"
 
 nexusPublishing {
     this.repositories {
@@ -17,8 +20,19 @@ nexusPublishing {
     }
 }
 
+
+// Common settings for subprojects
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint") // Version should be inherited from parent
+
+    tasks.withType(Test::class.java) {
+        // Use JUnit Platform for unit tests.
+        useJUnitPlatform()
+    }
+
+    tasks.withType(KotlinCompilationTask::class.java).configureEach {
+        compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
+    }
 
     repositories {
         // Required to download KtLint

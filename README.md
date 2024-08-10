@@ -65,10 +65,28 @@ Focusing on core functionality, here is a list of known major issues:
 
 ## Releasing
 
-1. Make sure you set `SONATYPE_USERNAME`, `SONATYPE_PASSWORD`, `GPG_SIGNING_KEY` and `GPG_SIGNING_PASSPHRASE`. 
+> [!NOTE]
+> This section is applicable to official maintainers only.
+
+1. Update `version` under root `build.gradle.kts`.
+2. Make sure you set `SONATYPE_USERNAME`, `SONATYPE_PASSWORD`, `GPG_SIGNING_KEY` and `GPG_SIGNING_PASSPHRASE`.
 2. `./gradlew publishToSonatype`
 3. `./gradlew findSonatypeStagingRepository closeSonatypeStagingRepository`
 4. `./gradlew findSonatypeStagingRepository releaseSonatypeStagingRepository`
+
+For any errors, visit https://s01.oss.sonatype.org/#stagingRepositories.
+
+### Snapshots
+
+After you release a `-SNAPSHOT` version, you need the following block to import it.
+
+```kotlin
+repositories {
+    maven {
+        this.url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
+}
+```
 
 ## Contribution
 

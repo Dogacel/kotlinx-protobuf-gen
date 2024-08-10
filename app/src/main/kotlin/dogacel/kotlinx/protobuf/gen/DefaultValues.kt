@@ -1,7 +1,8 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.TypeName
 
 object DefaultValues {
     /**
@@ -14,7 +15,7 @@ object DefaultValues {
      */
     fun defaultValueOf(
         fieldDescriptor: Descriptors.FieldDescriptor,
-        typeNames: Map<Descriptors.GenericDescriptor, TypeName> = mapOf()
+        typeNames: Map<Descriptors.GenericDescriptor, TypeName> = mapOf(),
     ): Any? {
         if (fieldDescriptor.realContainingOneof != null) {
             return null
@@ -51,8 +52,9 @@ object DefaultValues {
             Descriptors.FieldDescriptor.Type.GROUP -> null
 
             Descriptors.FieldDescriptor.Type.ENUM -> {
-                val typeName = typeNames[fieldDescriptor.enumType]
-                    ?: throw IllegalStateException("Enum type not found: ${fieldDescriptor.enumType.fullName}")
+                val typeName =
+                    typeNames[fieldDescriptor.enumType]
+                        ?: throw IllegalStateException("Enum type not found: ${fieldDescriptor.enumType.fullName}")
 
                 return CodeBlock.of("%L.%L", typeName, fieldDescriptor.defaultValue)
             }

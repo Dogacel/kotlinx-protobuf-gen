@@ -16,7 +16,7 @@ fun main() {
                         .setName(spec.packageName.replace('.', '/') + "/" + spec.name + ".kt")
                         .setContent(spec.toString())
                         .build()
-                }
+                },
             )
             .build()
 

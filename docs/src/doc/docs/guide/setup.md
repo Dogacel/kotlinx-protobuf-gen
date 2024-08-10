@@ -6,17 +6,7 @@ This document also includes details regarding the `protoc` gradle plugin setup t
 `.proto` files in your project. You can either directly compile proto sources in your kotlin project or
 you can prefer to publish a JAR containing the sources and include it in your project.
 
-Currently only available version is `alpha-SNAPSHOT`. In order to use it, you need to add sonatype snapshot
-repository to your `build.gradle.kts` file,
-
-```kotlin
-repositories {
-    mavenCentral()
-    maven {
-        this.url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    }
-}
-```
+Currently only available version is `0.0.1`.
 
 #### 1. Dependencies,
 
@@ -32,7 +22,7 @@ var protobufVersion = "3.23.4"
 dependencies {
     // Runtime libraries include WKT conversion utilities and other libraries that are required such
     // as kotlinx.datetime, kotlinx.coroutines, kotlinx.serialization, etc.
-    implementation("io.github.dogacel:kotlinx-protobuf-gen:alpha-SNAPSHOT")
+    implementation("io.github.dogacel:kotlinx-protobuf-gen:0.0.1")
 }
 ```
 
@@ -46,7 +36,7 @@ protobuf {
 
     plugins {
         id("kotlinx-protobuf-gen") {
-            artifact = "io.github.dogacel:kotlinx-protobuf-gen:alpha-SNAPSHOT:jvm8@jar"
+            artifact = "io.github.dogacel:kotlinx-protobuf-gen:0.0.1:jvm8@jar"
         }
     }
 

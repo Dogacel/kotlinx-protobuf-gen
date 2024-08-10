@@ -1,5 +1,4 @@
 import com.google.protobuf.gradle.id
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -18,21 +17,12 @@ repositories {
     mavenCentral()
 }
 
-var protobufVersion = "3.23.4"
-
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-    implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
+    implementation(libs.bundles.protobuf)
+    implementation(libs.bundles.kotlinx)
+    implementation(libs.kotlinpoet)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-
-    implementation("com.squareup:kotlinpoet:1.14.2")
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+    testImplementation(libs.bundles.junit)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -45,15 +35,6 @@ java {
 application {
     // Define the main class for the application.
     mainClass.set("dogacel.kotlinx.protobuf.gen.AppKt")
-}
-
-tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
-
-tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
 }
 
 tasks.jar {
@@ -71,11 +52,13 @@ tasks.jar {
     archiveClassifier.set("jvm8")
 }
 
-koverReport {
-    filters {
-        includes {
-            this.packages("dogacel.kotlinx.protobuf.gen")
-            this.packages("dogacel.kotlinx.protobuf.gen.*")
+kover {
+    reports {
+        filters {
+            includes {
+                this.packages("dogacel.kotlinx.protobuf.gen")
+                this.packages("dogacel.kotlinx.protobuf.gen.*")
+            }
         }
     }
 }
@@ -90,7 +73,7 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
 
     // Enable Kotlin generation
@@ -147,7 +130,7 @@ publishing {
                 }
                 scm {
                     url.set(
-                        "https://github.com/dogacel/kotlinx-protobuf-gen.git"
+                        "https://github.com/dogacel/kotlinx-protobuf-gen.git",
                     )
                 }
                 issueManagement {

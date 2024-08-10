@@ -5,7 +5,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CodeGeneratorTest {
-
     @Test
     fun hasAnyFieldShouldWork() {
         val codeGenerator = CodeGenerator()

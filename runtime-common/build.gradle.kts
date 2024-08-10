@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-
 plugins {
     id("org.jetbrains.kotlin.jvm")
     kotlin("plugin.serialization")
@@ -16,19 +14,11 @@ repositories {
     mavenCentral()
 }
 
-var protobufVersion = "3.23.4"
-
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-    implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
+    implementation(libs.bundles.protobuf)
+    implementation(libs.bundles.kotlinx)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+    testImplementation(libs.bundles.junit)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -36,15 +26,6 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(11))
     }
-}
-
-tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
-
-tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
 }
 
 tasks.jar {
@@ -135,7 +116,7 @@ publishing {
                 }
                 scm {
                     url.set(
-                        "https://github.com/dogacel/kotlinx-protobuf-gen.git"
+                        "https://github.com/dogacel/kotlinx-protobuf-gen.git",
                     )
                 }
                 issueManagement {

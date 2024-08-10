@@ -2,14 +2,22 @@ package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
 import com.google.protobuf.compiler.PluginProtos
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
 import dogacel.kotlinx.protobuf.gen.DefaultValues.defaultValueOf
 import dogacel.kotlinx.protobuf.gen.Utils.toFirstLower
 import dogacel.kotlinx.protobuf.gen.Utils.toLowerCamelCaseIf
 import kotlinx.serialization.Serializable
 import java.nio.file.Path
 import kotlin.io.path.Path
-
 
 /**
  * Links are used to keep track of the [TypeName] of the fields and the types they reference before the code
@@ -28,7 +36,6 @@ private typealias TypeLinks = Map<Descriptors.GenericDescriptor, TypeName>
  * A class that generates the Kotlin code for the given protobuf files.
  */
 class CodeGenerator {
-
     private val typeLinks: TypeLinks
     private val filesInOrder: List<Descriptors.FileDescriptor>
     private val options: CodeGeneratorOptions
@@ -39,7 +46,7 @@ class CodeGenerator {
      */
     constructor(
         request: PluginProtos.CodeGeneratorRequest,
-        options: CodeGeneratorOptions = CodeGeneratorOptions()
+        options: CodeGeneratorOptions = CodeGeneratorOptions(),
     ) {
         this.options = options
         // https://protobuf.dev/reference/java/api-docs/com/google/protobuf/compiler/PluginProtos.CodeGeneratorRequest
@@ -47,19 +54,22 @@ class CodeGenerator {
         // they import.  The files will appear in topological order, so each file
         // appears before any file that imports it.
         val files = mutableMapOf<String, Descriptors.FileDescriptor>()
-        filesInOrder = request.protoFileList.map { file ->
-            files.computeIfAbsent(
-                file.name
-            ) {
-                val deps = file.dependencyList.map { dep ->
-                    files[dep] ?: throw IllegalStateException("Dependency $dep not found for file ${file.name}")
+        filesInOrder =
+            request.protoFileList.map { file ->
+                files.computeIfAbsent(
+                    file.name,
+                ) {
+                    val deps =
+                        file.dependencyList.map { dep ->
+                            files[dep] ?: throw IllegalStateException("Dependency $dep not found for file ${file.name}")
+                        }
+                    Descriptors.FileDescriptor.buildFrom(file, deps.toTypedArray())
                 }
-                Descriptors.FileDescriptor.buildFrom(file, deps.toTypedArray())
             }
-        }
-        typeLinks = filesInOrder.flatMap { fileDescriptor ->
-            getAllLinks(fileDescriptor, options.packagePrefix)
-        }.toMap()
+        typeLinks =
+            filesInOrder.flatMap { fileDescriptor ->
+                getAllLinks(fileDescriptor, options.packagePrefix)
+            }.toMap()
     }
 
     /**
@@ -68,7 +78,7 @@ class CodeGenerator {
      */
     constructor(
         vararg fileDescriptors: Descriptors.FileDescriptor,
-        options: CodeGeneratorOptions = CodeGeneratorOptions()
+        options: CodeGeneratorOptions = CodeGeneratorOptions(),
     ) {
         this.options = options
 
@@ -76,7 +86,10 @@ class CodeGenerator {
             // Extract dependencies and topologically sort the descriptors.
             val depths = mutableMapOf<Descriptors.FileDescriptor, Int>()
 
-            fun calculator(descriptors: List<Descriptors.FileDescriptor>, depth: Int = 0) {
+            fun calculator(
+                descriptors: List<Descriptors.FileDescriptor>,
+                depth: Int = 0,
+            ) {
                 descriptors.forEach {
                     depths.computeIfAbsent(it) { 0 }
                     depths[it] = depth.coerceAtLeast(depths[it]!!)
@@ -93,9 +106,10 @@ class CodeGenerator {
             // Assume dependencies and files come in order
             filesInOrder = fileDescriptors.toList()
         }
-        typeLinks = filesInOrder.flatMap { fileDescriptor ->
-            getAllLinks(fileDescriptor, options.packagePrefix)
-        }.toMap()
+        typeLinks =
+            filesInOrder.flatMap { fileDescriptor ->
+                getAllLinks(fileDescriptor, options.packagePrefix)
+            }.toMap()
     }
 
     /**
@@ -134,11 +148,12 @@ class CodeGenerator {
      * @return [FileSpec.Builder] that contains the generated code.
      */
     private fun generateSingleFile(fileDescriptor: Descriptors.FileDescriptor): FileSpec.Builder {
-        val packageName = if (options.packagePrefix.isNotEmpty()) {
-            options.packagePrefix + '.' + fileDescriptor.`package`
-        } else {
-            fileDescriptor.`package`
-        }
+        val packageName =
+            if (options.packagePrefix.isNotEmpty()) {
+                options.packagePrefix + '.' + fileDescriptor.`package`
+            } else {
+                fileDescriptor.`package`
+            }
 
         val fileName = fileDescriptor.name.substringAfterLast('/')
         val fileSpec = FileSpec.builder(packageName, fileName)
@@ -200,7 +215,7 @@ class CodeGenerator {
                 .addParameter("other", Any::class.asTypeName().copy(nullable = true))
                 .addStatement("return other is ${messageDescriptor.name}")
                 .returns(Boolean::class)
-                .build()
+                .build(),
         )
     }
 
@@ -234,8 +249,9 @@ class CodeGenerator {
      * @return [TypeSpec.Builder] that contains the generated code.
      */
     private fun generateSingleClass(messageDescriptor: Descriptors.Descriptor): TypeSpec.Builder {
-        val typeSpec = TypeSpec.classBuilder(messageDescriptor.name)
-            .addAnnotation(Serializable::class)
+        val typeSpec =
+            TypeSpec.classBuilder(messageDescriptor.name)
+                .addAnnotation(Serializable::class)
 
         if (hasNoField(messageDescriptor)) {
             typeSpec.addFunctions(getEmptyOverrideFunSpecs(messageDescriptor))
@@ -245,9 +261,10 @@ class CodeGenerator {
 
         // A Data class needs a primary constructor with all the parameters.
         val parameters = messageDescriptor.fields.map { generateSingleParameter(it).build() }
-        val constructorSpec = FunSpec
-            .constructorBuilder()
-            .addParameters(parameters)
+        val constructorSpec =
+            FunSpec
+                .constructorBuilder()
+                .addParameters(parameters)
 
         // A trick to handle oneof fields. We need to make sure that only one of the fields is set.
         // Validation is done in `init` block so objects in invalid states can't be initialized.
@@ -279,23 +296,25 @@ class CodeGenerator {
             typeSpec.addProperty(
                 PropertySpec.builder(fieldName, type)
                     .initializer(fieldName)
-                    .build()
+                    .build(),
             )
         }
 
         // Recursively generate nested classes and enums.
-        val nestedTypes = messageDescriptor.nestedTypes.filterNot {
-            it.options.mapEntry
-        }
-            .filter { shouldGenerateClass(it) }
-            .map {
-                generateSingleClass(it).build()
+        val nestedTypes =
+            messageDescriptor.nestedTypes.filterNot {
+                it.options.mapEntry
             }
+                .filter { shouldGenerateClass(it) }
+                .map {
+                    generateSingleClass(it).build()
+                }
         typeSpec.addTypes(nestedTypes)
 
-        val nestedEnums = messageDescriptor.enumTypes.map {
-            generateSingleEnum(it).build()
-        }
+        val nestedEnums =
+            messageDescriptor.enumTypes.map {
+                generateSingleEnum(it).build()
+            }
         typeSpec.addTypes(nestedEnums)
 
         return typeSpec
@@ -311,16 +330,17 @@ class CodeGenerator {
      * @return [TypeSpec.Builder] that contains the generated code.
      */
     private fun generateSingleEnum(enumDescriptor: Descriptors.EnumDescriptor): TypeSpec.Builder {
-        val typeSpec = TypeSpec
-            .enumBuilder(enumDescriptor.name)
-            .addAnnotation(Serializable::class)
+        val typeSpec =
+            TypeSpec
+                .enumBuilder(enumDescriptor.name)
+                .addAnnotation(Serializable::class)
 
         enumDescriptor.values.forEach { valueDescriptor ->
             typeSpec.addEnumConstant(
                 valueDescriptor.name,
                 TypeSpec.anonymousClassBuilder()
                     .addAnnotations(Annotations.annotationsOf(valueDescriptor))
-                    .build()
+                    .build(),
             )
         }
 
@@ -339,11 +359,12 @@ class CodeGenerator {
      */
     private fun generateSingleService(
         serviceDescriptor: Descriptors.ServiceDescriptor,
-        isGrpcCompatible: Boolean
+        isGrpcCompatible: Boolean,
     ): TypeSpec.Builder {
-        val typeSpec = TypeSpec
-            .classBuilder(serviceDescriptor.name)
-            .addModifiers(KModifier.ABSTRACT)
+        val typeSpec =
+            TypeSpec
+                .classBuilder(serviceDescriptor.name)
+                .addModifiers(KModifier.ABSTRACT)
 
         serviceDescriptor.methods.forEach {
             val methodFunSpec = generateSingleMethod(it)
@@ -369,8 +390,9 @@ class CodeGenerator {
     private fun generateSingleMethod(methodDescriptor: Descriptors.MethodDescriptor): FunSpec.Builder {
         val (requestType, responseType) = TypeNames.typeNameOf(methodDescriptor, typeLinks)
 
-        val requestParamSpec = ParameterSpec
-            .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf().toFirstLower(), requestType)
+        val requestParamSpec =
+            ParameterSpec
+                .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf().toFirstLower(), requestType)
 
         return FunSpec
             .builder(methodDescriptor.name.toFirstLower())
@@ -389,11 +411,11 @@ class CodeGenerator {
     private fun getEnumLink(
         enumDescriptor: Descriptors.EnumDescriptor,
         packageName: String,
-        simpleNames: List<String>
+        simpleNames: List<String>,
     ): Link {
         return Link(
             enumDescriptor,
-            ClassName(packageName, simpleNames + enumDescriptor.name)
+            ClassName(packageName, simpleNames + enumDescriptor.name),
         )
     }
 
@@ -406,7 +428,7 @@ class CodeGenerator {
     private fun getAllLinks(
         descriptor: Descriptors.Descriptor,
         packageName: String,
-        simpleNames: List<String>
+        simpleNames: List<String>,
     ): List<Link> {
         val wellKnownType = options.wellKnownTypes.getFor(descriptor)
 
@@ -414,18 +436,21 @@ class CodeGenerator {
             return listOf(Link(descriptor, wellKnownType))
         }
 
-        val messages = descriptor.nestedTypes.flatMap { nestedType ->
-            getAllLinks(nestedType, packageName, simpleNames + descriptor.name)
-        }
+        val messages =
+            descriptor.nestedTypes.flatMap { nestedType ->
+                getAllLinks(nestedType, packageName, simpleNames + descriptor.name)
+            }
 
-        val enums = descriptor.enumTypes.map {
-            getEnumLink(it, packageName, simpleNames + descriptor.name)
-        }
+        val enums =
+            descriptor.enumTypes.map {
+                getEnumLink(it, packageName, simpleNames + descriptor.name)
+            }
 
-        val self = Link(
-            descriptor,
-            ClassName(packageName, simpleNames + descriptor.name)
-        )
+        val self =
+            Link(
+                descriptor,
+                ClassName(packageName, simpleNames + descriptor.name),
+            )
         return (messages + enums + self)
     }
 
@@ -436,29 +461,34 @@ class CodeGenerator {
      */
     private fun getAllLinks(
         fileDescriptor: Descriptors.FileDescriptor,
-        packagePrefix: String = ""
+        packagePrefix: String = "",
     ): List<Link> {
-        val publicDependencies = fileDescriptor.publicDependencies.flatMap {
-            getAllLinks(it, packagePrefix)
-        }
+        val publicDependencies =
+            fileDescriptor.publicDependencies.flatMap {
+                getAllLinks(it, packagePrefix)
+            }
 
-        val dependencies = fileDescriptor.dependencies.flatMap {
-            getAllLinks(it, packagePrefix)
-        }
+        val dependencies =
+            fileDescriptor.dependencies.flatMap {
+                getAllLinks(it, packagePrefix)
+            }
 
-        val packageName = if (packagePrefix.isNotEmpty()) {
-            packagePrefix + '.' + fileDescriptor.`package`
-        } else {
-            fileDescriptor.`package`
-        }
+        val packageName =
+            if (packagePrefix.isNotEmpty()) {
+                packagePrefix + '.' + fileDescriptor.`package`
+            } else {
+                fileDescriptor.`package`
+            }
 
-        val messages = fileDescriptor.messageTypes.flatMap {
-            getAllLinks(it, packageName, listOf())
-        }
+        val messages =
+            fileDescriptor.messageTypes.flatMap {
+                getAllLinks(it, packageName, listOf())
+            }
 
-        val enums = fileDescriptor.enumTypes.map {
-            getEnumLink(it, packageName, listOf())
-        }
+        val enums =
+            fileDescriptor.enumTypes.map {
+                getEnumLink(it, packageName, listOf())
+            }
 
         return (publicDependencies + dependencies + messages + enums)
     }

@@ -8,7 +8,6 @@ import kotlinx.serialization.protobuf.ProtoPacked
 import kotlinx.serialization.protobuf.ProtoType
 
 object Annotations {
-
     /**
      * Get [AnnotationSpec]s required to serialize a [Descriptors.EnumValueDescriptor] correctly.
      *
@@ -17,13 +16,11 @@ object Annotations {
      * @param enumValueDescriptor
      * @return
      */
-    fun annotationsOf(
-        enumValueDescriptor: Descriptors.EnumValueDescriptor
-    ): List<AnnotationSpec> {
+    fun annotationsOf(enumValueDescriptor: Descriptors.EnumValueDescriptor): List<AnnotationSpec> {
         return listOf(
             AnnotationSpec.builder(ProtoNumber::class)
                 .addMember("number = %L", enumValueDescriptor.number)
-                .build()
+                .build(),
         )
     }
 
@@ -35,14 +32,13 @@ object Annotations {
      * @param fieldDescriptor a [Descriptors.FieldDescriptor] to get annotations for.
      * @return a list of [AnnotationSpec]s to generate annotations from.
      */
-    fun annotationsOf(
-        fieldDescriptor: Descriptors.FieldDescriptor
-    ): List<AnnotationSpec> {
+    fun annotationsOf(fieldDescriptor: Descriptors.FieldDescriptor): List<AnnotationSpec> {
         val annotations: MutableList<AnnotationSpec> = mutableListOf()
 
-        annotations += AnnotationSpec.builder(ProtoNumber::class)
-            .addMember("number = %L", fieldDescriptor.number)
-            .build()
+        annotations +=
+            AnnotationSpec.builder(ProtoNumber::class)
+                .addMember("number = %L", fieldDescriptor.number)
+                .build()
 
         if (fieldDescriptor.isPackable && fieldDescriptor.isPacked) {
             annotations += AnnotationSpec.builder(ProtoPacked::class).build()
@@ -58,22 +54,26 @@ object Annotations {
                 Descriptors.FieldDescriptor.Type.FIXED32,
                 Descriptors.FieldDescriptor.Type.FIXED64,
                 Descriptors.FieldDescriptor.Type.SFIXED32,
-                Descriptors.FieldDescriptor.Type.SFIXED64
-                -> annotations += AnnotationSpec.builder(ProtoType::class)
-                    .addMember(
-                        "type = %M",
-                        MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "FIXED")
-                    )
-                    .build()
+                Descriptors.FieldDescriptor.Type.SFIXED64,
+                ->
+                    annotations +=
+                        AnnotationSpec.builder(ProtoType::class)
+                            .addMember(
+                                "type = %M",
+                                MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "FIXED"),
+                            )
+                            .build()
 
                 Descriptors.FieldDescriptor.Type.SINT32,
-                Descriptors.FieldDescriptor.Type.SINT64
-                -> annotations += AnnotationSpec.builder(ProtoType::class)
-                    .addMember(
-                        "type = %M",
-                        MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "SIGNED")
-                    )
-                    .build()
+                Descriptors.FieldDescriptor.Type.SINT64,
+                ->
+                    annotations +=
+                        AnnotationSpec.builder(ProtoType::class)
+                            .addMember(
+                                "type = %M",
+                                MemberName("kotlinx.serialization.protobuf.ProtoIntegerType", "SIGNED"),
+                            )
+                            .build()
 
                 else -> Unit
             }

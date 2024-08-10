@@ -1,5 +1,4 @@
 import com.google.protobuf.gradle.id
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -13,30 +12,13 @@ repositories {
     mavenCentral()
 }
 
-var protobufVersion = "3.23.4"
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-    implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.0-RC")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-
+    implementation(libs.bundles.protobuf)
+    implementation(libs.bundles.kotlinx)
     implementation(project(":runtime-common"))
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
-}
-
-tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
-
-tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
+    testImplementation(libs.bundles.junit)
 }
 
 tasks.named("generateProto") {
@@ -73,18 +55,20 @@ sourceSets {
     }
 }
 
-koverReport {
-    filters {
-        includes {
-            this.packages("testgen")
-            this.packages("testgen.*")
+kover {
+    reports {
+        filters {
+            includes {
+                this.packages("testgen")
+                this.packages("testgen.*")
+            }
         }
     }
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
 
     plugins {

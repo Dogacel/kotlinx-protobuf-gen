@@ -5,18 +5,24 @@ import io.grpc.BindableService
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import sample.grpc.*
+import sample.grpc.AddRequest
+import sample.grpc.AddResponse
+import sample.grpc.SampleService
+import sample.grpc.SampleServiceGrpcKt
+import sample.grpc.SampleServiceOuterClass
+import sample.grpc.SayHelloRequest
+import sample.grpc.SayHelloResponse
 
 class SampleServiceImpl : SampleService() {
     override suspend fun sayHello(sayHelloRequest: SayHelloRequest): SayHelloResponse {
         return SayHelloResponse(
-            message = "Hello, ${sayHelloRequest.name}!"
+            message = "Hello, ${sayHelloRequest.name}!",
         )
     }
 
     override suspend fun add(addRequest: AddRequest): AddResponse {
         return AddResponse(
-            result = addRequest.a + addRequest.b
+            result = addRequest.a + addRequest.b,
         )
     }
 }
@@ -38,16 +44,18 @@ fun SampleService.asBindable(): BindableService {
 }
 
 fun main() {
-    val grpcService = GrpcService.builder()
-        .addService(SampleServiceImpl().asBindable())
-        .enableUnframedRequests(true)
-        .build()
+    val grpcService =
+        GrpcService.builder()
+            .addService(SampleServiceImpl().asBindable())
+            .enableUnframedRequests(true)
+            .build()
 
-    val server = Server.builder()
-        .http(9000)
-        .service(grpcService)
-        .serviceUnder("/docs", DocService())
-        .build()
+    val server =
+        Server.builder()
+            .http(9000)
+            .service(grpcService)
+            .serviceUnder("/docs", DocService())
+            .build()
 
     server.start().join()
 }
