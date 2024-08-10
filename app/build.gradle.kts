@@ -6,9 +6,12 @@ plugins {
     kotlin("plugin.serialization")
     id("com.google.protobuf")
     application
-    `maven-publish`
     id("org.jetbrains.dokka")
     id("org.jetbrains.kotlinx.kover")
+
+    // Publish
+    `maven-publish`
+    signing
 }
 
 repositories {
@@ -152,5 +155,19 @@ publishing {
                 }
             }
         }
+    }
+}
+
+signing {
+    val signingKey = providers.environmentVariable("GPG_SIGNING_KEY")
+    val signingPassphrase = providers.environmentVariable("GPG_SIGNING_PASSPHRASE")
+
+    if (signingKey.isPresent && signingPassphrase.isPresent) {
+        useInMemoryPgpKeys(
+            signingKey.get(),
+            signingPassphrase.get(),
+        )
+        val extension = extensions.getByName("publishing") as PublishingExtension
+        sign(extension.publications)
     }
 }

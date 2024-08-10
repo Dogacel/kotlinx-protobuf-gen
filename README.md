@@ -63,6 +63,13 @@ Focusing on core functionality, here is a list of known major issues:
 - [x] Generated `enum` fields with negative values can't be serialized / deserialized.
 - [ ] Make data classes with `ByteArray` implement equals and hashcode correctly.
 
+## Releasing
+
+1. Make sure you set `SONATYPE_USERNAME`, `SONATYPE_PASSWORD`, `GPG_SIGNING_KEY` and `GPG_SIGNING_PASSPHRASE`. 
+2. `./gradlew publishToSonatype`
+3. `./gradlew findSonatypeStagingRepository closeSonatypeStagingRepository`
+4. `./gradlew findSonatypeStagingRepository releaseSonatypeStagingRepository`
+
 ## Contribution
 
 For starters, start by checking [issues](./issues).

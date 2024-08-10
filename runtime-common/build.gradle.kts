@@ -4,9 +4,12 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     kotlin("plugin.serialization")
     `java-library`
-    `maven-publish`
     id("org.jetbrains.dokka")
     id("org.jetbrains.kotlinx.kover")
+
+    // Publishing
+    `maven-publish`
+    signing
 }
 
 repositories {
@@ -78,6 +81,16 @@ tasks.jar {
 //    }
 // }
 
+ktlint {
+    filter {
+        exclude { entry ->
+            val condition =
+                entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
+            condition
+        }
+    }
+}
+
 // Publishing
 
 val sourcesJar by tasks.registering(Jar::class) {
@@ -133,12 +146,16 @@ publishing {
     }
 }
 
-ktlint {
-    filter {
-        exclude { entry ->
-            val condition =
-                entry.file.toString().contains(".proto.kt") || entry.file.toString().contains("generated")
-            condition
-        }
+signing {
+    val signingKey = providers.environmentVariable("GPG_SIGNING_KEY")
+    val signingPassphrase = providers.environmentVariable("GPG_SIGNING_PASSPHRASE")
+
+    if (signingKey.isPresent && signingPassphrase.isPresent) {
+        useInMemoryPgpKeys(
+            signingKey.get(),
+            signingPassphrase.get(),
+        )
+        val extension = extensions.getByName("publishing") as PublishingExtension
+        sign(extension.publications)
     }
 }
