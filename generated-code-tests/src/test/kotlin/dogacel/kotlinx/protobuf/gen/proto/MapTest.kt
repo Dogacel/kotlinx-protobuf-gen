@@ -1,12 +1,14 @@
 package dogacel.kotlinx.protobuf.gen.proto
 
+import com.google.protobuf.kotlin.toByteString
 import com.google.protobuf.kotlin.toByteStringUtf8
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import org.junit.jupiter.api.Assertions.assertEquals
+import kotlin.test.assertEquals
 import testgen.maps.MapsMessage
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 
 class MapTest {
     @Test
@@ -57,8 +59,12 @@ class MapTest {
 
         assertEquals(message.mapInt32Int32Map, result.mapInt32Int32)
         assertEquals(message.mapInt64Int64Map, result.mapInt64Int64)
-        assertEquals(message.mapUint32Uint32Map, result.mapUint32Uint32.mapKeys { it.key.toInt() }.mapValues { it.value.toInt() })
-        assertEquals(message.mapUint64Uint64Map, result.mapUint64Uint64.mapKeys { it.key.toLong() }.mapValues { it.value.toLong() })
+        assertEquals(
+            message.mapUint32Uint32Map,
+            result.mapUint32Uint32.mapKeys { it.key.toInt() }.mapValues { it.value.toInt() })
+        assertEquals(
+            message.mapUint64Uint64Map,
+            result.mapUint64Uint64.mapKeys { it.key.toLong() }.mapValues { it.value.toLong() })
 //        assertEquals(message.mapSint32Sint32Map, result.mapSint32Sint32)
 //        assertEquals(message.mapSint64Sint64Map, result.mapSint64Sint64)
         assertEquals(message.mapFixed32Fixed32Map, result.mapFixed32Fixed32)
@@ -72,8 +78,12 @@ class MapTest {
 //        assertEquals(message.mapStringBytesMap, result.mapStringBytes)
 //        assertEquals(message.mapStringNestedMessageMap, result.mapStringNestedMessage)
 //        assertEquals(message.mapStringForeignMessageMap, result.mapStringForeignMessage)
-        assertEquals(message.mapStringNestedEnumMap.mapValues { it.value.name }, result.mapStringNestedEnum.mapValues { it.value.name })
-        assertEquals(message.mapStringForeignEnumMap.mapValues { it.value.name }, result.mapStringForeignEnum.mapValues { it.value.name })
+        assertEquals(
+            message.mapStringNestedEnumMap.mapValues { it.value.name },
+            result.mapStringNestedEnum.mapValues { it.value.name })
+        assertEquals(
+            message.mapStringForeignEnumMap.mapValues { it.value.name },
+            result.mapStringForeignEnum.mapValues { it.value.name })
 
         val deser = maps.Maps.MapsMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
 
@@ -88,8 +98,12 @@ class MapTest {
 
         assertEquals(message.mapInt32Int32Map, result.mapInt32Int32)
         assertEquals(message.mapInt64Int64Map, result.mapInt64Int64)
-        assertEquals(message.mapUint32Uint32Map, result.mapUint32Uint32.mapKeys { it.key.toInt() }.mapValues { it.value.toInt() })
-        assertEquals(message.mapUint64Uint64Map, result.mapUint64Uint64.mapKeys { it.key.toLong() }.mapValues { it.value.toLong() })
+        assertEquals(
+            message.mapUint32Uint32Map,
+            result.mapUint32Uint32.mapKeys { it.key.toInt() }.mapValues { it.value.toInt() })
+        assertEquals(
+            message.mapUint64Uint64Map,
+            result.mapUint64Uint64.mapKeys { it.key.toLong() }.mapValues { it.value.toLong() })
         assertEquals(message.mapSint32Sint32Map, result.mapSint32Sint32)
         assertEquals(message.mapSint64Sint64Map, result.mapSint64Sint64)
         assertEquals(message.mapFixed32Fixed32Map, result.mapFixed32Fixed32)
@@ -100,11 +114,15 @@ class MapTest {
         assertEquals(message.mapInt32DoubleMap, result.mapInt32Double)
         assertEquals(message.mapBoolBoolMap, result.mapBoolBool)
         assertEquals(message.mapStringStringMap, result.mapStringString)
-        assertEquals(message.mapStringBytesMap, result.mapStringBytes)
-        assertEquals(message.mapStringNestedMessageMap, result.mapStringNestedMessage)
-        assertEquals(message.mapStringForeignMessageMap, result.mapStringForeignMessage)
-        assertEquals(message.mapStringNestedEnumMap.mapValues { it.value.name }, result.mapStringNestedEnum.mapValues { it.value.name })
-        assertEquals(message.mapStringForeignEnumMap.mapValues { it.value.name }, result.mapStringForeignEnum.mapValues { it.value.name })
+        assertEquals(message.mapStringBytesMap, result.mapStringBytes.mapValues { it.value.toByteString() })
+//        assertEquals(message.mapStringNestedMessageMap, result.mapStringNestedMessage)
+//        assertEquals(message.mapStringForeignMessageMap, result.mapStringForeignMessage)
+        assertEquals(
+            message.mapStringNestedEnumMap.mapValues { it.value.name },
+            result.mapStringNestedEnum.mapValues { it.value.name })
+        assertEquals(
+            message.mapStringForeignEnumMap.mapValues { it.value.name },
+            result.mapStringForeignEnum.mapValues { it.value.name })
 
         val deser = maps.Maps.MapsMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
 

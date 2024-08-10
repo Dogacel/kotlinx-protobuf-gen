@@ -3,7 +3,8 @@
 armeria = "1.28.2"
 grpc = "1.65.1"
 grpc-kotlin = "1.4.1"
-junit = "5.10.2"
+junit = "5.10.3"
+kotlin = "2.0.0"
 kotlinx-coroutines = "1.8.1"
 kotlinx-datetime = "0.5.0"
 kotlinpoet = "1.18.1"
@@ -27,7 +28,7 @@ kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-seria
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 
 kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
@@ -39,5 +40,5 @@ log4j-over-slf4j = { module = "org.slf4j:log4j-over-slf4j", version.ref = "slf4j
 
 kotlinx = ["kotlinx-serialization-json", "kotlinx-serialization-protobuf", "kotlinx-coroutines-core", "kotlinx-datetime"]
 protobuf = ["protobuf-kotlin", "protobuf-java-util"]
-junit = ["kotlin-test-junit", "junit-jupiter-engine"]
+junit = ["kotlin-test-junit5", "junit-jupiter-engine"]
 logging = ["logback-classic", "log4j-over-slf4j"]

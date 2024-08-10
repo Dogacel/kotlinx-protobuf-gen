@@ -1,7 +1,9 @@
+import org.gradle.kotlin.dsl.nexusPublishing
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     // Publishing
+    idea
     `maven-publish`
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
@@ -18,11 +20,6 @@ nexusPublishing {
             password.set(System.getenv("SONATYPE_PASSWORD"))
         }
     }
-}
-
-tasks.withType(Test::class.java) {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
 }
 
 // Common settings for subprojects

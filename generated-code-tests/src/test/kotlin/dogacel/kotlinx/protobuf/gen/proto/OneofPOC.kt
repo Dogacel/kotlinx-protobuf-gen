@@ -6,7 +6,7 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlinx.serialization.protobuf.ProtoNumber
-import org.junit.jupiter.api.Assertions.assertEquals
+import kotlin.test.assertEquals
 import testgen.oneof.OneofMessage
 import kotlin.test.Ignore
 import kotlin.test.Test

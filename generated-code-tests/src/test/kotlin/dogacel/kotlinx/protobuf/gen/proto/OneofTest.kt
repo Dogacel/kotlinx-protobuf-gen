@@ -3,8 +3,8 @@ package dogacel.kotlinx.protobuf.gen.proto
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import testgen.oneof.OneofMessage
 import kotlin.test.Test
 
@@ -47,7 +47,7 @@ class OneofTest {
 
     @Test
     fun oneofRules() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             OneofMessage(
                 oneofDouble = 420.0,
                 oneofString = "300"
@@ -59,7 +59,7 @@ class OneofTest {
 
         assertEquals(OneofMessage(), emptyConstructed)
 
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             OneofMessage(
                 oneofEnum = OneofMessage.NestedEnum.BAZ
             ).copy(oneofUint32 = 123U)

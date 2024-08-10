@@ -18,11 +18,6 @@ dependencies {
     implementation(libs.bundles.kotlinx)
 }
 
-tasks.withType(Test::class.java) {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
-
 tasks.named("generateProto") {
     dependsOn(project(":app").tasks.jar)
 }

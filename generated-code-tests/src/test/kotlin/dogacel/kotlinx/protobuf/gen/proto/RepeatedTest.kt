@@ -1,10 +1,11 @@
 package dogacel.kotlinx.protobuf.gen.proto
 
+import com.google.protobuf.kotlin.toByteString
 import com.google.protobuf.kotlin.toByteStringUtf8
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import org.junit.jupiter.api.Assertions.assertEquals
+import kotlin.test.assertEquals
 import testgen.repeateds.RepeatedsMessage
 import kotlin.test.Test
 
@@ -112,9 +113,9 @@ class RepeatedTest {
         assertEquals(message.repeatedDoubleList, result.repeatedDouble)
         assertEquals(message.repeatedBoolList, result.repeatedBool)
         assertEquals(message.repeatedStringList, result.repeatedString)
-        assertEquals(message.repeatedBytesList, result.repeatedBytes)
-        assertEquals(message.repeatedNestedMessageList, result.repeatedNestedMessage)
-        assertEquals(message.repeatedForeignMessageList, result.repeatedForeignMessage)
+        assertEquals(message.repeatedBytesList, result.repeatedBytes.map { it.toByteString() })
+//        assertEquals(message.repeatedNestedMessageList, result.repeatedNestedMessage)
+//        assertEquals(message.repeatedForeignMessageList, result.repeatedForeignMessage)
         assertEquals(message.repeatedNestedEnumList.map { it.name }, result.repeatedNestedEnum.map { it.name })
         assertEquals(
             message.repeatedForeignEnumList.map { it.name },

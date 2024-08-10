@@ -28,7 +28,7 @@ java {
     }
 }
 
-tasks.withType(Test::class.java) {
+tasks.withType<Test> {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }

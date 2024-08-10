@@ -1,10 +1,11 @@
 import com.google.protobuf.gradle.id
 
 plugins {
-    id("org.jetbrains.kotlin.jvm")
+    application
+    idea
+    kotlin("jvm")
     kotlin("plugin.serialization")
     id("com.google.protobuf")
-    application
     id("org.jetbrains.dokka")
     id("org.jetbrains.kotlinx.kover")
 
@@ -32,7 +33,7 @@ java {
     }
 }
 
-tasks.withType(Test::class.java) {
+tasks.withType<Test> {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }

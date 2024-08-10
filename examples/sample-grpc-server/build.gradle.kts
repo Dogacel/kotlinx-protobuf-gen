@@ -35,11 +35,6 @@ dependencies {
     runtimeOnly(libs.bundles.logging)
 }
 
-tasks.withType(Test::class.java) {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
-
 tasks.named("generateProto") {
     dependsOn(project(":app").tasks.jar)
 }
