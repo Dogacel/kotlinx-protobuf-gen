@@ -32,6 +32,11 @@ java {
     }
 }
 
+tasks.withType(Test::class.java) {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
 application {
     // Define the main class for the application.
     mainClass.set("dogacel.kotlinx.protobuf.gen.AppKt")

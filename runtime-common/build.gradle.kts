@@ -28,6 +28,11 @@ java {
     }
 }
 
+tasks.withType(Test::class.java) {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
 tasks.jar {
     from(sourceSets.main.get().output)
 

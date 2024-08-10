@@ -21,6 +21,11 @@ dependencies {
     testImplementation(libs.bundles.junit)
 }
 
+tasks.withType(Test::class.java) {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
 tasks.named("generateProto") {
     dependsOn(project(":app").tasks.jar)
     dependsOn("cleanSources")
@@ -28,13 +33,13 @@ tasks.named("generateProto") {
 
 tasks.register("copySources", type = Sync::class) {
     dependsOn("generateProto")
-    from("$buildDir/generated/source/proto/main/kotlinx-protobuf-gen")
+    from(layout.buildDirectory.dir("generated/source/proto/main/kotlinx-protobuf-gen"))
     into("src/main/kotlin")
 }
 
 tasks.register("cleanGeneratedFiles", type = Delete::class) {
     dependsOn("copySources")
-    delete("$buildDir/generated/source/proto/main/kotlinx-protobuf-gen")
+    delete(layout.buildDirectory.dir("generated/source/proto/main/kotlinx-protobuf-gen"))
 }
 
 tasks.register("cleanSources") {
@@ -90,7 +95,6 @@ protobuf {
 }
 
 // Lint
-
 tasks.named("runKtlintCheckOverMainSourceSet") {
     dependsOn("cleanGeneratedFiles")
 }

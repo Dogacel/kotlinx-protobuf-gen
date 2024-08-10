@@ -20,15 +20,14 @@ nexusPublishing {
     }
 }
 
+tasks.withType(Test::class.java) {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
 
 // Common settings for subprojects
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint") // Version should be inherited from parent
-
-    tasks.withType(Test::class.java) {
-        // Use JUnit Platform for unit tests.
-        useJUnitPlatform()
-    }
 
     tasks.withType(KotlinCompilationTask::class.java).configureEach {
         compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
