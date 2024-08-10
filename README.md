@@ -3,6 +3,10 @@
 [![Build](https://github.com/Dogacel/kotlinx-protobuf-gen/actions/workflows/build.yaml/badge.svg)](https://github.com/Dogacel/kotlinx-protobuf-gen/actions/workflows/build.yaml)
 [![codecov](https://codecov.io/gh/Dogacel/kotlinx-protobuf-gen/graph/badge.svg?token=6FE41BE2ZK)](https://codecov.io/gh/Dogacel/kotlinx-protobuf-gen)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Contributors](https://img.shields.io/github/contributors/dogacel/kotlinx-protobuf-gen.svg)](https://github.com/dogacel/kotlinx-protobuf-gen/contributors)
+[![Commits](https://img.shields.io/github/commit-activity/m/dogacel/kotlinx-protobuf-gen.svg?label=commits)](https://github.com/dogacel/kotlinx-protobuf-gen/pulse)
+[![Maven](https://img.shields.io/maven-central/v/io.github.dogacel/kotlinx-protobuf-gen.svg?label=version)](https://search.maven.org/search?q=g:io.github.dogacel%20AND%20a:kotlinx-protobuf-gen)
+[![Release](https://img.shields.io/github/release-date/dogacel/kotlinx-protobuf-gen.svg?label=release)](https://github.com/dogacel/kotlinx-protobuf-gen/commits)
 
 Generate kotlin data classes from `protobuf` files that supports _Kotlin Native_ that can be serialized and
 deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization).
