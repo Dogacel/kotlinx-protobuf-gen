@@ -1,0 +1,2 @@
+package testgen.google.protobuf
+
