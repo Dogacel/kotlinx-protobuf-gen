@@ -23,7 +23,7 @@ public class MessageNoFields() {
     @Serializable
     public data class SubMessageNoFieldsExtend(
       @ProtoNumber(number = 1)
-      public val type: Type = testgen.messages.MessageNoFields.Type.UNKNOWN,
+      public val type: Type? = testgen.messages.MessageNoFields.Type.UNKNOWN,
     )
   }
 
@@ -31,15 +31,7 @@ public class MessageNoFields() {
   public data class SubMessageOneofFields(
     @ProtoNumber(number = 1)
     public val someValue: Int? = null,
-  ) {
-    init {
-      require(
-        listOfNotNull(
-          someValue,
-        ).size <= 1
-      ) { "Should only contain one of some_oneof." } 
-    }
-  }
+  )
 
   @Serializable
   public enum class Type {

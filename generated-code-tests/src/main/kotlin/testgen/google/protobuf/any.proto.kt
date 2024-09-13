@@ -8,7 +8,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 public data class Any(
   @ProtoNumber(number = 1)
-  public val typeUrl: String = "",
+  public val typeUrl: String? = "",
   @ProtoNumber(number = 2)
-  public val `value`: ByteArray = byteArrayOf(),
+  public val `value`: ByteArray? = byteArrayOf(),
 )

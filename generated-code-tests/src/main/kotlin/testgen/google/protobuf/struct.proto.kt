@@ -11,7 +11,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 public data class Struct(
   @ProtoNumber(number = 1)
-  public val fields: Map<String, Value?> = emptyMap(),
+  public val fields: Map<String?, Value?> = emptyMap(),
 )
 
 @Serializable

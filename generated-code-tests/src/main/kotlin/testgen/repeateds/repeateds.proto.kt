@@ -73,7 +73,7 @@ public data class RepeatedsMessage(
   @Serializable
   public data class NestedMessage(
     @ProtoNumber(number = 1)
-    public val a: Int = 0,
+    public val a: Int? = 0,
     @ProtoNumber(number = 2)
     public val corecursive: RepeatedsMessage? = null,
   )
@@ -94,7 +94,7 @@ public data class RepeatedsMessage(
 @Serializable
 public data class ForeignMessage(
   @ProtoNumber(number = 1)
-  public val c: Int = 0,
+  public val c: Int? = 0,
 )
 
 @Serializable

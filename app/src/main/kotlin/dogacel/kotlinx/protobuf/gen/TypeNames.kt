@@ -71,7 +71,7 @@ object TypeNames {
             }
 
         if (
-            fieldDescriptor.hasOptionalKeyword() ||
+            fieldDescriptor.isOptional ||
             fieldDescriptor.type == Descriptors.FieldDescriptor.Type.MESSAGE ||
             fieldDescriptor.realContainingOneof != null
         ) {

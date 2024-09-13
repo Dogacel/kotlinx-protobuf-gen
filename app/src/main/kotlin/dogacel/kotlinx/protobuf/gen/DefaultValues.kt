@@ -1,10 +1,16 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
+import com.google.protobuf.Descriptors.FieldDescriptor
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.TypeName
 
 object DefaultValues {
+    // Indicate whether the field unconditionally has a value; true if the field is PROTO2 and marked `required`, or if
+    // the field has a default value when unset.
+    private val FieldDescriptor.unconditionallyHasValue: Boolean get() =
+        !isOptional || !options.features.hasFieldPresence()
+
     /**
      * Get a default value for the given [Descriptors.FieldDescriptor].
      *
@@ -14,7 +20,7 @@ object DefaultValues {
      * @return default value of the given type
      */
     fun defaultValueOf(
-        fieldDescriptor: Descriptors.FieldDescriptor,
+        fieldDescriptor: FieldDescriptor,
         typeNames: Map<Descriptors.GenericDescriptor, TypeName> = mapOf(),
     ): Any? {
         if (fieldDescriptor.realContainingOneof != null) {
@@ -28,10 +34,9 @@ object DefaultValues {
             return CodeBlock.of("emptyList()")
         }
 
-        if (fieldDescriptor.hasOptionalKeyword()) {
+        if (!fieldDescriptor.unconditionallyHasValue) {
             return null
         }
-
         return when (fieldDescriptor.type) {
             Descriptors.FieldDescriptor.Type.BOOL -> CodeBlock.of("false")
             Descriptors.FieldDescriptor.Type.INT32 -> CodeBlock.of("0")
