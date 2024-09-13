@@ -20,7 +20,7 @@ class EnumTest {
             )
         }.forEach {
             val someProtoEnum = it
-            val someWrapperMessage = enums.Enums.MessageWithEnum.newBuilder()
+            val someWrapperMessage = Enums.MessageWithEnum.newBuilder()
                 .setTestEnum(someProtoEnum)
                 .build()
 
@@ -29,10 +29,10 @@ class EnumTest {
 
             assertEquals(
                 someProtoEnum.name,
-                result.testEnum.name
+                result.testEnum?.name
             )
 
-            val deser = enums.Enums.MessageWithEnum.parseFrom(
+            val deser = Enums.MessageWithEnum.parseFrom(
                 ProtoBuf.encodeToByteArray(result)
             )
 
@@ -55,7 +55,7 @@ class EnumTest {
             )
             .filterNot { it == Enums.AliasedEnum.UNRECOGNIZED }.forEach {
                 val someProtoEnum = it
-                val someWrapperMessage = enums.Enums.MessageWithEnum.newBuilder()
+                val someWrapperMessage = Enums.MessageWithEnum.newBuilder()
                     .setAliasedEnum(someProtoEnum)
                     .build()
 
@@ -64,10 +64,10 @@ class EnumTest {
 
                 assertEquals(
                     someProtoEnum.name,
-                    result.aliasedEnum.name
+                    result.aliasedEnum?.name
                 )
 
-                val deser = enums.Enums.MessageWithEnum.parseFrom(
+                val deser = Enums.MessageWithEnum.parseFrom(
                     ProtoBuf.encodeToByteArray(result)
                 )
 
@@ -84,7 +84,7 @@ class EnumTest {
             it == Enums.MessageWithEnum.NestedEnum.UNRECOGNIZED
         }.forEach {
             val someProtoEnum = it
-            val someWrapperMessage = enums.Enums.MessageWithEnum.newBuilder()
+            val someWrapperMessage = Enums.MessageWithEnum.newBuilder()
                 .setNestedEnum(someProtoEnum)
                 .build()
 
@@ -93,10 +93,10 @@ class EnumTest {
 
             assertEquals(
                 someProtoEnum.name,
-                result.nestedEnum.name
+                result.nestedEnum?.name
             )
 
-            val deser = enums.Enums.MessageWithEnum.parseFrom(
+            val deser = Enums.MessageWithEnum.parseFrom(
                 ProtoBuf.encodeToByteArray(result)
             )
 

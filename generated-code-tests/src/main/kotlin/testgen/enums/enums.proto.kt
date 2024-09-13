@@ -7,13 +7,13 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 public data class MessageWithEnum(
   @ProtoNumber(number = 1)
-  public val id: Int = 0,
+  public val id: Int? = 0,
   @ProtoNumber(number = 2)
-  public val testEnum: TestEnum = testgen.enums.TestEnum.FOO,
+  public val testEnum: TestEnum? = testgen.enums.TestEnum.FOO,
   @ProtoNumber(number = 3)
-  public val aliasedEnum: AliasedEnum = testgen.enums.AliasedEnum.ALIAS_FOO,
+  public val aliasedEnum: AliasedEnum? = testgen.enums.AliasedEnum.ALIAS_FOO,
   @ProtoNumber(number = 4)
-  public val nestedEnum: NestedEnum = testgen.enums.MessageWithEnum.NestedEnum.NESTED_FOO,
+  public val nestedEnum: NestedEnum? = testgen.enums.MessageWithEnum.NestedEnum.NESTED_FOO,
 ) {
   @Serializable
   public enum class NestedEnum {

@@ -1,6 +1,7 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
+import com.google.protobuf.Descriptors.OneofDescriptor
 import com.google.protobuf.compiler.PluginProtos
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -239,6 +240,9 @@ class CodeGenerator {
             .defaultValue("%L", defaultValue)
     }
 
+    private val OneofDescriptor.isSyntheticCompat: Boolean get() =
+        fields.size == 1 && !options.features.hasFieldPresence()
+
     /**
      * Generate a single class for the given [Descriptors.Descriptor]. Returns a [TypeSpec.Builder] so users
      * can add additional code to the class.
@@ -269,7 +273,7 @@ class CodeGenerator {
         // A trick to handle oneof fields. We need to make sure that only one of the fields is set.
         // Validation is done in `init` block so objects in invalid states can't be initialized.
         messageDescriptor.oneofs.forEach { oneOfDescriptor ->
-            if (!oneOfDescriptor.isSynthetic && oneOfDescriptor.fields.isNotEmpty()) {
+            if (!oneOfDescriptor.isSyntheticCompat && oneOfDescriptor.fields.isNotEmpty()) {
                 val codeSpec = CodeBlock.builder()
                 codeSpec.addStatement("require(")
                 codeSpec.indent()

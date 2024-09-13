@@ -56,7 +56,7 @@ public data class OneofMessage(
   @Serializable
   public data class NestedMessage(
     @ProtoNumber(number = 1)
-    public val a: Int = 0,
+    public val a: Int? = 0,
     @ProtoNumber(number = 2)
     public val corecursive: OneofMessage? = null,
   )

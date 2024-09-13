@@ -8,13 +8,13 @@ import kotlinx.serialization.protobuf.ProtoNumber
 @Serializable
 public data class TestUnaryRequest(
   @ProtoNumber(number = 1)
-  public val name: String = "",
+  public val name: String? = "",
 )
 
 @Serializable
 public data class TestUnaryResponse(
   @ProtoNumber(number = 1)
-  public val message: String = "",
+  public val message: String? = "",
 )
 
 public abstract class TestService {

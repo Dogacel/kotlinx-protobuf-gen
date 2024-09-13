@@ -22,7 +22,7 @@ class SampleServiceImpl : SampleService() {
 
     override suspend fun add(addRequest: AddRequest): AddResponse {
         return AddResponse(
-            result = addRequest.a + addRequest.b,
+            result = (addRequest.a ?: 0) + (addRequest.b ?: 0),
         )
     }
 }
