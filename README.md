@@ -33,17 +33,17 @@ deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin
 
 ```kotlin
 plugins {
-    kotlin("jvm") version "1.9.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
+    kotlin("jvm") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
     id("com.google.protobuf") version "0.9.4"
 }
 
-var protobufVersion = "3.23.4"
+var protobufVersion = "4.30.0"
 
 dependencies {
     // Runtime libraries include WKT conversion utilities and other libraries that are required such
     // as kotlinx.datetime, kotlinx.coroutines, kotlinx.serialization, etc.
-    implementation("io.github.dogacel:kotlinx-protobuf-gen:0.0.1")
+    implementation("io.github.dogacel:kotlinx-protobuf-gen:0.1.0")
 }
 ```
 
@@ -57,7 +57,7 @@ protobuf {
 
     plugins {
         id("kotlinx-protobuf-gen") {
-            artifact = "io.github.dogacel:kotlinx-protobuf-gen:0.0.1:jvm8@jar"
+            artifact = "io.github.dogacel:kotlinx-protobuf-gen:0.1.0:jvm8@jar"
         }
     }
 
@@ -133,7 +133,7 @@ protobuf {
 
     plugins {
         id("kotlinx-protobuf-gen") {
-            artifact = "io.github.dogacel:kotlinx-protobuf-gen:0.0.1:jvm8@jar"
+            artifact = "io.github.dogacel:kotlinx-protobuf-gen:0.1.0jvm8@jar"
         }
     }
 
