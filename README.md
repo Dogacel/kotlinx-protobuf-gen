@@ -11,21 +11,156 @@
 Generate kotlin data classes from `protobuf` files that supports _Kotlin Native_ that can be serialized and
 deserialized to protobuf using [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization).
 
-> [!NOTE]  
-> Setup instructions and detailed documentation can be found
-> at [Setup and Documentation](https://dogacel.github.io/kotlinx-protobuf-gen).
-
-![Demonstrate Code](./docs/src/doc/docs/assets/demonstrate_code.png)
+![Demonstrate Code](./assets/demonstrate_code.png)
 
 ## Features
 
-- [x] Supports `proto2` and `proto3`.
+- [x] Supports `proto2`, `proto3` and `editions` up to `2023`.
 - [x] Generates `kotlinx.serialization` annotations for proto field numbers and serialization format.
 - [x] Generates Kotlin code for primitive fields such as `int32`, `string`, `bytes`.
 - [x] Generates Kotlin code for `message`, `enum`, `repeated`, `map`, `oneof` types.
 - [x] Generates Kotlin code that includes imports and uses nested types.
 - [x] Supports common well-known types such as `Timestamp`, `StringValue` and serializes them to kotlin
   primitives or standards.
+- [x] Support Well-Known Types deserialization to Well-Known Kotlin types such as `google.protobuf.Duration`
+  to `kotlin.time.Duration` and `google.protobuf.Timestamp` to `kotlinx.datetime.Instant`.
+    - An option is added to code generator to enable this feature.
+    - More WKT additions will be added.
+
+## Setup
+
+### 1. Dependencies,
+
+```kotlin
+plugins {
+    kotlin("jvm") version "1.9.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
+    id("com.google.protobuf") version "0.9.4"
+}
+
+var protobufVersion = "3.23.4"
+
+dependencies {
+    // Runtime libraries include WKT conversion utilities and other libraries that are required such
+    // as kotlinx.datetime, kotlinx.coroutines, kotlinx.serialization, etc.
+    implementation("io.github.dogacel:kotlinx-protobuf-gen:0.0.1")
+}
+```
+
+#### 2. Code generation,
+
+```kotlin
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+
+    plugins {
+        id("kotlinx-protobuf-gen") {
+            artifact = "io.github.dogacel:kotlinx-protobuf-gen:0.0.1:jvm8@jar"
+        }
+    }
+
+    // Enable Kotlin generation
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                remove("java") // Optionally you can keep the java generated files.
+            }
+            it.plugins {
+                id("kotlinx-protobuf-gen") {
+                    option("package_prefix=custom.pkg") // Set a custom package prefix
+                }
+            }
+        }
+    }
+}
+```
+
+#### 3. Writing proto files,
+
+Add your proto files to a known proto file path such as `src/main/proto`.
+
+```protobuf
+syntax = "proto3";
+
+package demo;
+
+message Task {
+  int32 id = 1;
+  optional string description = 2;
+  Status status = 3;
+
+  enum Status {
+    WIP = 0;
+    DONE = 1;
+  }
+}
+```
+
+The following class will be generated and added to your classpath.
+
+```kotlin
+@Serializable
+public data class Task(
+    @ProtoNumber(number = 1)
+    public val id: Int = 0,
+    @ProtoNumber(number = 2)
+    public val description: String? = null,
+    @ProtoNumber(number = 3)
+    public val status: Status = testgen.demo.Task.Status.WIP,
+) {
+    @Serializable
+    public enum class Status {
+        @ProtoNumber(number = 0)
+        WIP,
+
+        @ProtoNumber(number = 1)
+        DONE,
+    }
+}
+```
+
+## Customizations
+
+To customize the code generated, you can pass command line arguments or gradle options. For example,
+
+```kotlin
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+
+    plugins {
+        id("kotlinx-protobuf-gen") {
+            artifact = "io.github.dogacel:kotlinx-protobuf-gen:0.0.1:jvm8@jar"
+        }
+    }
+
+    // Enable Kotlin generation
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                remove("java") // Optionally you can keep the java generated files.
+            }
+            it.plugins {
+                id("kotlinx-protobuf-gen") {
+                    option("package_prefix=custom.pkg") // Set a custom package prefix
+                }
+            }
+        }
+    }
+}
+```
+
+### Available Options
+
+| Option             | Description                                                                                                | Default |
+|--------------------|------------------------------------------------------------------------------------------------------------|---------|
+| `package_prefix`   | Prefix for the generated package names. Appended to the start of each class                                | `""`    |
+| `useCamelCase`     | Whether to use the original `snake_case` for proto fields or `camelCase`. Can be either `true` or `false`. | `true`  |
+| `generateServices` | Whether to generate abstract gRPC stubs or not. Can be either `true` or `false`.                           | `true`  |
+
 
 ## Roadmap
 
@@ -34,15 +169,8 @@ is a list of features we are working on that are required to release first stabl
 
 - [ ] Proper serialization / deserialization of all types. Check "Known Issues" section below to see all major
   issues.
-- [ ] Run full conformance tests on the generated code.]
+- [ ] Run full conformance tests on the generated code.
 - [ ] Support Protobuf JSON format.
-
-And here is a list of features that we are planning to work on after the first stable release.
-
-- [x] Support Well-Known Types deserialization to Well-Known Kotlin types such as `google.protobuf.Duration`
-  to `kotlin.time.Duration` and `google.protobuf.Timestamp` to `kotlinx.datetime.Instant`.
-    - An option is added to code generator to enable this feature.
-    - More WKT additions will be added.
 - [ ] Support various options such as `deprecated`, `default`, `json_name`.
 - [ ] Auto-generated comments from `.proto` files in the generated code.
 - [x] gRPC support.
@@ -50,6 +178,8 @@ And here is a list of features that we are planning to work on after the first s
     - It is tricky to support gRPC without depending on the Java library.
 - [ ] Plugin and more option support for customizing the generated code. (Such as non-enforced nullability to
   gimmick proto2 required fields based on certain rules)
+
+For the full list, check [issues](./issues)
 
 ## Known Issues
 

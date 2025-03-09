@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package oneof.proto3;
+
+message OneofMessage {
+  oneof oneof_field {
+    uint32 oneof_uint32 = 1;
+    NestedMessage oneof_nested_message = 2;
+    string oneof_string = 3;
+//    bytes oneof_bytes = 4;
+    bool oneof_bool = 5;
+    uint64 oneof_uint64 = 6;
+    float oneof_float = 7;
+    double oneof_double = 8;
+    NestedEnum oneof_enum = 9;
+  }
+
+  oneof second_oneof_field {
+    string left = 10;
+    string right = 11;
+  }
+
+  message NestedMessage {
+    int32 a = 1;
+    OneofMessage corecursive = 2;
+  }
+
+  enum NestedEnum {
+    FOO = 0;
+    BAR = 1;
+    BAZ = 2;
+    NEG = -1;  // Intentionally negative.
+  }
+}

@@ -54,7 +54,7 @@ tasks.jar {
 
 // protobuf {
 //    protoc {
-//        artifact = "com.google.protobuf:protoc:$protobufVersion"
+//        artifact = libs.protoc
 //    }
 //
 //    // Enable Kotlin generation
@@ -84,11 +84,11 @@ val sourcesJar by tasks.registering(Jar::class) {
     from(kotlin.sourceSets.main.get().kotlin)
 }
 
-val javadocJar by tasks.creating(Jar::class) {
+val javadocJar by tasks.registering(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Javadoc JAR"
     archiveClassifier.set("javadoc")
-    from(tasks.named("dokkaHtml"))
+    from(tasks.dokkaGeneratePublicationHtml.flatMap { it.outputDirectory })
 }
 
 publishing {
@@ -116,7 +116,7 @@ publishing {
                     developer {
                         id.set("dogacel")
                         name.set("Doğaç Eldenk")
-                        email.set("dogacel@gmail.copm")
+                        email.set("dogacel@gmail.com")
                     }
                 }
                 scm {

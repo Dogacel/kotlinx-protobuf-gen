@@ -1,7 +1,6 @@
 package dogacel.kotlinx.protobuf.gen
 
 import com.google.protobuf.Descriptors
-import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.BYTE_ARRAY
 import com.squareup.kotlinpoet.ClassName
@@ -58,7 +57,10 @@ object TypeNames {
                 Descriptors.FieldDescriptor.Type.BYTES -> BYTE_ARRAY
                 Descriptors.FieldDescriptor.Type.STRING -> STRING
 
-                Descriptors.FieldDescriptor.Type.GROUP -> ANY
+                Descriptors.FieldDescriptor.Type.GROUP ->
+                    typeNames[fieldDescriptor.messageType]
+                        ?: throw IllegalStateException("Group type not found: ${fieldDescriptor.messageType.fullName}")
+
                 Descriptors.FieldDescriptor.Type.ENUM ->
                     typeNames[fieldDescriptor.enumType]
                         ?: throw IllegalStateException("Enum type not found: ${fieldDescriptor.enumType.fullName}")
@@ -71,7 +73,7 @@ object TypeNames {
             }
 
         if (
-            fieldDescriptor.hasOptionalKeyword() ||
+            fieldDescriptor.hasPresence() ||
             fieldDescriptor.type == Descriptors.FieldDescriptor.Type.MESSAGE ||
             fieldDescriptor.realContainingOneof != null
         ) {

@@ -5,11 +5,11 @@ plugins {
     // Publishing
     idea
     `maven-publish`
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+    alias(libs.plugins.io.github.gradle.nexus.publish.plugin)
 }
 
 group = "io.github.dogacel"
-version = "0.0.1"
+version = "0.1.0"
 
 nexusPublishing {
     this.repositories {

@@ -269,7 +269,7 @@ class CodeGenerator {
         // A trick to handle oneof fields. We need to make sure that only one of the fields is set.
         // Validation is done in `init` block so objects in invalid states can't be initialized.
         messageDescriptor.oneofs.forEach { oneOfDescriptor ->
-            if (!oneOfDescriptor.isSynthetic && oneOfDescriptor.fields.isNotEmpty()) {
+            if (oneOfDescriptor.fields.isNotEmpty()) {
                 val codeSpec = CodeBlock.builder()
                 codeSpec.addStatement("require(")
                 codeSpec.indent()

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package test.proto3;
+
+message BytesUnderTest {
+  bytes bytes = 1;
+}

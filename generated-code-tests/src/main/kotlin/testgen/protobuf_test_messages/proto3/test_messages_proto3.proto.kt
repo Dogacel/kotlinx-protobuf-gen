@@ -77,14 +77,14 @@ public data class TestAllTypesProto3(
   @ProtoNumber(number = 19)
   public val optionalForeignMessage: ForeignMessage? = null,
   @ProtoNumber(number = 21)
-  public val optionalNestedEnum: NestedEnum =
-      testgen.protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum.FOO,
+  public val optionalNestedEnum:
+      NestedEnum = testgen.protobuf_test_messages.proto3.TestAllTypesProto3.NestedEnum.FOO,
   @ProtoNumber(number = 22)
-  public val optionalForeignEnum: ForeignEnum =
-      testgen.protobuf_test_messages.proto3.ForeignEnum.FOREIGN_FOO,
+  public val optionalForeignEnum:
+      ForeignEnum = testgen.protobuf_test_messages.proto3.ForeignEnum.FOREIGN_FOO,
   @ProtoNumber(number = 23)
-  public val optionalAliasedEnum: AliasedEnum =
-      testgen.protobuf_test_messages.proto3.TestAllTypesProto3.AliasedEnum.ALIAS_FOO,
+  public val optionalAliasedEnum:
+      AliasedEnum = testgen.protobuf_test_messages.proto3.TestAllTypesProto3.AliasedEnum.ALIAS_FOO,
   @ProtoNumber(number = 24)
   public val optionalStringPiece: String = "",
   @ProtoNumber(number = 25)

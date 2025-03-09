@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package messages.proto3;
+
+message MessageNoFields {
+  enum Type {
+    UNKNOWN = 0;
+    KNOWN = 1;
+  }
+  message SubMessageNoFields {
+    message SubMessageNoFieldsExtend {
+      Type type = 1;
+    }
+    optional SubMessageNoFields subHello = 1;
+  }
+
+  message SubMessageOneofFields {
+    oneof some_oneof {
+      int32 some_value = 1;
+    }
+  }
+}

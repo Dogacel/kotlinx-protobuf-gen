@@ -28,7 +28,7 @@ object DefaultValues {
             return CodeBlock.of("emptyList()")
         }
 
-        if (fieldDescriptor.hasOptionalKeyword()) {
+        if (fieldDescriptor.hasPresence()) {
             return null
         }
 

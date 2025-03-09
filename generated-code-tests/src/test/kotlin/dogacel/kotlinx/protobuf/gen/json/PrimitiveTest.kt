@@ -6,13 +6,13 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import kotlin.test.assertEquals
-import testgen.primitives.PrimitivesMessage
+import testgen.primitives.proto3.PrimitivesMessage
 import kotlin.test.Test
 
 class PrimitiveTest {
     @Test
     fun shouldDeSerAll() {
-        val message = primitives.Primitives.PrimitivesMessage.newBuilder()
+        val message = primitives.proto3.Primitives.PrimitivesMessage.newBuilder()
             .setOptionalInt32(32)
             .setOptionalInt64(57L)
             .setOptionalUint32(12)
@@ -48,13 +48,13 @@ class PrimitiveTest {
         assertEquals(message.optionalBool, result.optionalBool)
         assertEquals(message.optionalString, result.optionalString)
 
-        val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
+        val deser = primitives.proto3.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
         assertEquals(message, deser)
     }
 
     @Test
     fun shouldDeSerEmpty() {
-        val message = primitives.Primitives.PrimitivesMessage.newBuilder().build()
+        val message = primitives.proto3.Primitives.PrimitivesMessage.newBuilder().build()
 
         val result: PrimitivesMessage = ProtoBuf.decodeFromByteArray(message.toByteArray())
 
@@ -73,7 +73,7 @@ class PrimitiveTest {
         assertEquals(message.optionalBool, result.optionalBool)
         assertEquals(message.optionalString, result.optionalString)
 
-        val deser = primitives.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
+        val deser = primitives.proto3.Primitives.PrimitivesMessage.parseFrom(ProtoBuf.encodeToByteArray(result))
         assertEquals(message, deser)
     }
 }

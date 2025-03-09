@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package maps.proto3;
+
+message MapsMessage {
+  map<int32, int32> map_int32_int32 = 1;
+  map<int64, int64> map_int64_int64 = 2;
+  map<uint32, uint32> map_uint32_uint32 = 3;
+  map<uint64, uint64> map_uint64_uint64 = 4;
+  map<sint32, sint32> map_sint32_sint32 = 5;
+  map<sint64, sint64> map_sint64_sint64 = 6;
+  map<fixed32, fixed32> map_fixed32_fixed32 = 7;
+  map<fixed64, fixed64> map_fixed64_fixed64 = 8;
+  map<sfixed32, sfixed32> map_sfixed32_sfixed32 = 9;
+  map<sfixed64, sfixed64> map_sfixed64_sfixed64 = 10;
+  map<int32, float> map_int32_float = 11;
+  map<int32, double> map_int32_double = 12;
+  map<bool, bool> map_bool_bool = 13;
+  map<string, string> map_string_string = 14;
+  map<string, bytes> map_string_bytes = 15;
+
+  map<string, NestedMessage> map_string_nested_message = 16;
+  map<string, ForeignMessage> map_string_foreign_message = 17;
+  map<string, NestedEnum> map_string_nested_enum = 18;
+  map<string, ForeignEnum> map_string_foreign_enum = 19;
+
+
+  message NestedMessage {
+    int32 a = 1;
+    MapsMessage corecursive = 2;
+  }
+
+  enum NestedEnum {
+    FOO = 0;
+    BAR = 1;
+    BAZ = 2;
+    NEG = -1;  // Intentionally negative.
+  }
+}
+
+message ForeignMessage {
+  int32 c = 1;
+}
+
+enum ForeignEnum {
+  FOREIGN_FOO = 0;
+  FOREIGN_BAR = 1;
+  FOREIGN_BAZ = 2;
+}

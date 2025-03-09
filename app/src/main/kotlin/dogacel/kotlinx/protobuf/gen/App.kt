@@ -9,7 +9,14 @@ fun main() {
 
     val responseBuilder =
         PluginProtos.CodeGeneratorResponse.newBuilder()
-            .setSupportedFeatures(PluginProtos.CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL_VALUE.toLong())
+            .setSupportedFeatures(
+                // Supported features is a bitwise OR of the following values:
+                (
+                    PluginProtos.CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL_VALUE or
+                        PluginProtos.CodeGeneratorResponse.Feature.FEATURE_SUPPORTS_EDITIONS_VALUE
+                ).toLong(),
+            )
+            .setMaximumEdition(2023)
             .addAllFile(
                 specs.map { spec ->
                     PluginProtos.CodeGeneratorResponse.File.newBuilder()

@@ -1,6 +1,6 @@
 package dogacel.kotlinx.protobuf.gen
 
-import messages.MessageNoFieldsOuterClass.MessageNoFields
+import messages.proto3.MessageNoFieldsOuterClass.MessageNoFields
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
