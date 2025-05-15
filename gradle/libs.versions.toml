@@ -6,6 +6,7 @@ kotlinx = ["kotlinx-serialization-json", "kotlinx-serialization-protobuf", "kotl
 protobuf = ["protobuf-kotlin", "protobuf-java-util"]
 junit = ["kotlin-test-junit5", "junit-jupiter-engine"]
 logging = ["logback-classic", "log4j-over-slf4j"]
+kotest = ["kotest-property-protobuf", "kotest-property", "kotest-runner-junit5", "kotest-assertions-core"]
 
 [plugins]
 
@@ -25,6 +26,8 @@ kotlinpoet = "2.1.0"
 kotlinx-serialization = "1.8.0"
 protobuf = "4.30.0"
 junit-jupiter = "5.12.0"
+kotest-property-protobuf = "0.0.1"
+kotest = "5.9.1"
 
 [libraries]
 
@@ -49,6 +52,10 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
 kotlin-scripting-compiler-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-compiler-embeddable", version.ref = "kotlin" }
 kotlin-serialization-compiler-plugin-embeddable = { group = "org.jetbrains.kotlin", name = "kotlin-serialization-compiler-plugin-embeddable", version.ref = "kotlin" }
+kotest-property-protobuf = { group = "io.github.dogacel", name = "kotest-property-protobuf", version.ref = "kotest-property-protobuf" }
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
+kotest-assertions-core = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
 

@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":runtime-common"))
 
     testImplementation(libs.bundles.junit)
+    testImplementation(libs.bundles.kotest)
 }
 
 tasks.withType<Test> {
