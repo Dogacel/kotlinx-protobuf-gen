@@ -13,6 +13,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import dogacel.kotlinx.protobuf.gen.DefaultValues.defaultValueOf
+import dogacel.kotlinx.protobuf.gen.Utils.removeEnumPrefixFromValue
 import dogacel.kotlinx.protobuf.gen.Utils.toFirstLower
 import dogacel.kotlinx.protobuf.gen.Utils.toLowerCamelCaseIf
 import kotlinx.serialization.Serializable
@@ -232,7 +233,7 @@ class CodeGenerator {
         val fieldTypeName = TypeNames.typeNameOf(fieldDescriptor, typeLinks)
         val fieldName = fieldDescriptor.name.toLowerCamelCaseIf(options.useCamelCase)
 
-        val defaultValue = defaultValueOf(fieldDescriptor, typeLinks)
+        val defaultValue = defaultValueOf(fieldDescriptor, typeLinks, options)
 
         return ParameterSpec.builder(fieldName, fieldTypeName)
             .addAnnotations(Annotations.annotationsOf(fieldDescriptor))
@@ -336,8 +337,14 @@ class CodeGenerator {
                 .addAnnotation(Serializable::class)
 
         enumDescriptor.values.forEach { valueDescriptor ->
+            val enumValueName =
+                if (options.removeEnumPrefix) {
+                    removeEnumPrefixFromValue(enumDescriptor.name, valueDescriptor.name)
+                } else {
+                    valueDescriptor.name
+                }
             typeSpec.addEnumConstant(
-                valueDescriptor.name,
+                enumValueName,
                 TypeSpec.anonymousClassBuilder()
                     .addAnnotations(Annotations.annotationsOf(valueDescriptor))
                     .build(),

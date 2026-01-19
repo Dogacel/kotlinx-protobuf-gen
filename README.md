@@ -155,11 +155,12 @@ protobuf {
 
 ### Available Options
 
-| Option             | Description                                                                                                | Default |
-|--------------------|------------------------------------------------------------------------------------------------------------|---------|
-| `package_prefix`   | Prefix for the generated package names. Appended to the start of each class                                | `""`    |
-| `useCamelCase`     | Whether to use the original `snake_case` for proto fields or `camelCase`. Can be either `true` or `false`. | `true`  |
-| `generateServices` | Whether to generate abstract gRPC stubs or not. Can be either `true` or `false`.                           | `true`  |
+| Option               | Description                                                                                                                                                                   | Default |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| `package_prefix`     | Prefix for the generated package names. Appended to the start of each class                                                                                                   | `""`    |
+| `useCamelCase`       | Whether to use the original `snake_case` for proto fields or `camelCase`. Can be either `true` or `false`.                                                                    | `true`  |
+| `generateServices`   | Whether to generate abstract gRPC stubs or not. Can be either `true` or `false`.                                                                                              | `true`  |
+| `remove_enum_prefix` | Strips the enum name prefix from enum values (e.g., `STATE_ACTIVE` becomes `ACTIVE` for enum `State`). Useful when proto enums follow the `ENUM_NAME_VALUE` naming convention. | `false` |
 
 
 ## Roadmap

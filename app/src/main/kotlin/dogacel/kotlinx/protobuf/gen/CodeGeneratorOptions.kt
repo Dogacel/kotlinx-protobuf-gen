@@ -25,6 +25,7 @@ data class CodeGeneratorOptions(
     val generateGrpcServices: Boolean = true,
     val generateGrpcMethodsSuspend: Boolean = true,
     val wellKnownTypes: WellKnownTypes = NoWellKnownTypes,
+    val removeEnumPrefix: Boolean = false,
 ) {
     companion object {
         fun parse(parameter: String): CodeGeneratorOptions {
@@ -43,6 +44,7 @@ data class CodeGeneratorOptions(
                     flags.contains("use_well_known_types").let {
                         if (it) DefaultWellKnownTypes else NoWellKnownTypes
                     },
+                removeEnumPrefix = flags.contains("remove_enum_prefix"),
             )
         }
     }
