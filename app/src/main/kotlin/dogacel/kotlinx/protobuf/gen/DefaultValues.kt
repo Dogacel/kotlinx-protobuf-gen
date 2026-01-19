@@ -3,6 +3,7 @@ package dogacel.kotlinx.protobuf.gen
 import com.google.protobuf.Descriptors
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.TypeName
+import dogacel.kotlinx.protobuf.gen.Utils.removeEnumPrefixFromValue
 
 object DefaultValues {
     /**
@@ -11,11 +12,13 @@ object DefaultValues {
      * @param fieldDescriptor a [Descriptors.FieldDescriptor] to get default value for.
      * @param typeNames a map of [Descriptors.GenericDescriptor] to [TypeName] to get type names which is used
      * to reference other types using full name in code.
+     * @param options optional [CodeGeneratorOptions] to customize the generated default value.
      * @return default value of the given type
      */
     fun defaultValueOf(
         fieldDescriptor: Descriptors.FieldDescriptor,
         typeNames: Map<Descriptors.GenericDescriptor, TypeName> = mapOf(),
+        options: CodeGeneratorOptions? = null,
     ): Any? {
         if (fieldDescriptor.realContainingOneof != null) {
             return null
@@ -56,7 +59,16 @@ object DefaultValues {
                     typeNames[fieldDescriptor.enumType]
                         ?: throw IllegalStateException("Enum type not found: ${fieldDescriptor.enumType.fullName}")
 
-                return CodeBlock.of("%L.%L", typeName, fieldDescriptor.defaultValue)
+                val enumValueName =
+                    if (options?.removeEnumPrefix == true) {
+                        val enumDescriptor = fieldDescriptor.enumType
+                        val defaultValueDescriptor = fieldDescriptor.defaultValue as Descriptors.EnumValueDescriptor
+                        removeEnumPrefixFromValue(enumDescriptor.name, defaultValueDescriptor.name)
+                    } else {
+                        fieldDescriptor.defaultValue
+                    }
+
+                return CodeBlock.of("%L.%L", typeName, enumValueName)
             }
 
             Descriptors.FieldDescriptor.Type.MESSAGE -> null

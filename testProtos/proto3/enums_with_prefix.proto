@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package enums_prefix.proto3;
+
+enum State {
+  STATE_UNKNOWN = 0;
+  STATE_ACTIVE = 1;
+  STATE_INACTIVE = 2;
+}
+
+enum ForeignEnum {
+  FOREIGN_ENUM_UNSPECIFIED = 0;
+  FOREIGN_ENUM_FOO = 1;
+  FOREIGN_ENUM_BAR = 2;
+}
+
+message StatusMessage {
+  State state = 1;
+  ForeignEnum foreign_enum = 2;
+}
