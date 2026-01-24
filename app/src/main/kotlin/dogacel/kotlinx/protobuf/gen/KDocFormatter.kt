@@ -76,7 +76,7 @@ object KDocFormatter {
             .replace("\r", "\n")
             // Trim trailing whitespace from each line
             .lines()
-            .joinToString("\n") { it.trimEnd() }
+            .joinToString("\n") { it.trimEnd().removePrefix(" ") }
             .trim()
     }
 }

@@ -34,6 +34,23 @@ import testgen.google.protobuf.ListValue
 import testgen.google.protobuf.Struct
 import testgen.google.protobuf.Value
 
+/**
+ * This proto includes every type of field in both singular and repeated
+ * forms.
+ *
+ * Also, crucially, all messages and enums in this file are eventually
+ * submessages of this message.  So for example, a fuzz test of TestAllTypes
+ * could trigger bugs that occur in any message type in this file.  We verify
+ * this stays true in a unit test.
+ *
+ * @param optionalInt32 Singular
+ * @param repeatedInt32 Repeated
+ * @param packedInt32 Packed
+ * @param unpackedInt32 Unpacked
+ * @param mapInt32Int32 Map
+ * @param optionalBoolWrapper Well-known types
+ * @param fieldname1 Test field-name-to-JSON-name convention. (protobuf says names can be any valid C/C++ identifier.)
+ */
 @Serializable
 public data class TestAllTypesProto3(
   @ProtoNumber(number = 1)
@@ -404,6 +421,9 @@ public data class TestAllTypesProto3(
     BAR,
     @ProtoNumber(number = 2)
     BAZ,
+    /**
+     * Intentionally negative.
+     */
     @ProtoNumber(number = -1)
     NEG,
   }

@@ -52,3 +52,15 @@ service DocumentedService {
   // Updates an existing documented message.
   rpc UpdateMessage(DocumentedMessage) returns (DocumentedMessage);
 }
+
+/* A message documented with C-style comments. */
+message CStyleCommentMessage {
+  /* The ID field with inline block comment. */
+  int32 id = 1;
+
+  /*
+   * A field with a multi-line
+   * block comment.
+   */
+  string name = 2;
+}

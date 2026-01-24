@@ -19,6 +19,23 @@ import kotlinx.serialization.protobuf.ProtoNumber
 import kotlinx.serialization.protobuf.ProtoPacked
 import kotlinx.serialization.protobuf.ProtoType
 
+/**
+ * This proto includes every type of field in both singular and repeated
+ * forms.
+ *
+ * Also, crucially, all messages and enums in this file are eventually
+ * submessages of this message.  So for example, a fuzz test of TestAllTypes
+ * could trigger bugs that occur in any message type in this file.  We verify
+ * this stays true in a unit test.
+ *
+ * @param optionalInt32 Singular
+ * @param repeatedInt32 Repeated
+ * @param packedInt32 Packed
+ * @param unpackedInt32 Unpacked
+ * @param mapInt32Int32 Map
+ * @param defaultInt32 default values
+ * @param fieldname1 Test field-name-to-JSON-name convention. (protobuf says names can be any valid C/C++ identifier.)
+ */
 @Serializable
 public data class TestAllTypesProto2(
   @ProtoNumber(number = 1)
@@ -339,6 +356,9 @@ public data class TestAllTypesProto2(
     public val corecursive: TestAllTypesProto2? = null,
   )
 
+  /**
+   * groups
+   */
   @Serializable
   public data class Data(
     @ProtoNumber(number = 202)
@@ -355,6 +375,9 @@ public data class TestAllTypesProto2(
     public val groupUint32: UInt? = null,
   )
 
+  /**
+   * message_set test case.
+   */
   @Serializable
   public class MessageSetCorrect() {
     override fun toString(): String = "MessageSetCorrect"
@@ -384,6 +407,9 @@ public data class TestAllTypesProto2(
     BAR,
     @ProtoNumber(number = 2)
     BAZ,
+    /**
+     * Intentionally negative.
+     */
     @ProtoNumber(number = -1)
     NEG,
   }
@@ -467,6 +493,10 @@ public data class ProtoWithKeywords(
   public val requires: List<String> = emptyList(),
 )
 
+/**
+ * @param requiredInt32 Singular
+ * @param defaultInt32 default values
+ */
 @Serializable
 public data class TestAllRequiredTypesProto2(
   @ProtoNumber(number = 1)
@@ -570,6 +600,9 @@ public data class TestAllRequiredTypesProto2(
     public val optionalCorecursive: TestAllRequiredTypesProto2? = null,
   )
 
+  /**
+   * groups
+   */
   @Serializable
   public data class Data(
     @ProtoNumber(number = 202)
@@ -578,6 +611,9 @@ public data class TestAllRequiredTypesProto2(
     public val groupUint32: UInt? = null,
   )
 
+  /**
+   * message_set test case.
+   */
   @Serializable
   public class MessageSetCorrect() {
     override fun toString(): String = "MessageSetCorrect"
@@ -607,6 +643,9 @@ public data class TestAllRequiredTypesProto2(
     BAR,
     @ProtoNumber(number = 2)
     BAZ,
+    /**
+     * Intentionally negative.
+     */
     @ProtoNumber(number = -1)
     NEG,
   }
