@@ -122,8 +122,15 @@ class CodeGenerator {
                 getAllLinks(fileDescriptor, options.packagePrefix)
             }.toMap()
 
-        // FileDescriptors don't have SourceCodeInfo, so location maps are empty
-        locationMaps = emptyMap()
+        // Build location maps from FileDescriptor's SourceCodeInfo (available if the descriptor was built from a proto with source info)
+        locationMaps =
+            if (options.generateComments) {
+                fileDescriptors.associate { fileDescriptor ->
+                    fileDescriptor.name to Comments.buildLocationMap(fileDescriptor.toProto().sourceCodeInfo)
+                }
+            } else {
+                emptyMap()
+            }
     }
 
     /**
