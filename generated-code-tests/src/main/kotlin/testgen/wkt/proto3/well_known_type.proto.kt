@@ -19,6 +19,11 @@ import testgen.google.protobuf.ListValue
 import testgen.google.protobuf.Struct
 import testgen.google.protobuf.Value
 
+/**
+ * @param optionalBoolWrapper Wrappers
+ * @param optionalDuration Time
+ * @param optionalFieldMask Other
+ */
 @Serializable
 public data class MessageWithWellKnownTypes(
   @ProtoNumber(number = 1)

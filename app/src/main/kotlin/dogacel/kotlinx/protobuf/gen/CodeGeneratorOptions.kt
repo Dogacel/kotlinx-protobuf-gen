@@ -14,6 +14,7 @@ import dogacel.kotlinx.protobuf.gen.wkt.WellKnownTypes
  * [Descriptors.FileDescriptor]. Generates the classes for inferred dependencies if set to `true`.
  * Default is `true`. Note if you set this to `false` you need to add the dependencies manually otherwise
  * generated code might not compie.
+ * @property generateComments Whether to include KDoc comments extracted from proto source files. Default is `false`.
  *
  * @constructor Create empty Code generator options
  */
@@ -25,6 +26,7 @@ data class CodeGeneratorOptions(
     val generateGrpcServices: Boolean = true,
     val generateGrpcMethodsSuspend: Boolean = true,
     val wellKnownTypes: WellKnownTypes = NoWellKnownTypes,
+    val generateComments: Boolean = false,
 ) {
     companion object {
         fun parse(parameter: String): CodeGeneratorOptions {
@@ -43,6 +45,7 @@ data class CodeGeneratorOptions(
                     flags.contains("use_well_known_types").let {
                         if (it) DefaultWellKnownTypes else NoWellKnownTypes
                     },
+                generateComments = flags.contains("generate_comments"),
             )
         }
     }

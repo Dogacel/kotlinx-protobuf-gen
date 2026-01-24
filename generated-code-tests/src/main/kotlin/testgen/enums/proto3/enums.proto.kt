@@ -36,6 +36,9 @@ public enum class TestEnum {
   BAZ,
   @ProtoNumber(number = 100)
   TOP,
+  /**
+   * Intentionally negative.
+   */
   @ProtoNumber(number = -1)
   NEG,
 }

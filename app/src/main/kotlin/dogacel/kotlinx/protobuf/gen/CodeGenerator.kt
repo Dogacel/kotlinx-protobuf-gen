@@ -39,6 +39,7 @@ class CodeGenerator {
     private val typeLinks: TypeLinks
     private val filesInOrder: List<Descriptors.FileDescriptor>
     private val options: CodeGeneratorOptions
+    private val locationMaps: Map<String, LocationMap>
 
     /**
      * Create a code generator for the given [PluginProtos.CodeGeneratorRequest]. This request is created from
@@ -70,6 +71,16 @@ class CodeGenerator {
             filesInOrder.flatMap { fileDescriptor ->
                 getAllLinks(fileDescriptor, options.packagePrefix)
             }.toMap()
+
+        // Build location maps for comment extraction
+        locationMaps =
+            if (options.generateComments) {
+                request.protoFileList.associate { file ->
+                    file.name to Comments.buildLocationMap(file.sourceCodeInfo)
+                }
+            } else {
+                emptyMap()
+            }
     }
 
     /**
@@ -110,6 +121,16 @@ class CodeGenerator {
             filesInOrder.flatMap { fileDescriptor ->
                 getAllLinks(fileDescriptor, options.packagePrefix)
             }.toMap()
+
+        // Build location maps from FileDescriptor's SourceCodeInfo (available if the descriptor was built from a proto with source info)
+        locationMaps =
+            if (options.generateComments) {
+                fileDescriptors.associate { fileDescriptor ->
+                    fileDescriptor.name to Comments.buildLocationMap(fileDescriptor.toProto().sourceCodeInfo)
+                }
+            } else {
+                emptyMap()
+            }
     }
 
     /**
@@ -253,6 +274,23 @@ class CodeGenerator {
             TypeSpec.classBuilder(messageDescriptor.name)
                 .addAnnotation(Serializable::class)
 
+        // Add KDoc comments if enabled
+        if (options.generateComments) {
+            val locationMap = locationMaps[messageDescriptor.file.name]
+            if (locationMap != null) {
+                val messageComments = Comments.getCommentsForMessage(messageDescriptor, locationMap)
+                val fieldComments =
+                    messageDescriptor.fields.map { field ->
+                        val fieldName = field.name.toLowerCamelCaseIf(options.useCamelCase)
+                        fieldName to Comments.getCommentsForField(field, locationMap)
+                    }
+                val kdoc = KDocFormatter.formatClassKDoc(messageComments, fieldComments)
+                if (kdoc.isNotEmpty()) {
+                    typeSpec.addKdoc("%L", kdoc)
+                }
+            }
+        }
+
         if (hasNoField(messageDescriptor)) {
             typeSpec.addFunctions(getEmptyOverrideFunSpecs(messageDescriptor))
         } else {
@@ -335,13 +373,36 @@ class CodeGenerator {
                 .enumBuilder(enumDescriptor.name)
                 .addAnnotation(Serializable::class)
 
+        // Add KDoc comments if enabled
+        if (options.generateComments) {
+            val locationMap = locationMaps[enumDescriptor.file.name]
+            if (locationMap != null) {
+                val enumComments = Comments.getCommentsForEnum(enumDescriptor, locationMap)
+                val kdoc = KDocFormatter.formatSimpleKDoc(enumComments)
+                if (kdoc.isNotEmpty()) {
+                    typeSpec.addKdoc("%L", kdoc)
+                }
+            }
+        }
+
         enumDescriptor.values.forEach { valueDescriptor ->
-            typeSpec.addEnumConstant(
-                valueDescriptor.name,
+            val enumConstantBuilder =
                 TypeSpec.anonymousClassBuilder()
                     .addAnnotations(Annotations.annotationsOf(valueDescriptor))
-                    .build(),
-            )
+
+            // Add KDoc comments to enum values if enabled
+            if (options.generateComments) {
+                val locationMap = locationMaps[enumDescriptor.file.name]
+                if (locationMap != null) {
+                    val valueComments = Comments.getCommentsForEnumValue(valueDescriptor, locationMap)
+                    val kdoc = KDocFormatter.formatSimpleKDoc(valueComments)
+                    if (kdoc.isNotEmpty()) {
+                        enumConstantBuilder.addKdoc("%L", kdoc)
+                    }
+                }
+            }
+
+            typeSpec.addEnumConstant(valueDescriptor.name, enumConstantBuilder.build())
         }
 
         return typeSpec
@@ -365,6 +426,18 @@ class CodeGenerator {
             TypeSpec
                 .classBuilder(serviceDescriptor.name)
                 .addModifiers(KModifier.ABSTRACT)
+
+        // Add KDoc comments if enabled
+        if (options.generateComments) {
+            val locationMap = locationMaps[serviceDescriptor.file.name]
+            if (locationMap != null) {
+                val serviceComments = Comments.getCommentsForService(serviceDescriptor, locationMap)
+                val kdoc = KDocFormatter.formatSimpleKDoc(serviceComments)
+                if (kdoc.isNotEmpty()) {
+                    typeSpec.addKdoc("%L", kdoc)
+                }
+            }
+        }
 
         serviceDescriptor.methods.forEach {
             val methodFunSpec = generateSingleMethod(it)
@@ -394,13 +467,28 @@ class CodeGenerator {
             ParameterSpec
                 .builder(methodDescriptor.inputType.name.toLowerCamelCaseIf().toFirstLower(), requestType)
 
-        return FunSpec
-            .builder(methodDescriptor.name.toFirstLower())
-            .addModifiers(KModifier.OPEN)
-            .addModifiers(KModifier.SUSPEND)
-            .addParameter(requestParamSpec.build())
-            .returns(responseType)
-            .addCode("return TODO()")
+        val funSpec =
+            FunSpec
+                .builder(methodDescriptor.name.toFirstLower())
+                .addModifiers(KModifier.OPEN)
+                .addModifiers(KModifier.SUSPEND)
+                .addParameter(requestParamSpec.build())
+                .returns(responseType)
+                .addCode("return TODO()")
+
+        // Add KDoc comments if enabled
+        if (options.generateComments) {
+            val locationMap = locationMaps[methodDescriptor.service.file.name]
+            if (locationMap != null) {
+                val methodComments = Comments.getCommentsForMethod(methodDescriptor, locationMap)
+                val kdoc = KDocFormatter.formatSimpleKDoc(methodComments)
+                if (kdoc.isNotEmpty()) {
+                    funSpec.addKdoc("%L", kdoc)
+                }
+            }
+        }
+
+        return funSpec
     }
 
     /**

@@ -155,11 +155,12 @@ protobuf {
 
 ### Available Options
 
-| Option             | Description                                                                                                | Default |
-|--------------------|------------------------------------------------------------------------------------------------------------|---------|
-| `package_prefix`   | Prefix for the generated package names. Appended to the start of each class                                | `""`    |
-| `useCamelCase`     | Whether to use the original `snake_case` for proto fields or `camelCase`. Can be either `true` or `false`. | `true`  |
-| `generateServices` | Whether to generate abstract gRPC stubs or not. Can be either `true` or `false`.                           | `true`  |
+| Option               | Description                                                                                                | Default |
+|----------------------|------------------------------------------------------------------------------------------------------------|---------|
+| `package_prefix`     | Prefix for the generated package names. Appended to the start of each class                                | `""`    |
+| `use_snake_case`     | Use the original `snake_case` for proto fields instead of `camelCase`.                                     | off     |
+| `disable_services`   | Disable generation of abstract gRPC stubs.                                                                 | off     |
+| `generate_comments`  | Generate KDoc comments extracted from proto source files (leading, trailing, and detached comments).       | off     |
 
 
 ## Roadmap
@@ -172,7 +173,7 @@ is a list of features we are working on that are required to release first stabl
 - [ ] Run full conformance tests on the generated code.
 - [ ] Support Protobuf JSON format.
 - [ ] Support various options such as `deprecated`, `default`, `json_name`.
-- [ ] Auto-generated comments from `.proto` files in the generated code.
+- [x] Auto-generated comments from `.proto` files in the generated code.
 - [x] gRPC support.
     - Stub generation is completed but it does not include any functionality to call or receive gRPC yet.
     - It is tricky to support gRPC without depending on the Java library.

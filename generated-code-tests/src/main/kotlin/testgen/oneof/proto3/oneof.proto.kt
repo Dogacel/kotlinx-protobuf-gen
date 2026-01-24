@@ -10,6 +10,9 @@ import kotlin.ULong
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
+/**
+ * @param oneofBool bytes oneof_bytes = 4;
+ */
 @Serializable
 public data class OneofMessage(
   @ProtoNumber(number = 1)
@@ -69,6 +72,9 @@ public data class OneofMessage(
     BAR,
     @ProtoNumber(number = 2)
     BAZ,
+    /**
+     * Intentionally negative.
+     */
     @ProtoNumber(number = -1)
     NEG,
   }

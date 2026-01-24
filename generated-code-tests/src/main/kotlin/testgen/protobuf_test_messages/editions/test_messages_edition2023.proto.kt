@@ -24,6 +24,13 @@ public data class ComplexMessage(
   public val d: Int? = null,
 )
 
+/**
+ * @param optionalInt32 Singular
+ * @param repeatedInt32 Repeated
+ * @param packedInt32 Packed
+ * @param unpackedInt32 Unpacked
+ * @param mapInt32Int32 Map
+ */
 @Serializable
 public data class TestAllTypesEdition2023(
   @ProtoNumber(number = 1)
@@ -287,6 +294,9 @@ public data class TestAllTypesEdition2023(
     public val corecursive: TestAllTypesEdition2023? = null,
   )
 
+  /**
+   * groups
+   */
   @Serializable
   public data class GroupLikeType(
     @ProtoNumber(number = 202)
@@ -303,6 +313,9 @@ public data class TestAllTypesEdition2023(
     BAR,
     @ProtoNumber(number = 2)
     BAZ,
+    /**
+     * Intentionally negative.
+     */
     @ProtoNumber(number = -1)
     NEG,
   }

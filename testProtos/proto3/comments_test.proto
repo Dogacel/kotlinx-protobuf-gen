@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package comments.test;
+
+// A documented message.
+// This message is used for testing comment extraction.
+message DocumentedMessage {
+  // The unique ID of the message.
+  int32 id = 1;
+
+  // The name field.
+  string name = 2;
+
+  string description = 3; // Trailing comment for description.
+
+  // A nested message with comments.
+  message NestedMessage {
+    // The value in the nested message.
+    int32 value = 1;
+  }
+
+  // The nested message field.
+  NestedMessage nested = 4;
+}
+
+// An undocumented message for comparison.
+message UndocumentedMessage {
+  int32 field1 = 1;
+  string field2 = 2;
+}
+
+// A documented enum.
+// This enum represents different status values.
+enum DocumentedEnum {
+  // The unknown status.
+  UNKNOWN = 0;
+
+  // The active status.
+  ACTIVE = 1;
+
+  // The inactive status.
+  INACTIVE = 2;
+
+  DEPRECATED = 3; // Trailing comment for deprecated.
+}
+
+// A documented service for testing.
+service DocumentedService {
+  // Gets a documented message by ID.
+  rpc GetMessage(DocumentedMessage) returns (DocumentedMessage);
+
+  // Updates an existing documented message.
+  rpc UpdateMessage(DocumentedMessage) returns (DocumentedMessage);
+}
+
+/* A message documented with C-style comments. */
+message CStyleCommentMessage {
+  /* The ID field with inline block comment. */
+  int32 id = 1;
+
+  /*
+   * A field with a multi-line
+   * block comment.
+   */
+  string name = 2;
+}

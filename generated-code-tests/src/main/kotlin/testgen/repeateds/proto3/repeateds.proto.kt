@@ -86,6 +86,9 @@ public data class RepeatedsMessage(
     BAR,
     @ProtoNumber(number = 2)
     BAZ,
+    /**
+     * Intentionally negative.
+     */
     @ProtoNumber(number = -1)
     NEG,
   }
