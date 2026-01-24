@@ -88,6 +88,7 @@ protobuf {
                 id("kotlinx-protobuf-gen") {
                     option("package_prefix=testgen")
                     option("use_well_known_types")
+                    option("generate_comments")
                 }
             }
         }
